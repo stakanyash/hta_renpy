@@ -1,8 +1,10 @@
 # Вы можете расположить сценарий своей игры в этом файле.
 
 # Определение персонажей игры.
+define mc = Character("[player_name]", color="#FED11B")
+default temp_name = ""
+default player_name = "Вы"
 define father = Character('Отец', color="#FED11B")
-define mc = Character('Вы', color="#FED11B")
 define lisa = Character('Лиса', color="#FED11B")
 
 # Вместо использования оператора image можете просто
@@ -14,6 +16,12 @@ define lisa = Character('Лиса', color="#FED11B")
 label start:
 
     play music "music/bio07unloop.ogg" fadeout 1.0
+
+    $ player_name = "Вы"
+
+    call screen name_input_screen
+
+label main_game:
 
     "{cps=20}История не сохранила точных сведений о тёмных временах, наступивших сразу после Катастрофы. Доподлинно известно лишь то, что люди выжили в отравленном воздухе благодаря защитным маскам."
 
