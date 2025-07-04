@@ -379,7 +379,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer build 0.1" xpos 380 ypos 0.98 yanchor 1.0 style "main_menu_text" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer build" xpos 365 ypos 0.98 yanchor 1.0 style "main_menu_text" xmaximum 800 size 17
 
 
 

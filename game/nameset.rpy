@@ -15,7 +15,7 @@ screen name_input_screen():
             input value VariableInputValue("temp_name") length 20 pixel_width 500 align (0.5, 0.5):
                 style "centered_input"
 
-            textbutton "Подтвердить" action [
+            textbutton "Подтвердить" activate_sound "audio/sfx/click.wav" action [
                 SetVariable("player_name", temp_name.strip() or "Вы"),
                 Hide("name_input_screen"),
                 Jump("main_game")

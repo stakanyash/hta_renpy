@@ -3,3 +3,5 @@
 *.rpyc
 /game/saves
 *.rpymc
+game/images/ico1n.ico
+game/gui/icon.ico
