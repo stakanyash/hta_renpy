@@ -14,6 +14,9 @@
 
 define config.name = _("Hard Truck Apocalypse")
 
+define config.mouse = { 
+    "default": [("gui/cursor.png", 0, 0)]
+}
 
 ## Определяет, показывать ли заголовок, данный выше, на экране главного меню.
 ## Установите на False, чтобы спрятать заголовок.
@@ -23,7 +26,7 @@ define gui.show_name = False
 
 ## Версия игры.
 
-define config.version = "0.1"
+define config.version = "0.15"
 
 
 ## Текст, помещённый в экран "Об игре". Поместите текст между тройными скобками.
@@ -37,7 +40,7 @@ define gui.about = _p("""
 ## постройке дистрибутивов. Оно должно содержать текст формата ASCII и не должно
 ## содержать пробелы, двоеточия и точки с запятой.
 
-define build.name = "HardTruckApocalypseRenPy"
+define build.name = "htaRenPy"
 
 
 ## Звуки и музыка ##############################################################

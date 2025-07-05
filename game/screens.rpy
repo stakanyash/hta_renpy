@@ -11,6 +11,9 @@ init offset = -1
 
 define startfade = Fade(1.5, 0.5, 1.5)
 
+transform scroll_credits:
+    linear 60.0 ypos -3000
+
 style default:
     properties gui.text_properties()
     language gui.language
@@ -328,7 +331,7 @@ screen navigation():
 
             ## Кнопка выхода блокирована в iOS и не нужна на Android и в веб-
             ## версии.
-            textbutton _("Выход") activate_sound "audio/sfx/click.wav" action Quit(confirm=not main_menu)
+            textbutton _("Выход") activate_sound "audio/sfx/click.wav" action Quit(confirm=True)
 
 
 style navigation_button is gui_button
@@ -358,11 +361,7 @@ screen main_menu():
 
     add "slideshow"
 
-    ## Эта пустая рамка затеняет главное меню.
-    frame:
-        style "main_menu_frame"
-
-    add "logo.png" xpos 50 ypos 50
+    add "gui/overlay/main_menu.png" xpos 0 ypos 0
 
     ## Оператор use включает отображение другого экрана в данном. Актуальное
     ## содержание главного меню находится на экране навигации.
@@ -379,7 +378,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer build" xpos 365 ypos 0.98 yanchor 1.0 style "main_menu_text" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer build" xpos 340 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 
 
@@ -537,12 +536,11 @@ style game_menu_label:
 style game_menu_label_text:
     size gui.title_text_size
     color gui.accent_color
-    yalign 0.5
+    yalign 0.3
 
 style return_button:
     xpos gui.navigation_xpos
-    yalign 1.0
-    yoffset -45
+    yalign 0.8
 
 
 ## Экран Об игре ###############################################################
@@ -563,14 +561,14 @@ screen about():
         style_prefix "about"
 
         vbox:
-
+            text ""
             label "[config.name!t]"
             text _("Версия [config.version!t]\n")
 
             text _("Данный продукт является фанатской адаптацией игры Ex Machina/Hard Truck Apocalypse на движок для визуальных новелл RenPy.\n")
             text _("Не является коммерческим и вообще не факт, что когда либо выйдет, ибо Бука хуюка.\n")
 
-            text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]")
+            text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
 
 
 style about_label is gui_label
@@ -660,8 +658,8 @@ screen file_slots(title):
             vbox:
                 style_prefix "page"
 
-                xalign 0.5
-                yalign 1.0
+                xalign 0.51
+                yalign 0.92
 
                 hbox:
                     xalign 0.5
@@ -684,16 +682,6 @@ screen file_slots(title):
                     textbutton _(">") activate_sound "audio/sfx/click.wav" action FilePageNext()
                     key "save_page_next" activate_sound "audio/sfx/click.wav" action FilePageNext()
 
-                if config.has_sync:
-                    if CurrentScreenName() == "save":
-                        textbutton _("Загрузить Sync"):
-                            action UploadSync()
-                            xalign 0.5
-                    else:
-                        textbutton _("Скачать Sync"):
-                            action DownloadSync()
-                            xalign 0.5
-
 
 style page_label is gui_label
 style page_label_text is gui_label_text
@@ -707,7 +695,7 @@ style slot_name_text is slot_button_text
 
 style page_label:
     xpadding 75
-    ypadding 5
+    ypadding 30
 
 style page_label_text:
     textalign 0.5
@@ -718,7 +706,9 @@ style page_button:
     properties gui.button_properties("page_button")
 
 style page_button_text:
-    properties gui.text_properties("page_button")
+    color "#AD8E13"
+    hover_color "#ffcc00"
+    selected_color "#ffcc00"
 
 style slot_button:
     properties gui.button_properties("slot_button")
@@ -895,38 +885,47 @@ style slider_vbox:
 screen history():
 
     tag menu
-
-    ## Избегайте предсказывания этого экрана, так как он может быть очень
-    ## массивным.
     predict False
 
-    use game_menu(_("История"), scroll=("vpgrid" if gui.history_height else "viewport"), yinitial=1.0, spacing=gui.history_spacing):
+    use game_menu(_("История")):
 
-        style_prefix "history"
+        frame:
+            background None
+            xpos 0.0
+            ypos 100
+            xsize 1420
+            ysize 750
 
-        for h in _history_list:
+            viewport:
+                scrollbars "vertical"
+                mousewheel True
+                yinitial 1.0
 
-            window:
+                vbox:
+                    style_prefix "history"
+                    spacing 5
 
-                ## Это всё правильно уравняет, если history_height будет
-                ## установлен на None.
-                has fixed:
-                    yfit True
+                    for h in _history_list:
 
-                if h.who:
+                        window:
 
-                    label h.who:
-                        style "history_name"
-                        substitute False
+                            has fixed:
+                                yfit True
 
-                        ## Берёт цвет из who параметра персонажа, если он
-                        ## установлен.
-                        if "color" in h.who_args:
-                            text_color h.who_args["color"]
+                            if h.who:
 
-                $ what = renpy.filter_text_tags(h.what, allow=gui.history_allow_tags)
-                text what:
-                    substitute False
+                                label h.who:
+                                    style "history_name"
+                                    substitute False
+
+                                    if "color" in h.who_args:
+                                        text_color h.who_args["color"]
+
+                            $ what = renpy.filter_text_tags(h.what, allow=gui.history_allow_tags)
+                            text what:
+                                substitute False
+
+                    null height 20
 
         if not _history_list:
             label _("История диалогов пуста.")
@@ -947,8 +946,8 @@ style history_label is gui_label
 style history_label_text is gui_label_text
 
 style history_window:
-    xfill True
     ysize gui.history_height
+    ypos 1
 
 style history_name:
     xpos gui.history_name_xpos
@@ -1000,15 +999,10 @@ screen help():
                 textbutton _("Клавиатура") activate_sound "audio/sfx/click.wav" action SetScreenVariable("device", "keyboard")
                 textbutton _("Мышь") activate_sound "audio/sfx/click.wav" action SetScreenVariable("device", "mouse")
 
-                if GamepadExists():
-                    textbutton _("Геймпад") activate_sound "audio/sfx/click.wav" action SetScreenVariable("device", "gamepad")
-
             if device == "keyboard":
                 use keyboard_help
             elif device == "mouse":
                 use mouse_help
-            elif device == "gamepad":
-                use gamepad_help
 
 
 screen keyboard_help():
@@ -1034,32 +1028,12 @@ screen keyboard_help():
         text _("Пропускает диалоги, пока зажат.")
 
     hbox:
-        label _("Tab")
-        text _("Включает режим пропуска.")
-
-    hbox:
-        label _("Page Up")
-        text _("Откат назад по сюжету игры.")
-
-    hbox:
-        label _("Page Down")
-        text _("Откатывает предыдущее действие вперёд.")
-
-    hbox:
         label "H"
         text _("Скрывает интерфейс пользователя.")
 
     hbox:
         label "S"
         text _("Делает снимок экрана.")
-
-    hbox:
-        label "V"
-        text _("Включает поддерживаемый {a=https://www.renpy.org/l/voicing}синтезатор речи{/a}.")
-
-    hbox:
-        label "Shift+A"
-        text _("Открывает меню специальных возможностей.")
 
 
 screen mouse_help():
@@ -1083,35 +1057,6 @@ screen mouse_help():
     hbox:
         label _("Колёсико вниз")
         text _("Откатывает предыдущее действие вперёд.")
-
-
-screen gamepad_help():
-
-    hbox:
-        label _("Правый триггер\nA/Нижняя кнопка")
-        text _("Прохождение диалогов, активация интерфейса.")
-
-    hbox:
-        label _("Левый Триггер\nЛевый Бампер")
-        text _("Откат назад по сюжету игры.")
-
-    hbox:
-        label _("Правый бампер")
-        text _("Откатывает предыдущее действие вперёд.")
-
-    hbox:
-        label _("Крестовина, Стики")
-        text _("Навигация по интерфейсу.")
-
-    hbox:
-        label _("Старт, Гид, B/Правая кнопка")
-        text _("Вход в игровое меню.")
-
-    hbox:
-        label _("Y/Верхняя кнопка")
-        text _("Скрывает интерфейс пользователя.")
-
-    textbutton _("Калибровка") action GamepadCalibrate()
 
 
 style help_button is gui_button
