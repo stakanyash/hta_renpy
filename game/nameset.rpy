@@ -46,5 +46,3 @@ style smaller_button_text is button_text:
     textalign 0.5
     color "#404040"
     hover_color "#6d6d6d"
-
-

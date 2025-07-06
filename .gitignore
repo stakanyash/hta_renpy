@@ -5,3 +5,4 @@
 *.rpymc
 game/images/ico1n.ico
 game/gui/icon.ico
+/game/android/icon
