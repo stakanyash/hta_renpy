@@ -6,9 +6,14 @@ define lisa = Character('Лиса', color="#FED11B")
 define sergo = Character('Серго', color="#FED11B")
 define unknown = Character('???', color="#FED11B")
 define dick = Character('Фермер Дик', color="#FED11B")
+define felix = Character('Феликс', color="#FED11B")
 
 init python:
     renpy.music.register_channel("sfx2", mixer="sfx", loop=True, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
+
+transform stretch_in:
+    yzoom 0.95
+    linear 0.1 yzoom 1.0
 
 label start:
 
@@ -44,6 +49,10 @@ label main_game:
 
     mc "И тебе доброе утро. Чего нервничаешь?"
 
+    hide fther
+
+    show fther2 at left, stretch_in
+
     father "Ладно, остынь."
 
     father "Вот так..."
@@ -54,11 +63,9 @@ label main_game:
 
     father "Теперь ты настоящий мужчина и можешь делать всё, что пожелаешь, даже завести семью... Кхе, но лучше, конечно, сперва спросить разрешения."
 
-    hide mchar with dissolve
+    hide mchar
 
-    show mcsurp at right with dissolve
-
-    show fther at left with dissolve
+    show mcsurp at right, stretch_in
 
     mc "Неужели этот день настал?! Я думал, меня будут до старости мариновать на этой ферме!"
 
@@ -70,7 +77,7 @@ label main_game:
 
     show mcsurp at right
 
-    show fther at left
+    show fther2 at left
 
     mc "Что, прямо сейчас могу сесть и ехать куда захочу?"
 
@@ -78,7 +85,7 @@ label main_game:
 
     hide mcsurp
 
-    show mc3 at right
+    show mc3 at right, stretch_in
 
     play sound "sfx/enginestart.wav"
 
@@ -86,8 +93,8 @@ label main_game:
 
     play music "music/driving1.ogg" fadeout 2.0
 
-    hide mc3 with dissolve
-    hide fther with dissolve
+    hide mc3
+    hide fther2
     scene bg_tosowth with fade
 
     "Вы поехали на стареньком грузовике в Южный, чтобы встретиться с Серго и передать ему посылку."
@@ -142,7 +149,7 @@ label afterfirstattack:
     "Я был немного ошарашен и волнительно спросил..."
 
     show lisa2 at right with dissolve
-    show mc2 at left with dissolve
+    show mc_2 at left with dissolve
 
     mc "Это вы мне?"
 
@@ -152,9 +159,9 @@ label afterfirstattack:
 
     mc "А что, собственно, за груз?"
 
-    hide lisa2 with dissolve
+    hide lisa2
 
-    show lisa at right with dissolve
+    show lisa at right, stretch_in
 
     lisa "Да какая тебе разница? Дельце плёвое, а заплачу я хорошо."
 
@@ -178,7 +185,7 @@ label lisaagree:
     play music "music/driving1.ogg" fadeout 1.0
 
     hide lisa with dissolve
-    hide mc2 with dissolve
+    hide mc_2 with dissolve
 
     "Вы поехали по соседним деревням. Сначала решили заехать в Заимку."
 
@@ -191,7 +198,7 @@ label lisarefuse:
     mc "Я, пожалуй, тоже поеду."
 
     hide lisa with dissolve
-    hide mc2 with dissolve
+    hide mc_2 with dissolve
 
     play music "music/driving1.ogg" fadeout 0.5
 
@@ -299,21 +306,37 @@ label sergo:
     elif LisaAgreed == "False":
         "Вы заехали в город и усердно ищете Серго. Спустя несколько секунд вы его находите."
 
+    show sergo at left with dissolve
+
     sergo "Кто здесь у нас? Надеюсь, по делу?"
+
+    show mchar at right with dissolve
 
     mc "День добрый! Вы Серго? Я приехал из Глухого и привёз вам этот пакет."
 
     sergo "Да, это я! А ты, видимо, сын Петра. Совсем уже взрослый, ездишь в одиночку…"
 
+    hide sergo
+
+    show sergo2 at left, stretch_in
+
     sergo "Опасные нынче времена: совсем бандиты распоясались. Еле добрался до Южного, двух охранников загубил. Наверное, это будет моя последняя поездка сюда."
 
     "В глубине души вы расстроились от этой новости, но не проявили этого на лице."
+
+    hide mchar
+
+    show mcsurp at right, stretch_in
 
     mc "Это мой первый рейс. Так что насчёт посылки?"
 
     sergo "Прыткий юноша. Давай посмотрим..."
 
     pause 1.0
+
+    hide sergo2
+
+    show sergo3 at left, stretch_in
 
     sergo "Товар, как всегда, отличный. Держи, это твоя награда за доставку."
 
@@ -323,11 +346,19 @@ label sergo:
 
     mc "Обязательно передам."
 
+    hide sergo3 with dissolve
+
     "Вы уже собирались ехать домой, как тут вас подзывает странный тип."
+
+    show farmerdi at left with dissolve
 
     unknown "Я вижу, у вас влиятельные знакомые, молодой человек. Не окажете ли Вы мне небольшую услугу?"
 
     mc "Посмотрим, а в чём, собственно, дело? И кто ты вообще такой?"
+
+    hide farmerdi
+
+    show farmerdi at left, stretch_in
 
     dick "Называй меня просто Фермер Дик. Я случайно застал Вашего знакомого, Серго, когда был здесь по делам."
 
@@ -342,13 +373,23 @@ label sergo:
     menu:
         "Согласиться":
             mc "Садись, показывай дорогу…"
+            hide farmerdi with dissolve
+            hide mcsurp with dissolve
             "Фермер сел в вашу машину и вы поехали в сторону заправки по его наводке."
-            jump secondenemy
+            if LisaAgreed == "False":
+                jump secondenemy
+            elif LisaAgreed == "True":
+                jump dickzapravka
 
         "Отказать":
             mc "Нет, слишком далеко ехать. Меня дома ждут."
+            hide farmerdi
+            show farmerdi at left, stretch_in
             dick "Ты сорвал самую крупную сделку в моей жизни! Видеть тебя не желаю!"
             mc "Спокойно, спокойно…"
+
+            hide farmerdi with dissolve
+            hide mcsurp with dissolve
 
             "Вы спокойно уходите, а Фермер продолжает ругаться на вас в след."
             "Странный какой-то тип. Не зря я ему отказал."
@@ -363,11 +404,18 @@ label dickzapravka:
 
     "Вы приехали к заправке. Фермер явно чем-то недоволен..."
 
+    show farmerdi at left, stretch_in
+
     dick "М-да… Можно было и побыстрее. Мне же ещё все бумаги надо найти и подготовить."
 
     "Вы не стали терпеть такой наглости и ответили ему достаточно дерзко."
 
+    show mcsurp at right, stretch_in
+
     mc "Плати деньги и проваливай из моей машины!"
+
+    hide farmerdi
+    show farmerdi at left, stretch_in
 
     dick "Обратно я найду себе другого водилу, порасторопнее."
 
@@ -375,9 +423,17 @@ label dickzapravka:
 
     mc "Ишь ты, не нравится ему, что так медленно! Для поездки в моей машине надо быть подготовленным! И вообще, мне не нравится твоя розовая курточка и твои…"
 
+    hide farmerdi with dissolve
+
     "Не дав закончить фразу - Фермер уходит."
 
+    hide mcsurp
+    
+    show mc3 at center, stretch_in
+
     mc "Да и пошёл он куда подальше! Надо бы уже домой возвращаться."
+
+    hide mc3 with dissolve
 
     if LisaAgreed == "True":
         jump felixmeet
@@ -391,6 +447,8 @@ label felixmeet:
     play music "audio/music/intensedialogue01.ogg" fadeout 1.0
 
     "Вы возвращались домой, как вдруг вам встретился странный персонаж..."
+
+    show felix with dissolve
 
     unknown "А вот и наш возмутитель спокойствия. Мои источники сообщают, что ты подвизался к Лисе в помощники, а она девушка щедрая..."
 
@@ -406,11 +464,26 @@ label felixmeet:
 
 label felixbeforefight:
 
+    hide felix
+
+    show felix at left
+
+    show mcsurp at right with dissolve
+
     mc "Да вы что? Откуда у меня такие деньги? И кто вы вообще такие?"
 
     "Видно, что незнакомца данный ответ не устраивает."
 
+    hide felix
+
+    show felix2 at left, stretch_in
+
     unknown "Придётся продать твою машину на запчасти, чтобы возместить нам моральный ущерб. Бей его!"
+
+    hide felix2
+    hide mcsurp
+
+    scene bg_felixfight
 
     play music "audio/music/battle1.ogg"
 
@@ -424,7 +497,6 @@ label felixbeforefight:
             return
 
         "Атаковать главаря":
-            scene bg_felixfight with dissolve
             $ RunFromFelix = "False"
             "Вы смело бросаетесь в атаку на главаря, игнорируя его охрану. Не смотря на то, что у бандитов больше опыта сражений силы слишком не равны и спустя некоторое время главарь сдаётся."
             jump felixafterfight
@@ -437,7 +509,15 @@ label felixbeforefight:
 
 label felixafterfight:
 
+    if RunFromFelix == "False":
+        show felix2 with dissolve
+
     unknown "Мы ещё встретимся, щенок! Попомни мои слова, ты пожалеешь, что связался с Феликсом!"
+
+    if RunFromFelix == False:
+        felix "Уходим!"
+        hide felix2 with dissolve
+
     mc "Обязательно встретимся, Феликс..."
 
     if RunFromFelix == "True":
@@ -450,9 +530,16 @@ label felixafterfight:
 
 label glukhoeburn:
 
-    scene bg_glburnaway with fade
+    scene black with fade
 
     stop music fadeout 1.0
+
+    if LisaAgreed == "False":
+        "Вы спокойно возвращались домой, гадая о чём же с вами хотел поговорить отец."
+    elif LisaAgreed == "True":
+        "Вы возвращались домой одновременно не понимая - что за чертовщина с вами произошла за столь короткое время. Но больше вас волновало о чём же хотел поговорить отец."
+
+    scene bg_glburnaway with dissolve
 
     "Однако при подъезде к Глухому вы замечаете дым."
     "Понимая что что-то не так - вы жмёте газ в пол."
@@ -488,7 +575,9 @@ label deadfather:
     mc "Если это так - ему не жить!"
     mc "Он бывает в баре Южного. Там я и начну поиски."
 
-    return
+    "Полностью раздосадованный вы уезжаете обратно в Южный."
+
+    jump sowthagain
 
 
 label dyingfather:
@@ -534,5 +623,14 @@ label dyingfather:
     mc "Мне больше нечего здесь делать. Я отправлюсь на поиски Бена."
     mc "Кто бы это ни был, надеюсь, он поможет мне обрести себя."
     mc "Может быть, в Южном слышали о нём?"
+
+    jump sowthagain
+
+label sowthagain:
+
+    scene bg_insowth with fade
+
+    if LisaAgreed == "True":
+        "Вы приехали в Южный и встретили местного бармена."
 
     return

@@ -22,7 +22,7 @@ screen name_input_screen():
             ] style "smaller_button" xalign 0.5
 
 style name_input_frame is default:
-    background Frame("gui/frame.png", 20, 20)  # или свой фон
+    background Frame("gui/frame.png", 20, 20)
     xsize 600
     ysize 300
 

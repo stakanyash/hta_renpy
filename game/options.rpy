@@ -18,6 +18,10 @@ define config.mouse = {
     "default": [("gui/cursor.png", 0, 0)]
 }
 
+init python:
+    style.say_dialogue.outlines = [(1, "#000000", 0, 0)]
+    style.say_label.outlines = [(2, "#836d14", 0, 0)]
+
 ## Определяет, показывать ли заголовок, данный выше, на экране главного меню.
 ## Установите на False, чтобы спрятать заголовок.
 
@@ -124,7 +128,7 @@ define config.window_hide_transition = Dissolve(.2)
 ## в то время как любая другая цифра — это количество символов, печатаемых в
 ## секунду.
 
-default preferences.text_cps = 0
+default preferences.text_cps = 30
 
 
 ## Стандартная задержка авточтения. Большие значения означают долгие ожидания, а
