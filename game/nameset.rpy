@@ -12,7 +12,7 @@ screen name_input_screen():
 
             text "Введите ваше имя:" size 36 xalign 0.5 color "#404040"
 
-            input value VariableInputValue("temp_name") length 20 pixel_width 500 align (0.5, 0.5):
+            input value VariableInputValue("temp_name") length 14 pixel_width 500 align (0.5, 0.5):
                 style "centered_input"
 
             textbutton "Подтвердить" activate_sound "audio/sfx/click.wav" action [

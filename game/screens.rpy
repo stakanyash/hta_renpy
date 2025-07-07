@@ -80,8 +80,6 @@ style frame:
     padding gui.frame_borders.padding
     background Frame("gui/frame.png", gui.frame_borders, tile=gui.frame_tile)
 
-
-
 ################################################################################
 ## Внутриигровые экраны
 ################################################################################
@@ -163,6 +161,7 @@ style say_dialogue:
     xpos gui.dialogue_xpos
     xsize gui.dialogue_width
     ypos gui.dialogue_ypos
+    line_spacing 10
 
     adjust_spacing False
 
@@ -365,6 +364,7 @@ screen main_menu():
 
     ## Оператор use включает отображение другого экрана в данном. Актуальное
     ## содержание главного меню находится на экране навигации.
+    
     use navigation
 
     if gui.show_name:
@@ -536,7 +536,7 @@ style game_menu_label:
 style game_menu_label_text:
     size gui.title_text_size
     color gui.accent_color
-    yalign 0.3
+    yalign 0.4
 
 style return_button:
     xpos gui.navigation_xpos
@@ -569,7 +569,6 @@ screen about():
             text _("Не является коммерческим и вообще не факт, что когда либо выйдет, ибо Бука хуюка.\n")
 
             text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
-
 
 style about_label is gui_label
 style about_label_text is gui_label_text
@@ -700,7 +699,7 @@ style page_label:
 style page_label_text:
     textalign 0.5
     layout "subtitle"
-    hover_color gui.hover_color
+    color "#ffcc00"
 
 style page_button:
     properties gui.button_properties("page_button")

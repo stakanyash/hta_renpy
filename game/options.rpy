@@ -19,7 +19,7 @@ define config.mouse = {
 }
 
 init python:
-    style.say_dialogue.outlines = [(1, "#000000", 0, 0)]
+    style.say_dialogue.outlines = [(1, "#202020", 0, 0)]
     style.say_label.outlines = [(2, "#836d14", 0, 0)]
 
 ## Определяет, показывать ли заголовок, данный выше, на экране главного меню.
@@ -30,7 +30,7 @@ define gui.show_name = False
 
 ## Версия игры.
 
-define config.version = "0.15"
+define config.version = "0.16"
 
 
 ## Текст, помещённый в экран "Об игре". Поместите текст между тройными скобками.

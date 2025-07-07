@@ -71,7 +71,7 @@ define gui.interface_text_font = "DejaVuSans.ttf"
 define gui.text_size = 33
 
 ## Размер имён персонажей.
-define gui.name_text_size = 40
+define gui.name_text_size = 38
 
 ## Размер текста в пользовательском интерфейсе.
 define gui.interface_text_size = 33
@@ -233,6 +233,7 @@ define gui.slot_button_height = 309
 define gui.slot_button_borders = Borders(15, 15, 15, 15)
 define gui.slot_button_text_size = 21
 define gui.slot_button_text_xalign = 0.5
+define gui.slot_button_text_ypos = 20
 define gui.slot_button_text_idle_color = gui.idle_small_color
 define gui.slot_button_text_selected_idle_color = gui.selected_color
 define gui.slot_button_text_selected_hover_color = gui.hover_color
