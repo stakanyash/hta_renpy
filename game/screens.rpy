@@ -9,10 +9,7 @@ init offset = -1
 ## Стили
 ################################################################################
 
-define startfade = Fade(1.5, 0.5, 1.5)
-
-transform scroll_credits:
-    linear 60.0 ypos -3000
+define startfade = Fade(1.0, 0.5, 1.0)
 
 style default:
     properties gui.text_properties()
@@ -83,6 +80,87 @@ style frame:
 ################################################################################
 ## Внутриигровые экраны
 ################################################################################
+
+screen boss_ui():
+
+    # Блок с кнопками слева
+    frame:
+        align (0.05, 0.98)  # слева по центру
+        padding (20, 40)
+        xsize 350
+
+        vbox:
+            spacing 10
+            xalign 0.5
+            text "Выберите действие:" xalign 0.5
+
+            if not attack_locked:
+                textbutton "Атаковать" action Function(attack_boss) xalign 0.5
+            else:
+                textbutton "Атаковать" xalign 0.5
+
+            if heal_count < max_heals:
+                textbutton "Лечиться" action Function(heal) xalign 0.5 sensitive player_hp < player_max_hp
+            else:
+                textbutton "Лечиться" xalign 0.5 sensitive False
+
+    # Блок с информацией справа внизу
+
+    add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
+    text "[boss_name]" yalign 0.883 xalign 0.85
+
+    fixed:
+        xalign 1.0215
+        yalign 0.9385
+        xmaximum 600
+        ysize 40
+
+        add get_boss_bar_image()
+
+    fixed:
+        xalign 0.98
+        yalign 0.1
+        add "gui/digits/HP.png"
+
+        hbox:
+            xalign 0.013
+            yalign 0.015
+            for digit_img in get_hp_digit_images(player_hp):
+                add digit_img
+
+        hbox:
+            xalign 0.037
+            yalign 0.03
+            if player_hp <= 0:
+                add get_lowheal()
+            elif "redlight_hp.png" in get_lowheal():
+                add get_lowheal() at blinking
+            else:
+                add get_lowheal()
+
+        hbox:
+            xalign 0.965
+            yalign 0.03
+            if get_remain_heals() <= 0:
+                add get_lowhealamount()
+            elif "redlight_fuel.png" in get_lowhealamount():
+                add get_lowhealamount() at blinking
+            else:
+                add get_lowhealamount()
+
+        hbox:
+            xalign 0.9861
+            yalign 0.015
+
+            for healing in get_heal_digit_images(get_remain_heals()):
+                add healing
+
+    # Логика выхода из экрана
+    if attack_locked:
+        timer .3 action SetVariable("attack_locked", False)
+
+    if boss_hp <= 0 or player_hp <= 0:
+        timer 0.1 action Return()
 
 
 ## Экран разговора #############################################################
@@ -244,7 +322,7 @@ screen quick_menu():
     ## Гарантирует, что оно появляется поверх других экранов.
     zorder 100
 
-    if quick_menu:
+    if not persistent._in_battle:
 
         hbox:
             style_prefix "quick"
@@ -252,7 +330,6 @@ screen quick_menu():
             xalign 0.5
             yalign 0.98
 
-            textbutton _("Назад") action Rollback()
             textbutton _("История") action ShowMenu('history')
             textbutton _("Пропуск") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Авто") action Preference("auto-forward", "toggle")
