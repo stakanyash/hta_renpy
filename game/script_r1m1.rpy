@@ -8,137 +8,16 @@ define felix = Character('Феликс', color="#FED11B")
 define dronn = Character('Дронн', color="#FED11B")
 define kventin = Character('Квентин', color="#FED11B")
 
-init python:
-    renpy.music.register_channel("sfx2", mixer="sfx", loop=True, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
-    renpy.music.register_channel("shoot", mixer="sfx", loop=False, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
-    renpy.music.register_channel("damage", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
-
-transform stretch_in:
-    yzoom 0.95
-    linear 0.1 yzoom 1.0
-
-transform fadeout_damage:
-    alpha 1.0
-    pause 0.5
-    linear 1.5 alpha 0.0
-
-transform blinking:
-    alpha 1.0
-    pause 0.3
-    alpha 0.0
-    pause 0.3
-    repeat
-
 image boss = "felixcar.png"
 
-init python:
-    import random
-    import math
-    from renpy.display.im import MatrixColor
-
-    def apply_boss_attack():
-        global player_hp, turn_count, player_max_hp
-        if turn_count > 0 and turn_count % 5 == 0:
-            damage = int(player_max_hp * 0.075)
-            player_hp = max(0, player_hp - damage)
-
-            renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
-
-            renpy.show("damage", at_list=[fadeout_damage])
-
-    def attack_boss():
-        global boss_hp, boss_max_hp, turn_count, attack_locked
-        if attack_locked:
-            return
-        attack_locked = True
-
-        if TakeGunFromZaimka == "True":
-            damage_percent = random.uniform(0.005, 0.02)
-        else:
-            damage_percent = random.uniform(0.005, 0.0175)
-        damage = int(boss_max_hp * damage_percent)
-
-        shootsound = random.randint(1, 13)
-
-        renpy.sound.play(f"audio/sfx/bullet{shootsound}.wav", channel="shoot")
-
-        renpy.show("boss", at_list=[center, stretch_in], what=None)
-        boss_hp = max(0, boss_hp - damage)
-        turn_count += 1
-        apply_boss_attack()
-        renpy.restart_interaction()
-
-    def heal():
-        global player_hp, heal_count, max_heals, player_max_hp
-        if heal_count < max_heals:
-            heal_per = random.uniform(0.01, 0.08)
-            heal_amount = int(player_max_hp * heal_per)
-            player_hp = min(player_hp + heal_amount, player_max_hp)
-            heal_count += 1
-
-            renpy.sound.play(f"audio/sfx/life.wav", channel="sound")
-        renpy.restart_interaction()
-
-    def get_boss_bar_image():
-        if boss_hp <= 0:
-            return "gui/bossbar/boss_bar_0.png"
-        percent = (boss_hp / boss_max_hp) * 100
-        level = math.ceil(percent / 10.0) * 10
-        level = max(10, min(100, level))
-        return f"gui/bossbar/boss_bar_{level}.png"
-
-    def hex_to_rgb(color_str):
-        color_str = color_str.lstrip("#")
-        return tuple(int(color_str[i:i+2], 16) / 255.0 for i in (0, 2, 4))
-
-    def tint_image(path, hex_color):
-        r, g, b = hex_to_rgb(hex_color)
-
-        matrix = [
-            r, 0, 0, 0, 0,
-            0, g, 0, 0, 0,
-            0, 0, b, 0, 0,
-            0, 0, 0, 1, 0,
-        ]
-
-        return MatrixColor(path, matrix)
-
-    def get_hp_digit_images(hp):
-        s = str(hp).rjust(4, "E")
-        percent = player_hp / float(player_max_hp)
-        color = "#00FF00" if percent >= 0.15 else "#FF0000"
-
-        return [tint_image(f"gui/digits/{c}.png", color) for c in s]
-
-    def get_heal_digit_images(heal):
-        s = str(heal).rjust(4, "E")
-        color = "#00aeff"
-
-        return [tint_image(f"gui/digits/{c}.png", color) for c in s]
-
-    def get_remain_heals():
-        return max_heals - heal_count
-
-    def get_lowheal():
-        percent = player_hp / float(player_max_hp)
-        level = math.ceil(percent / 10.0) * 10
-        level = max(10, min(100, level))
-        if percent < 0.15:
-            return f"gui/bossbar/redlight_hp.png"
-        else:
-            return f"gui/bossbar/redlight_blank.png"
-
-    def get_lowhealamount():
-        percent = get_remain_heals() / float(max_heals)
-        level = math.ceil(percent / 10.0) * 10
-        level = max(10, min(100, level))
-        if percent < 0.30:
-            return f"gui/bossbar/redlight_fuel.png"
-        else:
-            return f"gui/bossbar/redlight_blank.png"
-
-
 label main_game:
+
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
 
     play music "music/bio07unloop.ogg" fadeout 1.0
 
@@ -226,11 +105,11 @@ label main_game:
 
     menu:
         "Атаковать":
-            $ renpy.save("autosave_firstattack")
+            $ renpy.save("checkpoint-1")
             jump attack
 
         "Попытаться договориться":
-            $ renpy.save("autosave_firsttrytalk")
+            $ renpy.save("checkpoint-1")
             jump speak
 
 label attack:
@@ -292,12 +171,12 @@ label afterfirstattack:
 
     menu:
         "Согласиться":
-            $ renpy.save("autosave_lisaagreed")
+            $ renpy.save("checkpoint-2")
             $ LisaAgreed = "True"
             jump lisaagree
 
         "Отказать":
-            $ renpy.save("autosave_lisareject")
+            $ renpy.save("checkpoint-2")
             $ LisaAgreed = "False"
             jump lisarefuse
 
@@ -579,12 +458,12 @@ label felixmeet:
 
     menu:
         "Отдать деньги":
-            $ renpy.save("autosave_felixmeet")
+            $ renpy.save("checkpoint-3")
             "Вы бы с радостью отдали деньги, чтобы от вас отстали, но у вас нет 1000 монет."
             jump felixbeforefight
 
         "Отказать":
-            $ renpy.save("autosave_felixmeet")
+            $ renpy.save("checkpoint-3")
             jump felixbeforefight
 
 label felixbeforefight:
@@ -615,27 +494,62 @@ label felixbeforefight:
     "Начинается перестрелка. Но кого-же атаковать сперва? Их ведь трое. А может вообще дать дёру?"
 
     menu:
-        "Атаковать охрану":
-            "Вы начали атаковать охрану, однако не заметили как главарь заехал сзади и начал активно вас расстреливать."
-            scene black with dissolve
-            stop music fadeout 2.0
-            "Из-за своей неопытности вы не смогли сориентироваться и были повержены..."
-            mc "{cps=7}Я не смог... увернуться..."
-            window hide
-            pause 1.5
-            
-            jump titles
-
-        "Атаковать главаря":
+        "Атаковать":
+            $ _window_hide()
+            $ _game_menu_screen = None
+            $ _menu = False
+            $ config.keymap['save'] = []
+            $ config.keymap['load'] = []
+            $ config.keymap['game_menu'] = []
+            $ persistent._in_battle = True
             $ RunFromFelix = "False"
-            "Вы смело бросаетесь в атаку на главаря, игнорируя его охрану. Не смотря на то, что у бандитов больше опыта сражений силы слишком не равны и спустя некоторое время главарь сдаётся."
-            jump felixafterfight
+            image boss = "felixteam.png"
+            $ player_hp = 850
+            $ player_max_hp = player_hp
+            $ max_heals = 10
+            $ boss_hp = player_hp
+            $ damage_range = (0.007, 0.02)
+            $ turn_count = 0
+            $ boss_max_hp = boss_hp
+            $ heal_count = 0
+            $ remainheals = max_heals - heal_count
+            $ attack_locked = False
+            $ boss_name = "Бандиты"
+            scene bg_felix_nocars
+            show boss at center
+
+            while boss_hp > 0 and player_hp > 0:
+                call screen boss_ui
+
+            if player_hp <= 0:
+                $ _game_menu_screen = "save_screen"
+                $ _menu = True
+                $ config.keymap['save'] = ['save']
+                $ config.keymap['load'] = ['load']
+                $ config.keymap['game_menu'] = ['game_menu']
+                $ persistent._in_battle = False
+                
+                hide boss
+                play sound "sfx/explosion04.wav"
+                jump fightlost
+            else:
+                $ _game_menu_screen = "save_screen"
+                $ _menu = True
+                $ config.keymap['save'] = ['save']
+                $ config.keymap['load'] = ['load']
+                $ config.keymap['game_menu'] = ['game_menu']
+                $ persistent._in_battle = False
+
+                hide boss with dissolve
+
+                jump felixafterfight
 
         "Попытаться уехать":
             scene bg_felixrun with dissolve
             $ RunFromFelix = "True"
             "Вы пытаетесь уехать под шквалом огня. На удивление бандиты не бросаются за вами в погоню и спустя несколько секунд огонь прекращается."
             "Однако по рации вы слышите следующее..."
+            jump felixafterfight
 
 label felixafterfight:
 
@@ -869,13 +783,13 @@ label sowthagain:
         menu:
             "Ехать в Заимку":
                 $ TakeGunFromZaimka = "True"
-                $ renpy.save("autosave_gotokventin")
+                $ renpy.save("checkpoint-4")
                 play music "music/town2.ogg" fadeout 1.0
                 jump KventinZaimka
 
             "Ехать сразу к Феликсу":
                 $ TakeGunFromZaimka = "False"
-                $ renpy.save("autosave_gotofelix")
+                $ renpy.save("checkpoint-4")
                 jump felixbase
     elif LisaAgreed == "False":
 
@@ -989,7 +903,7 @@ label felixbase:
 
     felix "Ладно, хочешь сделать что-то хорошо - делай это сам. Посторонись!"
 
-    $ renpy.save("autosave_felixbasebattle")
+    $ renpy.save("checkpoint-5")
 
     "Вы снова начинаете бой с Феликсом."
 
@@ -1009,17 +923,21 @@ label felix_battle:
         $ player_max_hp = player_hp
         $ max_heals = 10
         $ boss_hp = player_hp * 2
+        $ damage_range = (0.005, 0.02)
     elif TakeGunFromZaimka == "False":
         $ player_hp = 500
         $ player_max_hp = 850
         $ max_heals = 20
         $ boss_hp = player_hp * 1.5
+        $ damage_range = (0.005, 0.0175)
     $ turn_count = 0
     $ boss_max_hp = boss_hp
     $ heal_count = 0
     $ remainheals = max_heals - heal_count
     $ attack_locked = False
     $ boss_name = "Феликс"
+    image boss = "felixcar.png"
+
 
     scene bg_felixbase
     show boss

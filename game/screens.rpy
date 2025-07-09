@@ -667,19 +667,21 @@ screen save():
 
     tag menu
 
-    use file_slots(_("Сохранить"))
+    use file_slots(_("Сохранить"), is_load=False)
 
 
 screen load():
 
     tag menu
 
-    use file_slots(_("Загрузить"))
+    use file_slots(_("Загрузить"), is_load=True)
 
 
-screen file_slots(title):
+screen file_slots(title, is_load=False):
 
-    default page_name_value = FilePageNameInputValue(pattern=_("{} страница"), auto=_("Автосохранения"), quick=_("Быстрые сохранения"))
+    default page_name_value = FilePageNameInputValue(pattern=_("{} страница"), auto=_("Автосохранения"), quick=_("Быстрые сохранения"), checkpoint=_("Чекпоинты"))
+
+    $ current_page = FileCurrentPage()
 
     use game_menu(title):
 
@@ -716,7 +718,11 @@ screen file_slots(title):
                     $ slot = i + 1
 
                     button:
-                        action FileAction(slot)
+                        if current_page == "checkpoint" and not is_load:
+                            action NullAction()
+                            sensitive False
+                        else:
+                            action FileAction(slot)
 
                         has vbox
 
@@ -737,13 +743,16 @@ screen file_slots(title):
                 xalign 0.51
                 yalign 0.92
 
+                $ current_page = FileCurrentPage()
+
                 hbox:
                     xalign 0.5
 
                     spacing gui.page_spacing
 
-                    textbutton _("<") activate_sound "audio/sfx/click.wav" action FilePagePrevious()
-                    key "save_page_prev" activate_sound "audio/sfx/click.wav" action FilePagePrevious()
+                    if current_page not in ("auto", "quick", "checkpoint"):
+                        textbutton _("<") activate_sound "audio/sfx/click.wav" action FilePagePrevious()
+                        key "save_page_prev" activate_sound "audio/sfx/click.wav" action FilePagePrevious()
 
                     if config.has_autosave:
                         textbutton _("{#auto_page}А") activate_sound "audio/sfx/click.wav" action FilePage("auto")
@@ -751,12 +760,15 @@ screen file_slots(title):
                     if config.has_quicksave:
                         textbutton _("{#quick_page}Б") activate_sound "audio/sfx/click.wav" action FilePage("quick")
 
+                    textbutton "Ч" activate_sound "audio/sfx/click.wav" action FilePage("checkpoint")
+
                     ## range(1, 10) задаёт диапазон значений от 1 до 9.
                     for page in range(1, 10):
                         textbutton "[page]" activate_sound "audio/sfx/click.wav" action FilePage(page)
 
-                    textbutton _(">") activate_sound "audio/sfx/click.wav" action FilePageNext()
-                    key "save_page_next" activate_sound "audio/sfx/click.wav" action FilePageNext()
+                    if current_page not in ("auto", "quick", "checkpoint"):
+                        textbutton _(">") activate_sound "audio/sfx/click.wav" action FilePageNext()
+                        key "save_page_next" activate_sound "audio/sfx/click.wav" action FilePageNext()
 
 
 style page_label is gui_label
