@@ -39,6 +39,9 @@ define config.version = "0.17"
 define gui.about = _p("""
 """)
 
+## by: stakan
+## Disabling autosave (replaced with checkpoints)
+
 define config.has_autosave = False
 
 

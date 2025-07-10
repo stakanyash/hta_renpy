@@ -26,7 +26,7 @@ init python:
 
         renpy.sound.play(f"audio/sfx/bullet{shootsound}.wav", channel="shoot")
 
-        renpy.show("boss", at_list=[center, stretch_in], what=None)
+        renpy.show(boss_image, at_list=[center, stretch_in], what=None)
         boss_hp = max(0, boss_hp - damage)
         turn_count += 1
         apply_boss_attack()

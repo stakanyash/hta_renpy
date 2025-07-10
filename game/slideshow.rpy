@@ -23,7 +23,7 @@
     pause 5.0
     "images/bg_insowth.jpg" with dissolve
     pause 5.0
-    "images/bg_troitkoe.jpg" with dissolve
+    "images/bg_troitckoe.jpg" with dissolve
     pause 5.0
     "images/bg_glukhoe.jpg" with dissolve
     pause 5.0
