@@ -527,7 +527,7 @@ label felixbeforefight:
                 $ config.keymap['game_menu'] = ['game_menu']
                 $ persistent._in_battle = False
                 
-                hide boss
+                hide felixteam
                 play sound "sfx/explosion04.wav"
                 jump fightlost
             else:
@@ -538,7 +538,7 @@ label felixbeforefight:
                 $ config.keymap['game_menu'] = ['game_menu']
                 $ persistent._in_battle = False
 
-                hide boss with dissolve
+                hide felixteam with dissolve
 
                 jump felixafterfight
 
@@ -962,7 +962,7 @@ label felix_battle:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
 
-        hide boss with dissolve
+        hide felixcar with dissolve
 
         play music "music/intensedialogue03.ogg" fadeout 1.0
         jump felixdefeated
