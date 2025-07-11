@@ -1,13 +1,3 @@
-define mc = Character("[player_name]", color="#FED11B")
-define father = Character('Отец', color="#FED11B")
-define lisa = Character('Лиса', color="#FED11B")
-define sergo = Character('Серго', color="#FED11B")
-define unknown = Character('???', color="#FED11B")
-define dick = Character('Фермер Дик', color="#FED11B")
-define felix = Character('Феликс', color="#FED11B")
-define dronn = Character('Дронн', color="#FED11B")
-define kventin = Character('Квентин', color="#FED11B")
-
 label main_game:
 
     $ _game_menu_screen = "save_screen"
