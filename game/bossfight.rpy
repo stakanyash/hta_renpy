@@ -6,7 +6,7 @@ init python:
     def apply_boss_attack():
         global player_hp, turn_count, player_max_hp
         if turn_count > 0 and turn_count % 5 == 0:
-            damage = int(player_max_hp * 0.075)
+            damage = int(player_max_hp * 0.07)
             player_hp = max(0, player_hp - damage)
 
             renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")

@@ -1059,4 +1059,10 @@ label leaver1m1toridzin:
 
     $ renpy.movie_cutscene("movies/leaver1m1/leaver1m1tom2_hornet.mp4")
 
-    return
+    play music "music/driving2.ogg"
+
+    $ TakeGunFromZaimka = "False"
+
+    pause 1.5
+
+    jump arrivetor1m2
