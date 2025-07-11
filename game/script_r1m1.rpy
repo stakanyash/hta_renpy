@@ -797,7 +797,7 @@ label sowthagain:
 
         dronn "Ты из Глухого?"
 
-#        show mc3 at right with dissolve
+        show mc3 at right with dissolve
 
         mc "..."
 
@@ -819,8 +819,12 @@ label sowthagain:
 
         "Вы уходите из бара и начинаете ехать в сторону соседнего региона, где находится Восточный."
 
+        hide dronn with dissolve
+        hide mc3 with dissolve
+        scene black with fade
+
         # Temporary "return" (replace with jump to Ridzin)
-        return
+        jump leaver1m1toridzin
 
 label KventinZaimka:
 
@@ -1047,6 +1051,22 @@ label felixdefeated:
 
     hide felix with dissolve
     hide mcsurp with dissolve
+    scene black with fade
 
-    # Add jump to Vaterland
+    # Temporary scene
+    jump leaver1m1tovaterland
+
+label leaver1m1tovaterland:
+
+    if TakeGunFromZaimka == "True":
+        $ renpy.movie_cutscene("movies/leaver1m1/leaver1m1tom2_storm.mp4")
+    elif TakeGunFromZaimka == "False":
+        $ renpy.movie_cutscene("movies/leaver1m1/leaver1m1tom2_hornet.mp4")
+
+    return
+
+label leaver1m1toridzin:
+
+    $ renpy.movie_cutscene("movies/leaver1m1/leaver1m1tom2_hornet.mp4")
+
     return
