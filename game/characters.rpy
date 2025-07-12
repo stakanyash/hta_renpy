@@ -12,3 +12,8 @@ define dick = Character('Фермер Дик', color="#FED11B")
 define felix = Character('Феликс', color="#FED11B")
 define dronn = Character('Дронн', color="#FED11B")
 define kventin = Character('Квентин', color="#FED11B")
+
+# r1m2 characters
+
+define hose = Character('Фермер Хосе', color="#FED11B")
+define oldwoman = Character('Старуха', color="#FED11B")

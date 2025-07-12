@@ -6,6 +6,7 @@ label main_game:
     $ config.keymap['load'] = ['load']
     $ config.keymap['game_menu'] = ['game_menu']
     $ persistent._in_battle = False
+    $ persistent.current_script = "r1m1"
 
     play music "music/bio07unloop.ogg" fadeout 1.0
 
