@@ -6,7 +6,6 @@ label main_game:
     $ config.keymap['load'] = ['load']
     $ config.keymap['game_menu'] = ['game_menu']
     $ persistent._in_battle = False
-    $ persistent.current_script = "r1m1"
 
     play music "music/bio07unloop.ogg" fadeout 1.0
 
@@ -1054,7 +1053,11 @@ label leaver1m1tovaterland:
     elif TakeGunFromZaimka == "False":
         $ renpy.movie_cutscene("movies/leaver1m1/leaver1m1tom2_hornet.mp4")
 
-    return
+    "Автор (дебил)" "Временный перенос в r1m2 из-за того, что r1m3 не начат."
+
+    pause 1.5
+
+    jump arrivetor1m2
 
 label leaver1m1toridzin:
 

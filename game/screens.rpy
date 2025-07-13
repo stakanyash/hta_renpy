@@ -4,12 +4,11 @@
 
 init offset = -1
 
-
 ################################################################################
 ## Стили
 ################################################################################
 
-define startfade = Fade(1.0, 0.5, 1.0)
+define startfade = Fade(1.0, 0.0, 1.0)
 
 style default:
     properties gui.text_properties()
@@ -87,12 +86,12 @@ screen boss_ui():
     frame:
         align (0.05, 0.98)  # слева по центру
         padding (20, 40)
-        xsize 350
+        xsize 450
 
         vbox:
             spacing 10
             xalign 0.5
-            text "Выберите действие:" xalign 0.5
+            text _("Выберите действие:") xalign 0.5
 
             if not attack_locked:
                 textbutton "Атаковать" action Function(attack_boss) xalign 0.5
@@ -455,7 +454,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer build" xpos 340 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer build 0.17.6 (250713b)" xpos 450 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 
 
@@ -642,8 +641,8 @@ screen about():
             label "[config.name!t]"
             text _("Версия [config.version!t]\n")
 
-            text _("Данный продукт является фанатской адаптацией игры Ex Machina/Hard Truck Apocalypse на движок для визуальных новелл RenPy.\n")
-            text _("Не является коммерческим и вообще не факт, что когда либо выйдет, ибо Бука хуюка.\n")
+            text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл RenPy.\n")
+            text _("Посвящен 20-летию оригинальной Ex Machina/Hard Truck Apocalypse.\n")
 
             text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
 

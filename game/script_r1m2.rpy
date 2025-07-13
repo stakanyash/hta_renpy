@@ -1,6 +1,4 @@
 label arrivetor1m2:
-
-    $ persistent.current_script = "r1m2"
     
     scene bg_ridzin with fade
 
@@ -86,12 +84,12 @@ label attackforloot:
 label defeateddefender:
 
     mc "Посмотрим, что в этом ящике..."
-    $ randomgun = random.randint(1, 3)
+    $ randomgun = random.randint(1, 9)
 
-    if randomgun == "1":
+    if 1 <= randomgun <= 3:
         "Вы нашли оружие \"Корд\"!"
         $ CurrentGun = "Kord"
-    elif randomgun == "2":
+    elif 4 <= randomgun <= 6:
         "Вы нашли оружие \"ПКТ\"!"
         $ CurrentGun = "PKT"
     else:
