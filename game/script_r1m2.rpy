@@ -39,12 +39,8 @@ label attackforloot:
     $ player_hp = 850
     $ player_max_hp = player_hp
     $ boss_hp = 400
-    if CurrentGun == "Storm":
-        $ damage_range = (0.005, 0.02)
-        $ max_heals = 10
-    else:
-        $ damage_range = (0.005, 0.0175)
-        $ max_heals = 20
+    $ damage_range = (0.005, 0.0175)
+    $ max_heals = 20
     $ turn_count = 0
     $ boss_max_hp = boss_hp
     $ heal_count = 0
@@ -99,11 +95,11 @@ label defeateddefender:
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."
 
+    play music "music/bar.ogg" fadeout 1.0
+
     jump movetovostochnoe
 
 label movetovostochnoe:
-
-    play music "music/bar.ogg" fadeout 1.0
 
     scene bg_vostochnoe with fade
 
@@ -210,6 +206,157 @@ label tomidgard:
 
     scene bg_midgard with fade
     play music "music/town3.ogg" fadeout 1.0
+
+    "Заехав в Мидгард вы стокнулись с явным негостеприимством..."
+
+    show scientist at left with dissolve
+
+    unknown "Из-под какого камня ты выполз? Сразу видно: невежественный фермер. Никто здесь с тобой даже разговаривать не будет."
+
+    show mcsurp at right with dissolve
+
+    mc "А в чём дело?"
+
+    hide scientist
+    show scientist at left, stretch_in
+
+    unknown "Как в чём? Да ты когда последний раз в зеркало смотрел? Наш город - последний оплот цивилизации в этом проклятом мире."
+    unknown "И всяким невежам здесь не место, особенно в музее, ещё экспонаты испортишь. Иди в бар, работяга."
+
+    "Вы явно возмущены от такого приёма, но всё же сдерживаетесь от ответной агрессии."
+
+    mc "Я думал, музей – для всех. Нести культуру в массы и всё такое."
+
+    unknown "Вообще-то, так оно и есть… Наверное, я погорячился. Слушай, нам как раз нужен такой дикарь, как ты, чтобы защитить транспорт."
+    unknown "Довезешь его в цельности и сохранности до Порто, тогда не только я закрою глаза на твоё происхождение, но и сам мэр руку пожмет."
+
+    hide mcsurp
+    show mc5 at right, stretch_in
+
+    mc "Совсем вы тут сдурели со своей цивилизацией. Нормальному человеку помочь не можете."
+    mc "Так и быть, доставлю ваш транспорт куда надо. Только потом не отвертишься, ответишь на все вопросы!"
+
+    unknown "Безусловно! Отправляйся к завхозу, у него пройдёшь инструктаж."
+
+    mc "Посмотрим, что у вас за завхоз."
+
+    hide mc5 with dissolve
+    hide scientist with dissolve
+
+    mc "Да что-же это такое! Куда не зайди, с ходу так и наровят выгнать или оскорбить! Фермер в Восточном, бабка в Локусе, а теперь ещё и он! Безобразие!"
+
+    "Вы идёте к завхозу."
+
+    show zavhoz at left with dissolve
+
+    zavhoz "Ты, что ли, доброволец? Хлипковат…"
+    zavhoz "Надеюсь, водить и стрелять ты умеешь."
+
+    show mchar at right with dissolve
+
+    mc "Справлюсь, не волнуйся. Говори, куда ехать."
+
+    zavhoz "Так, давай помечу на твоей карте пункт назначения и возможные места нападения бандитов."
+    zavhoz "..."
+    hide zavhoz
+    show zavhoz at left, stretch_in
+    zavhoz "Вот здесь - узкое место. Надо быть особенно бдительным."
+    zavhoz "Транспорт будет ехать сам. Твоя задача - обеспечить безопасность во время движения и доставку груза."
+    zavhoz "Ясно?"
+
+    mc "Предельно. Когда выступаем?"
+
+    zavhoz "Если готов, хоть сейчас. Можешь сделать покупки и установить необходимое оборудование."
+
+    mc "Можем выдвигаться прямо сейчас."
+
+    hide mchar with dissolve
+    hide zavhoz with dissolve
+
+    "Вы выдвигаетесь в сторону Порто."
+
+    jump toportoe1
+
+label toportoe1:
+
+    play music "music/driving1.ogg" fadeout 1.0
+
+    scene bg_toporto with fade
+
+    "Вы спокойно ехали в Порто и уже думали, что сопровождение окажется лёгкой прогулкой."
+
+    play music "music/alarm1.ogg"
+    scene bg_toportoe1 with dissolve
+
+    "Однако вы замечаете бандитскую машину."
+    "Вам ничего не остаётся, кроме как начать с ней бой."
+
+    play music "music/battle1.ogg"
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ boss_image = "to_porto_e1"
+    $ player_hp = 850
+    $ player_max_hp = player_hp
+    $ boss_hp = 850
+
+    if CurrentGun == "Storm":
+        $ damage_range = (0.005, 0.02)
+        $ max_heals = 10
+    elif CurrentGun == "PKT":
+        $ damage_range = (0.005, 0.0188)
+        $ max_heals = 20
+    elif CurrentGun == "Kord":
+        $ damage_range = (0.005, 0.0195)
+        $ max_heals = 15
+    else:
+        $ damage_range = (0.005, 0.0175)
+        $ max_heals = 20
+    
+    $ turn_count = 0
+    $ boss_max_hp = boss_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ boss_name = "Бандит"
+    scene bg_toporto
+    show to_porto_e1 at center
+
+    while boss_hp > 0 and player_hp > 0:
+        call screen boss_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        hide to_porto_e1
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+
+        play sound "sfx/explosion04.wav"
+        hide to_porto_e1 with dissolve
+
+        jump to_porto_e1_died
+
+label to_porto_e1_died:
+
+    play music "music/driving2.ogg" fadeout 1.0
 
     "Терпим."
 
