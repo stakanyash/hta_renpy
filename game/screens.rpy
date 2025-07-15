@@ -8,6 +8,8 @@ init offset = -1
 ## Стили
 ################################################################################
 
+# Fade when "New Game" pressed
+
 define startfade = Fade(1.0, 0.0, 1.0)
 
 style default:
@@ -80,11 +82,12 @@ style frame:
 ## Внутриигровые экраны
 ################################################################################
 
+## Screen for bossfight
+
 screen boss_ui():
 
-    # Блок с кнопками слева
     frame:
-        align (0.05, 0.98)  # слева по центру
+        align (0.05, 0.98)
         padding (20, 40)
         xsize 450
 
@@ -94,16 +97,14 @@ screen boss_ui():
             text _("Выберите действие:") xalign 0.5
 
             if not attack_locked:
-                textbutton "Атаковать" action Function(attack_boss) xalign 0.5
+                textbutton _("Атаковать") action Function(attack_boss) xalign 0.5
             else:
-                textbutton "Атаковать" xalign 0.5
+                textbutton _("Атаковать") xalign 0.5
 
             if heal_count < max_heals:
-                textbutton "Лечиться" action Function(heal) xalign 0.5 sensitive player_hp < player_max_hp
+                textbutton _("Лечиться") action Function(heal) xalign 0.5 sensitive player_hp < player_max_hp
             else:
-                textbutton "Лечиться" xalign 0.5 sensitive False
-
-    # Блок с информацией справа внизу
+                textbutton _("Лечиться") xalign 0.5 sensitive False
 
     add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
     text "[boss_name]" yalign 0.883 xalign 0.85
@@ -154,9 +155,8 @@ screen boss_ui():
             for healing in get_heal_digit_images(get_remain_heals()):
                 add healing
 
-    # Логика выхода из экрана
     if attack_locked:
-        timer .3 action SetVariable("attack_locked", False)
+        timer .35 action SetVariable("attack_locked", False)
 
     if boss_hp <= 0 or player_hp <= 0:
         timer 0.1 action Return()
@@ -454,7 +454,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer build 0.17.6 (250713b)" xpos 450 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer build 0.17.7 (250715с)" xpos 450 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 
 

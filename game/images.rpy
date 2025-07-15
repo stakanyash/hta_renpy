@@ -39,6 +39,18 @@ image bg_vostochnoe = "images/bgs/bg_vostochnoe.jpg"
 image bg_whatiffelix = "images/bgs/bg_whatiffelix.jpg"
 image bg_zaimka = "images/bgs/bg_zaimka.jpg"
 image bg_zapravka = "images/bgs/bg_zapravka.jpg"
+image bg_m3nolisa = "images/bgs/bg_m3nolisa.jpg"
+image bg_pesht = "images/bgs/bg_pesht.jpg"
+image bg_asgard = "images/bgs/bg_asgard.jpg"
+image bg_mvillage = "images/bgs/bg_mvillage.jpg"
+image bg_mvillage_fight = "images/bgs/bg_mvillage_fight.jpg"
+image bg_nearbridgeenemy = "images/bgs/bg_nearbridgeenemy.jpg"
+image bg_nearbridge = "images/bgs/bg_nearbridge.jpg"
+image bg_bandbridge = "images/bgs/bg_bandbridge.jpg"
+image bg_bandbridge_down = "images/bgs/bg_bandbridge_down.jpg"
+image bg_minin = "images/bgs/bg_minin.jpg"
+image bg_aivenhouse = "images/bgs/bg_aivenhouse.jpg"
+image bg_benradio = "images/bgs/bg_benradio.jpg"
 
 # Sprites
 
@@ -73,6 +85,8 @@ image sergo3 = "images/sprites/sergo3.png"
 image shon = "images/sprites/shon.png"
 image to_porto_e1 = "images/sprites/to_porto_e1.png"
 image zavhoz = "images/sprites/zavhoz.png"
+image pguard = "images/sprites/pguard.png"
+image seller = "images/sprites/seller.png"
 
 # Effects
 

@@ -21,3 +21,18 @@ label titles:
     $ renpy.movie_cutscene("movies/titles.mp4")
 
     return
+
+label fightlost:
+    scene black with fade
+    stop music fadeout 1.0
+    $ randomdeadmsg = random.randint(1, 4)
+    if randomdeadmsg == "1":
+        mc "{cps=7}Я не смог... увернуться...{/cps}"
+    elif randomdeadmsg == "2":
+        mc "{cps=7}Это конец...{/cps}"
+    elif randomdeadmsg == "3":
+        mc "{cps=7}Нееет! Нее...{/cps}"
+    else:
+        mc "{cps=7}Прощайте, братцы!{/cps}"
+    
+    return

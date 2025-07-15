@@ -1,3 +1,5 @@
+# characters.rpy - file for define characters
+
 # Main character
 define mc = Character("[player_name]", color="#FED11B")
 
@@ -22,3 +24,9 @@ define oldwoman = Character('Старуха', color="#FED11B")
 define zavhoz = Character('Завхоз', color="#FED11B")
 define shon = Character('Караванщик Шон', color="#FED11B")
 define ben = Character('Бен Дроссель', color="#FED11B")
+
+# Region 1, part 3
+
+define pguard = Character('Житель Арнольд', color="#FED11B")
+define seller = Character('Продавец Томаc', color="#FED11B")
+define miner = Character('Прораб Эдди', color="#FED11B")

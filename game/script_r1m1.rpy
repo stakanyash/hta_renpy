@@ -1,3 +1,5 @@
+# TODO: Make a video cutscene when leaving to r1m3
+
 label main_game:
 
     $ _game_menu_screen = "save_screen"
@@ -503,6 +505,7 @@ label felixbeforefight:
             $ remainheals = max_heals - heal_count
             $ attack_locked = False
             $ boss_name = "Бандиты"
+            $ bgname = "felixteam"
             scene bg_felix_nocars
             show felixteam at center
 
@@ -929,6 +932,7 @@ label felix_battle:
     $ attack_locked = False
     $ boss_name = "Феликс"
     $ boss_image = "felixcar"
+    $ bgname = "bg_felixbase"
 
 
     scene bg_felixbase
@@ -960,12 +964,6 @@ label felix_battle:
 
         play music "music/intensedialogue03.ogg" fadeout 1.0
         jump felixdefeated
-
-label fightlost:
-    scene black with fade
-    stop music fadeout 1.0
-    mc "{cps=7}Я не смог... увернуться...{/cps}"
-    return
 
 label felixdefeated:
 
@@ -1053,7 +1051,7 @@ label leaver1m1tovaterland:
     elif TakeGunFromZaimka == "False":
         $ renpy.movie_cutscene("movies/leaver1m1/leaver1m1tom2_hornet.mp4")
 
-    "Автор (дебил)" "Временный перенос в r1m2 из-за того, что r1m3 не начат."
+    "Автор (дебил)" "Временный перенос в r1m2 из-за того, что r1m3 (по нужной ветке) не начат."
 
     pause 1.5
 

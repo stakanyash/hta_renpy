@@ -1,8 +1,10 @@
 init python:
+    ## Imports
     import random
     import math
     from renpy.display.im import MatrixColor
-
+    
+    ## When boss attacks player (Damage = 7% of max player HP, damage sound, damage effect)
     def apply_boss_attack():
         global player_hp, turn_count, player_max_hp
         if turn_count > 0 and turn_count % 5 == 0:
@@ -11,8 +13,10 @@ init python:
 
             renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
 
-            renpy.show("damage", at_list=[fadeout_damage])
+            renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
+            renpy.show(bgname, at_list=[Shake(None, 1.0, dist=5)], what=None)
 
+    ## Player attacks (random damage percent (declarate in variable when fight starts), random attack sound)
     def attack_boss():
         global boss_hp, boss_max_hp, turn_count, attack_locked
         if attack_locked:
@@ -32,6 +36,7 @@ init python:
         apply_boss_attack()
         renpy.restart_interaction()
 
+    ## Player healing (from 1% to 8% of max player HP, heal sound)
     def heal():
         global player_hp, heal_count, max_heals, player_max_hp
         if heal_count < max_heals:
@@ -43,6 +48,7 @@ init python:
             renpy.sound.play(f"audio/sfx/life.wav", channel="sound")
         renpy.restart_interaction()
 
+    ## Boss health bar
     def get_boss_bar_image():
         if boss_hp <= 0:
             return "gui/bossbar/boss_bar_0.png"
@@ -50,7 +56,8 @@ init python:
         level = math.ceil(percent / 10.0) * 10
         level = max(10, min(100, level))
         return f"gui/bossbar/boss_bar_{level}.png"
-
+    
+    ## Functions for digits of HP and remaining heals
     def hex_to_rgb(color_str):
         color_str = color_str.lstrip("#")
         return tuple(int(color_str[i:i+2], 16) / 255.0 for i in (0, 2, 4))
@@ -82,7 +89,8 @@ init python:
 
     def get_remain_heals():
         return max_heals - heal_count
-
+    
+    ## Blinking effects when HP or heal amount is low
     def get_lowheal():
         percent = player_hp / float(player_max_hp)
         level = math.ceil(percent / 10.0) * 10
@@ -101,11 +109,13 @@ init python:
         else:
             return f"gui/bossbar/redlight_blank.png"
 
+## Fadeout effect for damage effect
 transform fadeout_damage:
     alpha 1.0
     pause 0.5
     linear 1.5 alpha 0.0
 
+## Blinking animation for get_lowheal() and get_lowhealamount() functions
 transform blinking:
     alpha 1.0
     pause 0.3

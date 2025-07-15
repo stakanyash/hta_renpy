@@ -1,3 +1,5 @@
+# TODO: Make a video cutscene when leaving to r1m1 and to r1m3
+
 # Without Lisa route
 
 label arrivetor1m2:
@@ -49,6 +51,7 @@ label attackforloot:
     $ remainheals = max_heals - heal_count
     $ attack_locked = False
     $ boss_name = "Бандит"
+    $ bgname = "bg_fightforloot"
     scene bg_fightforloot
     show lootdefender at center
 
@@ -97,12 +100,11 @@ label defeateddefender:
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."
 
-    play music "music/bar.ogg" fadeout 1.0
-
     jump movetovostochnoe
 
 label movetovostochnoe:
 
+    play music "music/bar.ogg" fadeout 1.0
     scene bg_vostochnoe with fade
 
     "Приехав в Восточное вы не знаете к кому обратиться."
@@ -307,6 +309,7 @@ label toportoe1:
     $ player_hp = 850
     $ player_max_hp = player_hp
     $ boss_hp = 850
+    $ bgname = "bg_toporto"
 
     if CurrentGun == "Storm":
         $ damage_range = (0.005, 0.02)
@@ -412,6 +415,10 @@ label backtomidgard:
     hide scientist with dissolve
     hide mchar with dissolve
 
+    "Однако перед тем, как отправиться к Бену вы решили купить себе новую машину."
+    
+    mc "Вот теперь можно ехать."
+
     jump firstmeetben
 
 label firstmeetben:
@@ -516,7 +523,6 @@ label firstmeetben:
     hide ben3 with dissolve
     hide mc5 with dissolve
 
-    # Temporary
-    return
+    jump vaterlandfirst
 
 # With Lisa route
