@@ -3,22 +3,29 @@ init python:
     import random
     import math
     from renpy.display.im import MatrixColor
+
+    boss_damage_multiplier = 0.0
+    consecutive_player_hits = 0
     
-    ## When boss attacks player (Damage = 7% of max player HP, damage sound, damage effect)
+    ## When boss attacks player (Damage += 3% of player max HP if he missed, damage sound, damage effect)
     def apply_boss_attack():
-        global player_hp, turn_count, player_max_hp
-        if turn_count > 0 and turn_count % 5 == 0:
-            damage = int(player_max_hp * 0.07)
+        global player_hp, turn_count, player_max_hp, boss_damage_multiplier, consecutive_player_hits
+        if turn_count > 0 and turn_count % 5 == 0 and boss_damage_multiplier > 0:
+            damage = int(player_max_hp * boss_damage_multiplier)
             player_hp = max(0, player_hp - damage)
 
             renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
 
-            renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
-            renpy.show(bgname, at_list=[Shake(None, 1.0, dist=5)], what=None)
+            renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=7)])
+            renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
 
-    ## Player attacks (random damage percent (declarate in variable when fight starts), random attack sound)
+            boss_damage_multiplier = 0.0
+        elif turn_count > 0 and turn_count % 5 == 0 and boss_damage_multiplier <= 0:
+            renpy.sound.play(f"audio/sfx/shoot_miss02.ogg", channel="missshot")
+
+    ## Player attacks (random damage percent (declarate in variable when fight starts), random attack sound, 70% chance to hit, if player hits the target 10 times in a row he gets 7% damage)
     def attack_boss():
-        global boss_hp, boss_max_hp, turn_count, attack_locked
+        global boss_hp, boss_max_hp, turn_count, attack_locked, boss_damage_multiplier, consecutive_player_hits, player_hp, player_max_hp
         if attack_locked:
             return
         attack_locked = True
@@ -26,12 +33,31 @@ init python:
         damage_percent = random.uniform(*damage_range)
         damage = int(boss_max_hp * damage_percent)
 
-        shootsound = random.randint(1, 13)
+        attackchance = random.randint(1, 10)
 
-        renpy.sound.play(f"audio/sfx/bullet{shootsound}.wav", channel="shoot")
+        if 1 <= attackchance <= 7:
+            shootsound = random.randint(1, 13)
 
-        renpy.show(boss_image, at_list=[center, stretch_in], what=None)
-        boss_hp = max(0, boss_hp - damage)
+            renpy.sound.play(f"audio/sfx/bullet{shootsound}.wav", channel="shoot")
+            renpy.show(boss_image, at_list=[center, stretch_in], what=None)
+            boss_hp = max(0, boss_hp - damage)
+            consecutive_player_hits += 1
+
+            if consecutive_player_hits >= 10:
+                penalty_damage = int(player_max_hp * 0.1)
+                player_hp = max(0, player_hp - penalty_damage)
+
+                renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
+                renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=7)])
+                renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
+
+                consecutive_player_hits = 0
+                boss_damage_multiplier = 0.0
+        else:
+            renpy.sound.play(f"audio/sfx/shoot_miss01.ogg", channel="missshot")
+            boss_damage_multiplier += 0.03
+            consecutive_player_hits = 0
+        
         turn_count += 1
         apply_boss_attack()
         renpy.restart_interaction()
@@ -40,7 +66,7 @@ init python:
     def heal():
         global player_hp, heal_count, max_heals, player_max_hp
         if heal_count < max_heals:
-            heal_per = random.uniform(0.01, 0.08)
+            heal_per = random.uniform(0.02, 0.1)
             heal_amount = int(player_max_hp * heal_per)
             player_hp = min(player_hp + heal_amount, player_max_hp)
             heal_count += 1

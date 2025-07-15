@@ -88,6 +88,17 @@ image zavhoz = "images/sprites/zavhoz.png"
 image pguard = "images/sprites/pguard.png"
 image seller = "images/sprites/seller.png"
 
+# Tutorial
+
+image tr_fight = "images/tutorial/tr_fight.jpg"
+image tr_fight_hp = "images/tutorial/tr_fight_hp.jpg"
+image tr_fight_heal = "images/tutorial/tr_fight_heal.jpg"
+image tr_fight_action = "images/tutorial/tr_fight_action.jpg"
+image tr_fight_enemyhp = "images/tutorial/tr_fight_enemyhp.jpg"
+image tr_fight_healbtn = "images/tutorial/tr_fight_healbtn.jpg"
+image tr_fight_attack = "images/tutorial/tr_fight_attack.jpg"
+image tr_checkpoints = "images/tutorial/tr_checkpoints.jpg"
+
 # Effects
 
 image damage = "images/effects/damage.png"

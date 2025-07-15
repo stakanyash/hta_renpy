@@ -123,8 +123,8 @@ screen boss_ui():
         add "gui/digits/HP.png"
 
         hbox:
-            xalign 0.013
-            yalign 0.015
+            xalign 0.0134
+            yalign 0.0136
             for digit_img in get_hp_digit_images(player_hp):
                 add digit_img
 
@@ -160,6 +160,36 @@ screen boss_ui():
 
     if boss_hp <= 0 or player_hp <= 0:
         timer 0.1 action Return()
+
+# Tutorial asking
+
+screen tutorial_prompt_call():
+
+    modal True
+    zorder 100
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (40, 40)  # Внутренние отступы для текста и кнопок
+
+        xsize 900
+        ysize 380
+
+        vbox:
+            spacing 20
+            xalign 0.5
+            yalign 0.5
+            text "Кажется, вы в первый раз играете в\nEx Machina RenPy.\n\nХотите пройти обучение?" size 36 textalign 0.5 outlines [(2, "#858585", 0, 0), (1, "#404040", 0, 0)]
+
+            hbox:
+                spacing 200
+                xalign 0.5
+                ypos 30
+                textbutton "Да" activate_sound "audio/sfx/click.wav" action Return(True)
+                textbutton "Нет" activate_sound "audio/sfx/click.wav" action Return(False)
+
+
 
 
 ## Экран разговора #############################################################
@@ -454,7 +484,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer build 0.17.7 (250715с)" xpos 450 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer build 0.18.0 (250716d)" xpos 450 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 
 

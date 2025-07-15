@@ -505,7 +505,7 @@ label felixbeforefight:
             $ remainheals = max_heals - heal_count
             $ attack_locked = False
             $ boss_name = "Бандиты"
-            $ bgname = "felixteam"
+            $ bgname = "bg_felix_nocars"
             scene bg_felix_nocars
             show felixteam at center
 

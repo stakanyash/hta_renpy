@@ -5,6 +5,7 @@ init python:
     renpy.music.register_channel("sfx2", mixer="sfx", loop=True, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("shoot", mixer="sfx", loop=False, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("damage", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
+    renpy.music.register_channel("missshot", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
 
 transform stretch_in:
     yzoom 0.95
@@ -15,6 +16,111 @@ label start:
     $ player_name = "Вы"
 
     call screen name_input_screen
+
+label tutorial_check:
+    init python:
+        import os
+
+        def tutorial_file_exists():
+            return os.path.exists("htafirstrun")
+
+        def create_tutorial_flag():
+            with open("htafirstrun", "w") as f:
+                f.write("shown")
+
+    if not tutorial_file_exists():
+        $ need_tutorial = renpy.call_screen("tutorial_prompt_call")
+        $ create_tutorial_flag()
+
+        if need_tutorial:
+            jump tutorial
+        
+    jump main_game
+
+label tutorial:
+
+#    play music "music/bio06.ogg" fadeout 1.0
+
+    scene bg_glukhoe with fade
+
+    show mc3 at center
+
+    "Добро пожаловать в Ex Machina/Hard Truck Apocalypse RenPy."
+    "Данная игра является фанатским переносом сюжета оригинальной Ex Machina/Hard Truck Apocalypse на движок RenPy."
+
+    "Данная игра очень сильно отличается от оригинальной Ex Machina/Hard Truck Apocalypse. Так что есть с чем ознакомиться."
+
+    "Начнём с того, что в данной игре вы не управляете грузовиком, а лишь следуете по сюжету игры."
+    "Текст, который вы сейчас читаете - расположен на диалоговом окне. Все разговоры, мысли и описания происходящего будут появляться именно здесь."
+    mc "Сейчас появилось окно с именем персонажа. Так вы будете знать, с кем говорите."
+    unknown "Незнакомцы будут помечены следующим именем."
+
+    "В данной игре есть выборы, которые могут влиять на события игры."
+    "Выглядеть они будут примерно так:"
+
+    menu:
+        "Вариант 1":
+            jump tutorial_continue
+
+        "Вариант 2":
+            jump tutorial_continue
+
+label tutorial_continue:
+    "Поэтому обдумывайте каждый свой выбор, ведь он может повлиять на доступ к событиям или концовку."
+
+    "Так-же в данной игре реализована система боёв."
+    scene tr_fight with fade
+    pause 2.0
+    "Перед вами пример интерфейса игры в состоянии боя."
+    scene tr_fight_hp with dissolve
+    pause 0.5
+    "В левом верхнем углу отображается ваше здоровье."
+    scene tr_fight_heal with dissolve
+    pause 0.5
+    "В правом верхнем углу количество оставшихся единиц лечения."
+    scene tr_fight_action with dissolve
+    pause 0.5
+    "Кнопки атаки и лечения расположены в левом нижнем углу."
+    scene tr_fight_enemyhp with dissolve
+    pause 0.5
+    "В правом нижнем углу - здоровье противника и его имя."
+    scene tr_fight_attack with dissolve
+    pause 0.5
+    "Для атаки нажмайте кнопку \"Атаковать\"."
+    scene tr_fight_healbtn with dissolve
+    pause 0.5
+    "Для лечения нажимайте кнопку \"Лечиться\"."
+    scene tr_fight with dissolve
+    pause 0.5
+    "Атака имеет 70%% шанс нанесения урона по противнику. Урон варьируется в зависимости от оружия, которое установлено на вашем грузовике. Оружие можно улучшить по сюжету."
+    "Например: стандартное оружие \"Шершень\" имеет случайный урон от 0.5%% до 1.75%% от максимального здоровья противника."
+    "Лечение случайным образом восстанавливает вам от 2%% до 10%% от вашего максимального здоровья."
+
+    scene tr_fight at Shake(None, 1.0, dist=7)
+    $ renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=7)])
+    $ renpy.sound.play(f"audio/sfx/tutorial_damage.ogg", channel="damage")
+
+    "Получение урона отнимает у вас 3%% от вашего максимального здоровья за каждый промах. Урон наносится после 5 попыток атаковать противника при наличии промаха."
+    "Т.е. если вы за 5 атак промажете 2 раза, то урон будет 6%%. Если же вам повезёт не промахнуться 10 раз подряд, то будет нанесён фиксированный урон в 7%%."
+    "Поэтому победить противника без лечения - не получится."
+    "На время боя отключена возможность сохранения, загрузки сохранений и выхода в меню. Но об этом далее..."
+
+    scene tr_checkpoints with fade
+
+    "В игре реализована механика \"чекпоинтов\", которые заменяют собой встроенные в движок автосохранения."
+    "Чекпоинты создаются в критически важные моменты игры. Например: после выбора или перед боем."
+    "Для чекпоинтов имеется всего 6 слотов, которые будут перезаписываться, так что не забывайте делать ручные сохранения."
+    "Сделать это можно как в главном меню, так и с помощью нижних кнопок в окне диалога."
+    "Делать ручные сохранения во вкладку \"чекпоинтов\" нельзя."
+
+    scene bg_glukhoe with fade
+    show mc3 at center
+
+    "Теперь вы готовы. Осталось одно - выжить в этом мире."
+    "Удачи. Она вам пригодится."
+
+    jump main_game
+
 
 label titles:
 

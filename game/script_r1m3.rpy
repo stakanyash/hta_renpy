@@ -310,9 +310,11 @@ label BOOOM:
 
     mc "Ну что-же пора браться за дело..."
 
-    $ renpy.movie_cutscene("movies/r1m3/bridge_destroy.mkv")
+    stop sound
 
-    scene bg_bandbridge_down with dissolve
+    $ renpy.movie_cutscene("movies/r1m3/bridge_destroy.mp4")
+
+    scene bg_bandbridge_down
 
     play music "music/driving2.ogg"
 
@@ -335,6 +337,9 @@ label peshtallow:
     mc "Больше бандиты этой дорогой не пройдут."
 
     "Вам открыли ворота и вы проехали через Пешт."
+
+    hide pguard
+    hide mc5
 
     jump minin1st_nl
 
