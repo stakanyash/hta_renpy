@@ -1,3 +1,5 @@
+# Without Lisa route
+
 label arrivetor1m2:
     
     scene bg_ridzin with fade
@@ -196,7 +198,8 @@ label tolocus:
     mc "Спасибо огромное..."
     hide oldwoman with dissolve
 
-    mc "Странная она какая-то... Ладно, надо ехать в Мидгард."
+    mc "Странная она какая-то..."
+    mc "Ладно, надо ехать в Мидгард."
 
     hide mc6 with dissolve
 
@@ -352,13 +355,168 @@ label toportoe1:
         play sound "sfx/explosion04.wav"
         hide to_porto_e1 with dissolve
 
-        jump to_porto_e1_died
+        jump portoa
 
-label to_porto_e1_died:
+label portoa:
 
-    play music "music/driving2.ogg" fadeout 1.0
+    play music "music/bar.ogg" fadeout 1.0
 
-    "Терпим."
+    scene bg_porto with fade
+
+    "Далее по пути вам больше никого не встретилось и вы спокойно доехали до Порто."
+
+    show shon at right with dissolve
+
+    shon "Спасибо, мил человек! Мы давно ждем этот груз, а то бандиты совсем озверели, все проходы перекрыли."
+
+    show mc4 at left with dissolve
+
+    mc "Рад был помочь."
+
+    pause 1.0
+
+    shon "Мы разгрузились. Ещё немного, и поедем обратно. Как будешь готов - свистни."
+
+    mc "Отправляемся прямо сейчас!"
+
+    hide mc4 with dissolve
+    hide shon with dissolve
+
+    jump backtomidgard
+
+label backtomidgard:
+
+    scene bg_midgard with fade
+
+    play music "music/town3.ogg" fadeout 1.0
+
+    "Обратно до Мидгарда вы добрались без каких-либо проишествий."
+
+    show scientist at left with dissolve
+
+    unknown "Кто помогает городу жить, тому и мы поможем. Что тебе было нужно?"
+
+    show mchar at right with dissolve
+
+    mc "Мне сказали, что здесь я смогу найти Бена Дросселя."
+
+    unknown "Бена, говоришь?"
+    unknown "..."
+    hide scientist
+    show scientist at left, stretch_in
+    unknown "Знаем такого. Он построил себе хижину неподалеку, там и живет."
+    unknown "Давай помечу на твоей карте."
+
+    mc "Спасибо. Наконец-то я узнаю, кто я такой."
+
+    hide scientist with dissolve
+    hide mchar with dissolve
+
+    jump firstmeetben
+
+label firstmeetben:
+
+    play music "music/bio07unloop.ogg" fadeout 1.0
+    scene bg_ben with fade
+
+    "Приехав к дому Бена вы заметили старика на балконе."
+
+    mc "Это явно Бен..."
+
+    play music "music/quietdialogue01.ogg" fadeout 1.0
+
+    show ben1 at left with dissolve
+
+    ben "Айвен, неужели ты вернулся!?"
+    ben "..."
+    ben "Прости, молодой человек, обознался. Глаза уже не те…"
+    ben "Что привело тебя ко мне?"
+
+    show mchar at right with dissolve
+
+    mc "Мой посёлок сожгли. Перед смертью мой отец сказал, что я приёмный сын, и сказал найти тебя."
+    mc "Вот вещи моего настоящего отца. И вот я стою перед тобой и не знаю, что делать дальше."
+
+    hide ben1
+    show ben2 at left, stretch_in
+
+    ben "Ёшкин кот! Неужели нашёлся!"
+
+    hide mchar
+    show mcsurp at right, stretch_in
+
+    mc "Кто нашёлся?"
+
+    ben "Смотри, как похож. Не зря я обознался."
+
+    "Вы перестаёте что либо понимать."
+
+    mc "Помедленнее! Объясни как следует."
+
+    ben "Прости уж меня, что так тороплюсь. Такие дела творятся."
+    hide ben2
+    show ben3 at left, stretch_in
+    ben "Слушай же: твой отец, настоящий, я имею в виду, – великий человек! Его имя – Айвен Го."
+    ben "Он объехал весь мир, открывая новые земли и технологии."
+    ben "Это он во многом предопределил весь путь развития человечества за последние, дай подумать, 30 лет!"
+
+    hide mcsurp
+    show mc5 at right, stretch_in
+
+    mc "Так прямо и предопределил…"
+
+    ben "Да-да! Именно! Его открытия помогли людям встать на ноги."
+    ben "Мир, который ты видишь вокруг, стал таким совсем недавно. Ещё совсем недавно мы жались по своим домишкам, в темноте, без электричества, без связи."
+    ben "Каждый был уверен, что в мире, кроме него, никого нет. А ты знал, что это твой отец открыл людям радио?"
+
+    mc "Вообще-то, до этого момента я ничего не знал о своем отце."
+
+    hide ben3
+    show ben2 at left, stretch_in
+
+    ben "Ах, да. Ну, так знай же теперь, каким великим человеком он был!"
+
+    hide mc5
+    show mcsurp at right, stretch_in
+
+    mc "Что же случилось с ним? Он погиб?"
+
+    ben "В том-то и дело, что никто не знает."
+    hide ben2
+    show ben3 at left, stretch_in
+    ben "Однажды он просто пропал. Притом что его хорошо знали, и никто бы не осмелился поднять руку на него."
+    ben "И к тому же Айвена было очень непросто победить в бою. Он сделал из своей машины просто чудо!"
+
+    mc "Значит, отец может быть ещё жив?"
+
+    ben "Столько времени прошло. Не стоит зря обнадёживаться."
+
+    hide mcsurp
+    show mc5 at right, stretch_in
+
+    mc "Но ты говоришь, отец был лучшим! Он знал, что его ожидает опасное путешествие, и оставил след, по которому я смогу найти и спасти его."
+    mc "Это загадочное письмо. И странный диск - они приведут меня к цели!"
+
+    hide ben3
+    show ben1 at left, stretch_in
+
+    ben "Молодёжь…"
+    ben "Когда-то и я был таким. Ты прав, не будем терять надежду. Я слишком стар для странствий, а тебе, я вижу, всё по плечу."
+
+    mc "С чего же начать поиски?"
+
+    ben "Твой диск непростой. Это что-то вроде книги. Правда, прочесть её будет сложно."
+    ben "Раз твой отец эту книгу записал, значит, у него дома должно быть устройство, чтобы её прочесть. Кажется, его тайное убежище было где-то за Пештом, на северо-востоке."
+    hide ben1
+    show ben3 at left, stretch_in
+    ben "Поезжай туда, а я пока пороюсь в книгах. Может быть, придумаю что-нибудь ещё. В добрый путь."
+
+    mc "Отправляюсь немедленно! Спасибо за помощь."
+
+    hide ben3 with dissolve
+    hide mc5 with dissolve
 
     # Temporary
     return
+
+# With Lisa route
