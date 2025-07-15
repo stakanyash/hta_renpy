@@ -19,7 +19,7 @@ define config.mouse = {
 }
 
 init python:
-    style.say_dialogue.outlines = [(1, "#202020", 0, 0)]
+    style.say_dialogue.outlines = [(2, "#858585", 0, 0), (1, "#404040", 0, 0)]
     style.say_label.outlines = [(2, "#836d14", 0, 0)]
 
 ## Определяет, показывать ли заголовок, данный выше, на экране главного меню.
