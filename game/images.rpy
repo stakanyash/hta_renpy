@@ -73,3 +73,7 @@ image sergo3 = "images/sprites/sergo3.png"
 image shon = "images/sprites/shon.png"
 image to_porto_e1 = "images/sprites/to_porto_e1.png"
 image zavhoz = "images/sprites/zavhoz.png"
+
+# Effects
+
+image damage = "images/effects/damage.png"
