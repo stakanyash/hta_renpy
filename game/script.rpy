@@ -26,7 +26,7 @@ label tutorial_check:
 
         def create_tutorial_flag():
             with open("htafirstrun", "w") as f:
-                f.write("shown")
+                f.write("Warm legs.")
 
     if not tutorial_file_exists():
         $ need_tutorial = renpy.call_screen("tutorial_prompt_call")
@@ -39,7 +39,7 @@ label tutorial_check:
 
 label tutorial:
 
-#    play music "music/bio06.ogg" fadeout 1.0
+    play music "music/bio06.ogg" fadeout 1.0
 
     scene bg_glukhoe with fade
 
@@ -101,7 +101,7 @@ label tutorial_continue:
     $ renpy.sound.play(f"audio/sfx/tutorial_damage.ogg", channel="damage")
 
     "Получение урона отнимает у вас 3%% от вашего максимального здоровья за каждый промах. Урон наносится после 5 попыток атаковать противника при наличии промаха."
-    "Т.е. если вы за 5 атак промажете 2 раза, то урон будет 6%%. Если же вам повезёт не промахнуться 10 раз подряд, то будет нанесён фиксированный урон в 7%%."
+    "Т.е. если вы за 5 атак промажете 2 раза, то урон будет 6%%. Если же вам повезёт не промахнуться 10 раз подряд, то будет нанесён фиксированный урон в 7%% от вашего максимального здоровья."
     "Поэтому победить противника без лечения - не получится."
     "На время боя отключена возможность сохранения, загрузки сохранений и выхода в меню. Но об этом далее..."
 
