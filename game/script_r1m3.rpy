@@ -785,27 +785,27 @@ label minin3rd_nl:
                                     weapon_text = ", ".join(affordable_weapons)
                                 "Ваших средств достаточно на: [weapon_text]."
                                 menu:
-                                    "Шершень":
+                                    "Шершень" if elprice - 11000 >= 280:
                                         "Вы установили второе оружие \"Шершень\" и отдали 280 монет."
                                         $ SecondGun = "Hornet" 
                                         $ renpy.save("checkpoint-1")
 
-                                    "Спектр":
+                                    "Спектр" if elprice - 11000 >= 590:
                                         "Вы установили второе оружие \"Спектр\" и отдали 590 монет."  
                                         $ SecondGun = "Specter" 
                                         $ renpy.save("checkpoint-1")
 
-                                    "ПКТ":
+                                    "ПКТ" if elprice - 11000 >= 1670:
                                         "Вы установили второе оружие \"ПКТ\" и отдали 1670 монет."  
                                         $ SecondGun = "PKT" 
                                         $ renpy.save("checkpoint-1")
 
-                                    "Шторм":
+                                    "Шторм" if elprice - 11000 >= 3450:
                                         "Вы установили второе оружие \"Шторм\" и отдали 3450 монет."
                                         $ SecondGun = "Storm" 
                                         $ renpy.save("checkpoint-1")
 
-                                    "Корд":
+                                    "Корд" if elprice - 11000 >= 3680:
                                         "Вы установили второе оружие \"Корд\" и отдали 3680 монет."
                                         $ SecondGun = "Kord" 
                                         $ renpy.save("checkpoint-1")
