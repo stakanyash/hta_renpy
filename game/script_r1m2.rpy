@@ -39,24 +39,25 @@ label attackforloot:
     $ config.keymap['load'] = []
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
-    $ boss_image = "lootdefender"
+    $ enemy_image = "lootdefender"
     $ player_hp = 850
     $ player_max_hp = player_hp
-    $ boss_hp = 400
+    $ enemy_hp = 400
     $ damage_range = (0.005, 0.0175)
     $ max_heals = 20
     $ turn_count = 0
-    $ boss_max_hp = boss_hp
+    $ enemy_max_hp = enemy_hp
     $ heal_count = 0
     $ remainheals = max_heals - heal_count
     $ attack_locked = False
-    $ boss_name = "Бандит"
+    $ enemy_name = "Бандит"
     $ bgname = "bg_fightforloot"
+    $ EnemyType = "Regular"
     scene bg_fightforloot
     show lootdefender at center
 
-    while boss_hp > 0 and player_hp > 0:
-        call screen boss_ui
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
 
     if player_hp <= 0:
         $ _game_menu_screen = "save_screen"
@@ -294,6 +295,8 @@ label toportoe1:
     scene bg_toportoe1 with dissolve
 
     "Однако вы замечаете бандитскую машину."
+    $ renpy.save("checkpoint-1")
+    $ renpy.notify("Игра сохранена.")
     "Вам ничего не остаётся, кроме как начать с ней бой."
 
     play music "music/battle1.ogg"
@@ -305,14 +308,14 @@ label toportoe1:
     $ config.keymap['load'] = []
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
-    $ boss_image = "to_porto_e1"
+    $ enemy_image = "to_porto_e1"
     $ player_hp = 850
     $ player_max_hp = player_hp
-    $ boss_hp = 850
+    $ enemy_hp = 850
     $ bgname = "bg_toporto"
 
     if CurrentGun == "Storm":
-        $ damage_range = (0.005, 0.02)
+        $ damage_range = (0.008, 0.02)
         $ max_heals = 10
     elif CurrentGun == "PKT":
         $ damage_range = (0.005, 0.0188)
@@ -325,16 +328,17 @@ label toportoe1:
         $ max_heals = 20
     
     $ turn_count = 0
-    $ boss_max_hp = boss_hp
+    $ enemy_max_hp = enemy_hp
     $ heal_count = 0
     $ remainheals = max_heals - heal_count
     $ attack_locked = False
-    $ boss_name = "Бандит"
+    $ enemy_name = "Бандит"
+    $ EnemyType = "Regular"
     scene bg_toporto
     show to_porto_e1 at center
 
-    while boss_hp > 0 and player_hp > 0:
-        call screen boss_ui
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
 
     if player_hp <= 0:
         $ _game_menu_screen = "save_screen"
@@ -416,6 +420,10 @@ label backtomidgard:
     hide mchar with dissolve
 
     "Однако перед тем, как отправиться к Бену вы решили купить себе новую машину."
+
+    pause 1.0
+
+    "Вы купили новую машину \"Молоковоз\"."
     
     mc "Вот теперь можно ехать."
 
@@ -424,7 +432,7 @@ label backtomidgard:
 label firstmeetben:
 
     play music "music/bio07unloop.ogg" fadeout 1.0
-    scene bg_ben with fade
+    scene bg_ben1 with fade
 
     "Приехав к дому Бена вы заметили старика на балконе."
 
@@ -432,7 +440,9 @@ label firstmeetben:
 
     play music "music/quietdialogue01.ogg" fadeout 1.0
 
-    show ben1 at left with dissolve
+    scene bg_ben with dissolve
+
+    show ben1 at left, stretch_in
 
     ben "Айвен, неужели ты вернулся!?"
     ben "..."

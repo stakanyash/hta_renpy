@@ -82,9 +82,16 @@ style frame:
 ## Внутриигровые экраны
 ################################################################################
 
-## Screen for bossfight
+## Screen for fight
 
-screen boss_ui():
+style centered_text is text:
+    xpos 0.825
+    yalign 0.883
+    textalign 0.5
+    color "#ffffff"
+    padding (10, 10)
+
+screen enemy_ui():
 
     frame:
         align (0.05, 0.98)
@@ -97,7 +104,7 @@ screen boss_ui():
             text _("Выберите действие:") xalign 0.5
 
             if not attack_locked:
-                textbutton _("Атаковать") action Function(attack_boss) xalign 0.5
+                textbutton _("Атаковать") action Function(attack_enemy) xalign 0.5
             else:
                 textbutton _("Атаковать") xalign 0.5
 
@@ -106,8 +113,14 @@ screen boss_ui():
             else:
                 textbutton _("Лечиться") xalign 0.5 sensitive False
 
-    add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
-    text "[boss_name]" yalign 0.883 xalign 0.85
+    if EnemyType == "Boss":
+        add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
+#        add BossIcon xalign X yalign Y (placeholder line)
+    else:
+        add "gui/bossbar/background_noboss.png" yalign 1.0 xalign 0.95
+
+    text "[enemy_name]":
+        style "centered_text"
 
     fixed:
         xalign 1.0215
@@ -115,7 +128,7 @@ screen boss_ui():
         xmaximum 600
         ysize 40
 
-        add get_boss_bar_image()
+        add get_enemy_bar_image()
 
     fixed:
         xalign 0.98
@@ -158,7 +171,7 @@ screen boss_ui():
     if attack_locked:
         timer .35 action SetVariable("attack_locked", False)
 
-    if boss_hp <= 0 or player_hp <= 0:
+    if enemy_hp <= 0 or player_hp <= 0:
         timer 0.1 action Return()
 
 # Tutorial asking
@@ -171,7 +184,7 @@ screen tutorial_prompt_call():
     frame:
         xalign 0.5
         yalign 0.5
-        padding (40, 40)  # Внутренние отступы для текста и кнопок
+        padding (40, 40)
 
         xsize 900
         ysize 380
@@ -316,11 +329,16 @@ style input:
 ## https://www.renpy.org/doc/html/screen_special.html#choice
 
 screen choice(items):
-    style_prefix "choice"
-
     vbox:
+        align (0.5, 0.5)
+        spacing 15
+
         for i in items:
-            textbutton i.caption action i.action
+            textbutton i.caption action i.action:
+                xsize gui.choice_button_width
+                ysize gui.choice_button_height
+                style "choice_button"
+
 
 
 style choice_vbox is vbox
@@ -359,12 +377,12 @@ screen quick_menu():
             xalign 0.5
             yalign 0.98
 
-            textbutton _("История") action ShowMenu('history')
-            textbutton _("Пропуск") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Авто") action Preference("auto-forward", "toggle")
-            textbutton _("Сохранить") action ShowMenu('save')
-            textbutton _("Загрузить") action ShowMenu('load')
-            textbutton _("Опции") action ShowMenu('preferences')
+            textbutton _("История") activate_sound "audio/sfx/click.wav" action ShowMenu('history')
+            textbutton _("Пропуск") activate_sound "audio/sfx/click.wav" action Skip() alternate Skip(fast=True, confirm=True)
+            textbutton _("Авто") activate_sound "audio/sfx/click.wav" action Preference("auto-forward", "toggle")
+            textbutton _("Сохранить") activate_sound "audio/sfx/click.wav" action ShowMenu('save')
+            textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu('load')
+            textbutton _("Опции") activate_sound "audio/sfx/click.wav" action ShowMenu('preferences')
 
 
 ## Данный код гарантирует, что экран быстрого меню будет показан в игре в любое
@@ -484,7 +502,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer build 0.18.0 (250716d)" xpos 450 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.18.0 (250718b)" xpos 470 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 
 
@@ -1591,7 +1609,7 @@ screen quick_menu():
             style_prefix "quick"
 
             xalign 0.5
-            yalign 1.0
+            yalign 0.975
 
             textbutton _("Назад") action Rollback()
             textbutton _("Пропуск") action Skip() alternate Skip(fast=True, confirm=True)

@@ -18,6 +18,8 @@ define config.mouse = {
     "default": [("gui/cursor.png", 0, 0)]
 }
 
+define config.rollback_enabled = renpy.variant("debug")
+
 init python:
     style.say_dialogue.outlines = [(2, "#858585", 0, 0), (1, "#404040", 0, 0)]
     style.say_label.outlines = [(2, "#836d14", 0, 0)]

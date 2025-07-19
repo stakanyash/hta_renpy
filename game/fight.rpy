@@ -4,34 +4,34 @@ init python:
     import math
     from renpy.display.im import MatrixColor
 
-    boss_damage_multiplier = 0.0
+    enemy_damage_multiplier = 0.0
     consecutive_player_hits = 0
     
-    ## When boss attacks player (Damage += 3% of player max HP if he missed, damage sound, damage effect)
-    def apply_boss_attack():
-        global player_hp, turn_count, player_max_hp, boss_damage_multiplier, consecutive_player_hits
-        if turn_count > 0 and turn_count % 5 == 0 and boss_damage_multiplier > 0:
-            damage = int(player_max_hp * boss_damage_multiplier)
+    ## When enemy attacks player (Damage += 3% of player max HP if he missed, damage sound, damage effect)
+    def apply_enemy_attack():
+        global player_hp, turn_count, player_max_hp, enemy_damage_multiplier, consecutive_player_hits
+        if turn_count > 0 and turn_count % 5 == 0 and enemy_damage_multiplier > 0:
+            damage = int(player_max_hp * enemy_damage_multiplier)
             player_hp = max(0, player_hp - damage)
 
             renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
 
-            renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=7)])
+            renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
             renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
 
-            boss_damage_multiplier = 0.0
-        elif turn_count > 0 and turn_count % 5 == 0 and boss_damage_multiplier <= 0:
+            enemy_damage_multiplier = 0.0
+        elif turn_count > 0 and turn_count % 5 == 0 and enemy_damage_multiplier <= 0:
             renpy.sound.play(f"audio/sfx/shoot_miss02.ogg", channel="missshot")
 
     ## Player attacks (random damage percent (declarate in variable when fight starts), random attack sound, 70% chance to hit, if player hits the target 10 times in a row he gets 7% damage)
-    def attack_boss():
-        global boss_hp, boss_max_hp, turn_count, attack_locked, boss_damage_multiplier, consecutive_player_hits, player_hp, player_max_hp
+    def attack_enemy():
+        global enemy_hp, enemy_max_hp, turn_count, attack_locked, enemy_damage_multiplier, consecutive_player_hits, player_hp, player_max_hp
         if attack_locked:
             return
         attack_locked = True
 
         damage_percent = random.uniform(*damage_range)
-        damage = int(boss_max_hp * damage_percent)
+        damage = int(enemy_max_hp * damage_percent)
 
         attackchance = random.randint(1, 10)
 
@@ -39,8 +39,8 @@ init python:
             shootsound = random.randint(1, 13)
 
             renpy.sound.play(f"audio/sfx/bullet{shootsound}.wav", channel="shoot")
-            renpy.show(boss_image, at_list=[center, stretch_in], what=None)
-            boss_hp = max(0, boss_hp - damage)
+            renpy.show(enemy_image, at_list=[center, stretch_in], what=None)
+            enemy_hp = max(0, enemy_hp - damage)
             consecutive_player_hits += 1
 
             if consecutive_player_hits >= 10:
@@ -52,14 +52,14 @@ init python:
                 renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
 
                 consecutive_player_hits = 0
-                boss_damage_multiplier = 0.0
+                enemy_damage_multiplier = 0.0
         else:
             renpy.sound.play(f"audio/sfx/shoot_miss01.ogg", channel="missshot")
-            boss_damage_multiplier += 0.03
+            enemy_damage_multiplier += 0.03
             consecutive_player_hits = 0
         
         turn_count += 1
-        apply_boss_attack()
+        apply_enemy_attack()
         renpy.restart_interaction()
 
     ## Player healing (from 1% to 8% of max player HP, heal sound)
@@ -74,11 +74,11 @@ init python:
             renpy.sound.play(f"audio/sfx/life.wav", channel="sound")
         renpy.restart_interaction()
 
-    ## Boss health bar
-    def get_boss_bar_image():
-        if boss_hp <= 0:
+    ## enemy health bar
+    def get_enemy_bar_image():
+        if enemy_hp <= 0:
             return "gui/bossbar/boss_bar_0.png"
-        percent = (boss_hp / boss_max_hp) * 100
+        percent = (enemy_hp / enemy_max_hp) * 100
         level = math.ceil(percent / 10.0) * 10
         level = max(10, min(100, level))
         return f"gui/bossbar/boss_bar_{level}.png"

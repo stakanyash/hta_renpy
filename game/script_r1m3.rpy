@@ -153,15 +153,15 @@ label mvillage:
     $ config.keymap['load'] = []
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
-    $ boss_image = "minerattackers"
+    $ enemy_image = "minerattackers"
     $ player_hp = 1500
     $ player_max_hp = player_hp
-    $ boss_hp = 2000
+    $ enemy_hp = 2000
 
 
     # Amount of heals increased because high enemy HP
     if CurrentGun == "Storm":
-        $ damage_range = (0.005, 0.02)
+        $ damage_range = (0.008, 0.02)
         $ max_heals = 15
     elif CurrentGun == "PKT":
         $ damage_range = (0.005, 0.0188)
@@ -174,17 +174,18 @@ label mvillage:
         $ max_heals = 25
     
     $ turn_count = 0
-    $ boss_max_hp = boss_hp
+    $ enemy_max_hp = enemy_hp
     $ heal_count = 0
     $ remainheals = max_heals - heal_count
     $ attack_locked = False
-    $ boss_name = "Бандиты"
+    $ enemy_name = "Бандиты"
     $ bgname = "bg_mvillage_fight"
+    $ EnemyType = "Regular"
     scene bg_mvillage_fight
     show minerattackers at center
 
-    while boss_hp > 0 and player_hp > 0:
-        call screen boss_ui
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
 
     if player_hp <= 0:
         $ _game_menu_screen = "save_screen"
@@ -246,14 +247,14 @@ label brigdedestroy:
     $ config.keymap['load'] = []
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
-    $ boss_image = "brigde_defender"
+    $ enemy_image = "brigde_defender"
     $ player_hp = 1500
     $ player_max_hp = player_hp
-    $ boss_hp = player_hp
+    $ enemy_hp = player_hp
 
 
     if CurrentGun == "Storm":
-        $ damage_range = (0.005, 0.02)
+        $ damage_range = (0.008, 0.02)
         $ max_heals = 10
     elif CurrentGun == "PKT":
         $ damage_range = (0.005, 0.0188)
@@ -266,18 +267,19 @@ label brigdedestroy:
         $ max_heals = 20
     
     $ turn_count = 0
-    $ boss_max_hp = boss_hp
+    $ enemy_max_hp = enemy_hp
     $ heal_count = 0
     $ remainheals = max_heals - heal_count
     $ attack_locked = False
-    $ boss_name = "Бандиты"
+    $ enemy_name = "Бандиты"
     $ bgname = "bg_nearbridge"
+    $ EnemyType = "Regular"
 
     scene bg_nearbridge
     show brigde_defender at center
 
-    while boss_hp > 0 and player_hp > 0:
-        call screen boss_ui
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
 
     if player_hp <= 0:
         $ _game_menu_screen = "save_screen"
@@ -346,6 +348,533 @@ label peshtallow:
 label minin1st_nl:
 
     scene bg_minin with fade
+    play music "music/town3.ogg" fadeout 1.0
+
+    "В Минине вы сразу привлекаете внимание местного рабочего."
+
+    show mworker at right with dissolve
+
+    sharki "Издалека, видать, приехал. По делам, или приключений ищешь?"
+
+    show mc_2 at left with dissolve
+
+    mc "Я слышал, здесь неподалёку жил исследователь Айвен. Мне бы хотелось побывать в его жилище."
+
+    sharki "Ты приехал в нужное место: Айвен жил прямо в этом городе, вон в том доме, вместе с женой и сыном. А потом случилось несчастье: его жена погибла во время ночного нападения бандитов, когда муж был в отъезде."
+    sharki "Конечно, никто из негодяев не ушёл живым. Айвен забрал сына и уехал куда-то. А дом до сих пор пустой стоит."
+
+    mc "Спасибо за рассказ. Я, пожалуй, пойду."
+
+    hide mc_2
+    hide mworker
+
+    jump aivenhouse
+
+label aivenhouse:
+
+    scene bg_aivenhouse with fade
+
+    play music "music/techno04.ogg" fadeout 1.0
+
+    "Заехав в дом Айвена вы заметили, что его явно покидали в спешке..."
+
+    show mcback at center with dissolve
+
+    mc "Сколько же здесь всего..."
+    mc "Странного..."
+    mc "И повсюду следы погрома..."
+    mc "На этой доске вырезано моё имя... Это же тайник, а внутри – какой-то оберег."
+    mc "Любопытная штуковина – возьму себе..."
+
+    "Из стоящего рядом приёмника послышался шум..."
+
+    scene bg_benradio with dissolve
+
+    play sound "audio/sfx/radiostart.ogg"
+    play sound "audio/sfx/radionoise.ogg" channel "sfx2"
+
+    unknown "Эй!"
+    unknown "Ага, кажется, заработало!"
+    ben "Это Бен, приём. Я настроил радиопередатчик."
+    ben "Как движутся поиски?"
+
+    show mc4_key at left, stretch_in
+
+    mc "Радиосвязь на таком расстоянии? Да ты просто волшебник!"
+    mc "Поиски ничего не дали, к сожалению. Тут только рухлядь."
+    mc "Правда, я нашёл забавный амулет с кнопочками и надписью: \"UB-627 Red access\"..."
+
+    ben "Точно как в старых манускриптах! Это же ключ от морских врат!"
+    ben "Но откуда он взялся у твоего отца? Впрочем, неважно. Слушай внимательно."
+    ben "Рассказывают, что на затерянном в океане острове живёт Оракул."
+    ben "Тот, кто пройдёт через все испытания на пути к его жилищу, получит ответ на любой свой вопрос."
+    ben "Естественно, всё это выдумки. Однако есть основания полагать, что у легенды этой имеется вполне научное основание."
+    ben "И ключ, который ты сейчас носишь на шее, явное тому свидетельство."
+
+    mc "Было бы неплохо узнать у этого Оракула, что случилось с Айвеном. В любом случае не зря такая редкая вещь оказалась в его тайнике."
+
+    ben "Я читал старинные документы, где говорилось, а точнее сказать - можно было прочесть между строк, что на одном острове было какое-то крупное и очень засекреченное строительство."
+    ben "Поезжай всё время на север. Где-то на самом краю земли находятся морские врата."
+    ben "Ты сразу их узнаешь, когда увидишь. Больше я и сам не знаю."
+    ben "Похоже, мой радиоприемник совсем сломал..."
+
+    stop sfx2
+    play sound "audio/sfx/radioend.ogg"
+
+    hide mc4_key
+
+    scene bg_aivenhouse with dissolve
+
+    show mc4_key at center, stretch_in
+
+    mc "Связь оборвалась... Но я понял, о чём говорил Бен. Узнаю подробности в Минине."
+
+    hide mc4_key
+
+    jump minin2nd_nl
+
+label minin2nd_nl:
+
+    play music "music/town3.ogg" fadeout 1.0
+    scene bg_minin with fade
+
+    "Вернувшись в Минин вы подходите к тому же рабочему, который указал вам на дом отца."
+
+    show mworker at right with dissolve
+
+    sharki "Чего тебе, бродяга?"
+
+    mc "Я ищу такое огромное сооружение. Говорят, раз увидишь - не забудешь. Оно должно быть где-то в ваших краях."
+
+    sharki "Никогда не встречал ничего, подходящего под твоё яркое описание."
+
+    "Вы немного разочарованы таким ответом."
+
+    mc "Ладно, спрошу у кого-нибудь ещё."
+
+    sharki "Спроси, конечно, но сперва дослушай. Так вот, я слышал от одного знакомого, который слышал от другого знакомого, который…"
+
+    "Вам начинает это надоедать."
+
+    mc "Слушай, не томи!"
+
+    sharki "Я знал рыбака, по имени… Забыл. Так вот, тот рыбак рассказывал сказки об одном интересном месте: подводные сокровища и страж-чудовище."
+    sharki "Правда, никто так ничего и не нашёл. Видимо, только сам рыбак знает точное расположение этого местечка."
+
+    mc "Так как же его звали?"
+
+    sharki "Ты о ком?"
+
+    mc "Да о рыбаке же!"
+
+    sharki "Прости, что-то с памятью моей стало."
+
+    mc "Так постарайся вспомнить! Это очень важно!"
+
+    sharki "Видишь ли, в такие моменты мне нужна некоторая мотивация."
+
+    mc "Ты серьёзно?!"
+    mc "Вот тебе 100 монет..."
+
+    sharki "Начинаю что-то вспоминать. Ага! Это же был старик Гомер."
+
+    mc "Гомер? И где я могу его найти?"
+
+    sharki "Где все рыбаки - на побережье! В посёлке. Только тут, видишь ли, встаёт ещё одна проблема."
+    sharki "Как ты уже заметил, у нас в городе напряг с бензином. Точнее, совсем его нет. Наши караваны не могут ехать на север. А путь до Ольма не самый простой! Один ты его не найдешь…"
+
+    mc "Что, пытаешься ещё денег выкачать?!"
+
+    sharki "Да ты что? Наоборот! Я вижу, ты смелый парень. Если поможешь, то сможешь вместе с нашим караваном поехать на север. Они покажут дорогу в Ольм."
+    sharki "А сейчас обратись к мэру. Скажи, что Шарки послал помочь с проблемой."
+
+    mc "Прямо сейчас к мэру и пойду."
+
+    hide mworker with dissolve
+
+    mc "Ужас какой-то! Так действовать на нервы надо уметь!"
+
+    "Вы идёте к мэру."
+
+    "Однако он кажется не рад вас видеть."
+
+    show mimayor at left, stretch_in
+
+    mayor "Говори быстрее, я занят!"
+
+    show mchar at right with dissolve
+
+    mc "Шарки послал помочь с проблемой."
+
+    mayor "Тебя? Что ж, сейчас нам любая помощь пригодится…"
+
+    mc "Что у вас за проблемы?"
+
+    mayor "Тут как в анекдоте: \"Пушки не стреляли по 20 причинам: первая - не было патронов\"."
+    mayor "Хех…"
+    mayor "Нефтяную вышку захватили бандиты. Они обосновались где-то поблизости и совершали рейды, пока совсем не истощили наши силы."
+    mayor "И теперь они окончательно отрезали нас от источника нефти. Наши запасы бензина подходят к концу."
+
+    hide mchar
+    show mcsurp at right, stretch_in
+
+    mc "То есть вы хотите, чтобы я один отправился сражаться с бандитами, когда вы всем городом не могли с ними справиться?!"
+
+    mayor "Признаться, мы не очень-то и сражались, так как были заняты внутренними проблемами: видишь ли, профсоюз работников объявил забастовку."
+
+    mc "То есть мне придётся ещё и убедить работников работать или найти новых?"
+
+    mayor "В двух словах…"
+    mayor "Да."
+
+    mc "Ладно, начнём с простой проблемы: бандитов. Бензин, надеюсь, будет казённый."
+
+    mayor "В разумных пределах."
+
+    mc "Ладно."
+
+    hide mimayor with dissolve
+    hide mcsurp with dissolve
+
+    "Вы уходите из кабинета мэра и направляетесь в сторону нефтянной вышки."
+
+    stop music fadeout 1.0
+
+    jump oilmine1st
+
+label oilmine1st:
+
+    scene bg_oilenemy with fade
+
+    play music "music/alarm1.ogg"
+
+    $ renpy.save("checkpoint-2")
+    $ renpy.notify("Игра сохранена.")
+    
+    "Приехав к нефтянной вышке вы действительно видите множество бандитов."
+
+    "Между вами начинается вполне ожидаемая битва."
+
+    play music "music/battle1.ogg"
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = "oilbandits"
+    $ player_hp = 1500
+    $ player_max_hp = player_hp
+    $ enemy_hp = player_hp
+
+
+    if CurrentGun == "Storm":
+        $ damage_range = (0.008, 0.02)
+        $ max_heals = 10
+    elif CurrentGun == "PKT":
+        $ damage_range = (0.005, 0.0188)
+        $ max_heals = 20
+    elif CurrentGun == "Kord":
+        $ damage_range = (0.005, 0.0195)
+        $ max_heals = 15
+    else:
+        $ damage_range = (0.005, 0.0175)
+        $ max_heals = 20
+    
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Захватчики вышки"
+    $ bgname = "bg_oil"
+    $ EnemyType = "Regular"
+
+    scene bg_oil
+    show oilbandits at center
+
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        hide oilbandits
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+
+        play sound "sfx/explosion04.wav"
+        hide oilbandits with dissolve
+
+        jump oilisfree
+
+label oilisfree:
+
+    scene bg_oillastenemy with fade
+
+    mc "Что ж, вышка освобождена!"
+    mc "Последний враг бежал. Он может привести меня к базе бандитов."
+    mc "Но надо ли мне это?"
+
+    menu:
+        "Проследить":
+            $ renpy.save("checkpoint-3")
+            jump followlastone
+
+        "Ехать обратно в Минин":
+            $ renpy.save("checkpoint-3")
+            jump minin3rd_nl
+
+label followlastone:
+
+    play music "music/techno02.ogg" fadeout 1.0
+
+    scene bg_oilspy_1 with fade
+
+    "Вы осторожно следовали за бандитской машиной."
+
+    mc "Интересно, куда же он меня ведёт..."
+
+    scene bg_oilspy_2 with fade
+
+    mc "Мы уже почти на месте, он ведёт меня на базу!"
+    mc "Интересно, заметил ли он меня?"
+
+    scene bg_oilspy_3 with fade
+    play music "music/battle2.ogg"
+
+    "Приехав на базу вас сразу начали атаковать три машины."
+    $ renpy.save("checkpoint-4")
+    $ renpy.notify("Игра сохранена.")
+    mc "Всё таки заметил..."
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = "banditsonbase"
+    $ player_hp = 1500
+    $ player_max_hp = player_hp
+    $ enemy_hp = player_hp
+
+
+    if CurrentGun == "Storm":
+        $ damage_range = (0.008, 0.02)
+        $ max_heals = 10
+    elif CurrentGun == "PKT":
+        $ damage_range = (0.005, 0.0188)
+        $ max_heals = 20
+    elif CurrentGun == "Kord":
+        $ damage_range = (0.005, 0.0195)
+        $ max_heals = 15
+    else:
+        $ damage_range = (0.005, 0.0175)
+        $ max_heals = 20
+    
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Бандиты"
+    $ bgname = "bg_oilspy_fight"
+    $ EnemyType = "Regular"
+
+    scene bg_oilspy_fight
+    show banditsonbase at center
+
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        hide banditsonbase
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+
+        play sound "sfx/explosion04.wav"
+        hide banditsonbase with dissolve
+
+        jump banditbaseelim
+
+label banditbaseelim:
+
+    init python:
+        import random
+
+        elrandom = random.randint(1,2)
+
+    if elrandom == 1:
+        "Расправившись с бандитами вы заметили, что у одного из них стоит неплохое оружие."
+
+        mc "Надо бы забрать себе."
+
+        $ GotElephant = True
+
+        "Вы получили предмет \"Слон\"."
+
+    mc "Пора ехать в Минин."
+
+    jump minin3rd_nl
+
+label minin3rd_nl:
+
+    play music "music/town3.ogg" fadeout 1.0
+    scene bg_minin with fade
+
+    $ elprice = random.randint(10000, 24353)
+
+    $ weapon_prices = {
+        "Шершень": 280,
+        "Спектр": 590,
+        "ПКТ": 1670,
+        "Шторм": 3450,
+        "Корд": 3680,
+    }
+
+    if GotElephant == True:
+        "В вашем инвентаре есть предмет \"Слон\"."
+        "Хотите его продать? Цена продажи: [elprice]."
+
+        menu:
+            "Продать":
+                $ renpy.save("checkpoint-5")
+                $ SelledElephant = True
+                "Вы продали предмет \"Слон\" и получили [elprice] монет."
+                if elprice >= 11000:
+                    "Ваших средств достаточно для обновления кабины."
+                    "Хотите установить кабину \"Шип\"? Цена покупки: 11000."
+                    menu:
+                        "Установить":
+                            $ renpy.save("checkpoint-6")
+                            "Вы установили кабину \"Шип\" и отдали 11000 монет."
+                            if elprice - 11000 >= 280:
+                                "У вас есть возможность установить второе оружие."
+                                python:
+                                    affordable_weapons = [name for name, price in weapon_prices.items() if price <= elprice - 11000]
+                                    weapon_text = ", ".join(affordable_weapons)
+                                "Ваших средств достаточно на: [weapon_text]."
+                                menu:
+                                    "Шершень":
+                                        "Вы установили второе оружие \"Шершень\" и отдали 280 монет."
+                                        $ SecondGun = "Hornet" 
+                                        $ renpy.save("checkpoint-1")
+
+                                    "Спектр":
+                                        "Вы установили второе оружие \"Спектр\" и отдали 590 монет."  
+                                        $ SecondGun = "Specter" 
+                                        $ renpy.save("checkpoint-1")
+
+                                    "ПКТ":
+                                        "Вы установили второе оружие \"ПКТ\" и отдали 1670 монет."  
+                                        $ SecondGun = "PKT" 
+                                        $ renpy.save("checkpoint-1")
+
+                                    "Шторм":
+                                        "Вы установили второе оружие \"Шторм\" и отдали 3450 монет."
+                                        $ SecondGun = "Storm" 
+                                        $ renpy.save("checkpoint-1")
+
+                                    "Корд":
+                                        "Вы установили второе оружие \"Корд\" и отдали 3680 монет."
+                                        $ SecondGun = "Kord" 
+                                        $ renpy.save("checkpoint-1")
+
+                                    "Не устанавливать второе оружие":
+                                        "Вы решили не устанавливать второе оружие."
+                                        $ SecondGun = "None" 
+                                        $ renpy.save("checkpoint-1")
+                                             
+
+                        "Не устанавливать":
+                            $ renpy.save("checkpoint-6")
+                            $ SecondGun = "None"
+
+            "Оставить":
+                $ renpy.save("checkpoint-5")
+                $ SelledElephant = False
+                $ SecondGun = "None"
+
+    "Вернувшись в Минин вы сразу идёте к мэру."
+
+    show mimayor at left with dissolve
+
+    mayor "Огромное спасибо. Просто нечеловеческое! Мы, наконец, можем вздохнуть свободно, не опасаясь за свои жизни."
+
+    show mcsurp at right with dissolve
+    
+    mc "\"И кошельки...\""
+
+    mayor "Но ведь сама по себе нефть не потечёт."
+    mayor "Эти мерзавцы сейчас протирают штаны в баре вместо того, чтобы работать для общего блага!"
+
+    mc "Посмотрю, что можно сделать с работниками. Попытаюсь их уговорить."
+
+    hide mimayor with dissolve
+    hide mcsurp with dissolve
+
+    "Вы идёте к Шарки."
+
+    show mworker at right, stretch_in
+
+    sharki "Опять ты?!"
+
+    show mc6 at left, stretch_in
+
+    mc "Что, ребята, работать будем?"
+
+    sharki "Какая к чертям работа? У нас забастовка!"
+
+    mc "А в чём, собственно, дело?"
+
+    sharki "Работа тяжёлая, платят гроши. Вот мы и отказываемся батрачить! А мэр, собака, наживается на наших бедах."
+
+    mc "Так он же говорит, что город бедный, совсем бандиты разорили."
+
+    sharki "Это он сам и разорил. И вообще не понимаю, зачем нам мэр нужен? Тем более такой. Не будем мы работать, и всё тут!"
+
+    mc "Но мне очень нужно…"
+
+    sharki "И не проси!"
+
+    mc "Что же делать? Придётся разобраться, что здесь у вас происходит."
+
+    hide mc6 with dissolve
+    hide mworker with dissolve
+
+    jump mayorspy
+
+label mayorspy:
 
     "..."
 

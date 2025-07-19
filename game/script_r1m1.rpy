@@ -493,24 +493,25 @@ label felixbeforefight:
             $ config.keymap['game_menu'] = []
             $ persistent._in_battle = True
             $ RunFromFelix = "False"
-            $ boss_image = "felixteam"
+            $ enemy_image = "felixteam"
             $ player_hp = 850
             $ player_max_hp = player_hp
             $ max_heals = 10
-            $ boss_hp = player_hp
+            $ enemy_hp = player_hp
             $ damage_range = (0.007, 0.02)
             $ turn_count = 0
-            $ boss_max_hp = boss_hp
+            $ enemy_max_hp = enemy_hp
             $ heal_count = 0
             $ remainheals = max_heals - heal_count
             $ attack_locked = False
-            $ boss_name = "Бандиты"
+            $ enemy_name = "Бандиты"
             $ bgname = "bg_felix_nocars"
+            $ EnemyType = "Regular"
             scene bg_felix_nocars
             show felixteam at center
 
-            while boss_hp > 0 and player_hp > 0:
-                call screen boss_ui
+            while enemy_hp > 0 and player_hp > 0:
+                call screen enemy_ui
 
             if player_hp <= 0:
                 $ _game_menu_screen = "save_screen"
@@ -666,17 +667,19 @@ label dyingfather:
 
     mc "Только это письмо..."
 
+    scene bg_fatherdead with dissolve
+
     pause 1.0
 
-    "{cps=15}Сын, если ты читаешь это письмо - значит я не смог вернуться и вырастить тебя сам. Я знаю, что Пётр отлично справился с этой задачей.{/cps}"
+    "{cps=15}\"Сын, если ты читаешь это письмо - значит я не смог вернуться и вырастить тебя сам. Я знаю, что Пётр отлично справился с этой задачей.\"{/cps}"
 
-    "{cps=15}Я вижу тебя, такого молодого и полного сил, и сердце моё обливается слезами...{/cps}"
+    "{cps=15}\"Я вижу тебя, такого молодого и полного сил, и сердце моё обливается слезами...\"{/cps}"
 
-    "{cps=15}Я виню себя за то, что меня не было рядом, когда ты рос. И это моё страшное наказание. Но знай, что я не мог поступить иначе. Передо мной стоит задача всей жизни...{/cps}"
+    "{cps=15}\"Я виню себя за то, что меня не было рядом, когда ты рос. И это моё страшное наказание. Но знай, что я не мог поступить иначе. Передо мной стоит задача всей жизни...\"{/cps}"
 
-    "{cps=15}Только выполнив задуманное, смогу я успокоиться и вновь почувствовать себя человеком. Если нет... значит, я недостоин жить. Это письмо - извинение.{/cps}"
+    "{cps=15}\"Только выполнив задуманное, смогу я успокоиться и вновь почувствовать себя человеком. Если нет... значит, я недостоин жить. Это письмо - извинение.\"{/cps}"
 
-    "{cps=15}Прости меня, если сможешь. Ты всегда в моём сердце, сын...{/cps}"
+    "{cps=15}\"Прости меня, если сможешь. Ты всегда в моём сердце, сын...\"{/cps}"
 
     mc "Это всё? Никаких объяснений..."
 
@@ -899,6 +902,7 @@ label felixbase:
     felix "Ладно, хочешь сделать что-то хорошо - делай это сам. Посторонись!"
 
     $ renpy.save("checkpoint-5")
+    $ renpy.notify("Игра сохранена.")
 
     "Вы снова начинаете бой с Феликсом."
 
@@ -917,29 +921,30 @@ label felix_battle:
         $ player_hp = 850
         $ player_max_hp = player_hp
         $ max_heals = 10
-        $ boss_hp = player_hp * 2
-        $ damage_range = (0.005, 0.02)
+        $ enemy_hp = player_hp * 2
+        $ damage_range = (0.008, 0.02)
     elif TakeGunFromZaimka == "False":
         $ player_hp = 500
         $ player_max_hp = 850
         $ max_heals = 20
-        $ boss_hp = player_hp * 1.5
+        $ enemy_hp = player_hp * 1.5
         $ damage_range = (0.005, 0.0175)
     $ turn_count = 0
-    $ boss_max_hp = boss_hp
+    $ enemy_max_hp = enemy_hp
     $ heal_count = 0
     $ remainheals = max_heals - heal_count
     $ attack_locked = False
-    $ boss_name = "Феликс"
-    $ boss_image = "felixcar"
+    $ enemy_name = "Феликс"
+    $ enemy_image = "felixcar"
     $ bgname = "bg_felixbase"
+    $ EnemyType = "Regular"
 
 
     scene bg_felixbase
     show felixcar at center
 
-    while boss_hp > 0 and player_hp > 0:
-        call screen boss_ui
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
 
     if player_hp <= 0:
         $ _game_menu_screen = "save_screen"
