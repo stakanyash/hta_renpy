@@ -65,7 +65,12 @@ image bg_oilspy_1 = "images/bgs/r1m3/bg_oilspy_1.jpg"
 image bg_oilspy_2 = "images/bgs/r1m3/bg_oilspy_2.jpg"
 image bg_oilspy_3 = "images/bgs/r1m3/bg_oilspy_3.jpg"
 image bg_oilspy_fight = "images/bgs/r1m3/bg_oilspy_fight.jpg"
-
+image bg_spymer_1 = "images/bgs/r1m3/bg_spymer_1.jpg"
+image bg_spymer_2 = "images/bgs/r1m3/bg_spymer_2.jpg"
+image bg_spymer_3 = "images/bgs/r1m3/bg_spymer_3.jpg"
+image bg_spymer_4 = "images/bgs/r1m3/bg_spymer_4.jpg"
+image bg_spymer_5 = "images/bgs/r1m3/bg_spymer_5.jpg"
+image bg_spymer_6 = "images/bgs/r1m3/bg_spymer_6.jpg"
 
 # Sprites: Characters
 
@@ -102,6 +107,8 @@ image mworker = "images/sprites/chr/mworker.png"
 image mcback = "images/sprites/chr/mcback.png"
 image mc4_key = "images/sprites/chr/mc4_key.png"
 image mimayor = "images/sprites/chr/mayor.png"
+image OilMineWorker = "images/sprites/chr/OilMineWorker.png"
+image MininWorker2 = "images/sprites/chr/MininWorker2.png"
 
 # Sprites: Enemy's
 

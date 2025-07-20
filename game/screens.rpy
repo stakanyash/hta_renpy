@@ -502,7 +502,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.18.0 (250718b)" xpos 470 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.18.2 (250720a)" xpos 470 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 
 

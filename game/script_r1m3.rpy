@@ -876,7 +876,121 @@ label minin3rd_nl:
 
 label mayorspy:
 
-    "..."
+    play music "music/passage03a.ogg" fadeout 1.0
+
+    scene bg_spymer_1 with fade
+
+    "Выехав из Минина вы заметили странную машину..."
+
+    mc "По-моему, в этой машине едет мэр!"
+    scene bg_spymer_2 with dissolve
+    mc "Куда, интересно, он так торопится? Надо бы проследить..."
+
+    scene bg_spymer_3 with dissolve
+
+    "Вы ехали позади машины мэра Минина и он кажется вас не замечал."
+
+    scene bg_spymer_4 with dissolve
+
+    "Однако в какой-то момент он свернул с дороги."
+
+    mc "Опять меня заметили?! Даже если он ведёт меня в ловушку я продолжу за ним ехать..."
+
+    play music "music/bio02.ogg" fadeout 1.0
+    scene bg_spymer_5 with dissolve
+
+    "Однако в какой-то момент он поехал к какой-то пещере."
+    "Вы решили не следовать дальше за ним, а понаблюдать со стороны."
+
+    scene bg_spymer_6 with dissolve
+
+    pause 1.0
+
+    mc "Сколько добра свалено в этом тайнике!"
+    mc "Значит, мэр действительно вор!"
+    mc "Если я расскажу об этом в Минине, то его точно прогонят с управляющего поста. Если не хуже."
+    mc "И работники могут захотеть работать!"
+
+    "С этой мыслью вы аккуратно покидаете место событий и уезжаете обратно в Минин."
+
+    jump minin4th_nl
+
+label minin4th_nl:
+
+    play music "music/town3.ogg" fadeout 1.0
+    scene bg_minin with fade
+
+    "Вернувшись в Минин вы спешно ищете Шарки."
+
+    "Ему сразу понятно, что вам есть о чём рассказать."
+
+    show mworker at right, stretch_in
+
+    sharki "Узнал что-нибудь?"
+
+    show mc_2 at left, stretch_in
+
+    mc "Вы правы, мэр - вор и обманщик. Я нашёл, куда он увозил городские богатства!"
+
+    hide mworker
+    show mworker at right, stretch_in
+
+    sharki "Я же говорил! Не быть ему больше главой! Увижу - морду начищу."
+
+    mc "Раз вы теперь сами себе хозяева, будете работать?"
+
+    sharki "Не вопрос."
+
+    mc "Тогда полезайте в кузов."
+
+    "Шарки и рабочие залезают в ваш грузовик и вы направляетесь на нефтяную вышку."
+
+    jump oilmine2nd
+
+label oilmine2nd:
+    
+    play music "music/bar.ogg" fadeout 1.0
+    scene bg_oil with fade
+
+    show OilMineWorker at left with dissolve
+
+    chris "Вот и первая бочка нефти."
+
+    show mchar at right, stretch_in
+
+    mc "Я отвезу её в город и расскажу всем, что больше не будет перебоев с топливом."
+    mc "Специально поставлю её в кабину, чтобы ничего не случилось…"
+
+    "Вы грузите бочку нефти в машину и уезжаете в Минин."
+
+    jump minin5th_nl
+
+label minin5th_nl:
+
+    play music "music/town3.ogg" fadeout 1.0
+    scene bg_minin with fade
+
+    "Приехав в Минин вы выгружаете бочку."
+
+    show MininWorker2 at left with dissolve
+    show mchar at right with dissolve
+
+    rid "Спасибо! Ты очень помог нашему городу и всем нам."
+    rid "Ты всегда будешь здесь желанным гостем. Для тебя - на всё скидка."
+
+    hide mchar
+    show mcsurp at right, stretch_in
+
+    mc "А как насчёт дороги на север?!"
+
+    rid "Ага, вот, когда нефтеоборот налажен, можешь ехать за нашими караванами."
+    rid "Они покажут тебе правильный путь на север, именно туда, куда ты хочешь."
+
+    mc "Прощайте."
+
+    "Вы направились вслед за караваном в соседний регион."
+
+    jump firsthel_nl
 
     # Temporary return
     return
