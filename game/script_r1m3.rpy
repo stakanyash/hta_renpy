@@ -742,6 +742,8 @@ label banditbaseelim:
         $ GotElephant = True
 
         "Вы получили предмет \"Слон\"."
+    else:
+        $ GotElephant = False
 
     mc "Пора ехать в Минин."
 
