@@ -72,6 +72,20 @@ image bg_spymer_4 = "images/bgs/r1m3/bg_spymer_4.jpg"
 image bg_spymer_5 = "images/bgs/r1m3/bg_spymer_5.jpg"
 image bg_spymer_6 = "images/bgs/r1m3/bg_spymer_6.jpg"
 
+# Backgrounds: r1m4
+
+image bg_helfirst = "images/bgs/r1m4/bg_helfirst.jpg"
+image bg_olm = "images/bgs/r1m4/bg_olm.jpg"
+image bg_saliniom = "images/bgs/r1m4/bg_saliniom.jpg"
+image bg_lauka = "images/bgs/r1m4/bg_lauka.jpg"
+image bg_kalis = "images/bgs/r1m4/bg_kalis.jpg"
+image bg_kordan = "images/bgs/r1m4/bg_kordan.jpg"
+image bg_boloto = "images/bgs/r1m4/bg_boloto.jpg"
+image bg_boloto_1 = "images/bgs/r1m4/bg_boloto_1.jpg"
+image bg_boloto_2 = "images/bgs/r1m4/bg_boloto_2.jpg"
+image bg_kran = "images/bgs/r1m4/bg_kran.jpg"
+image bg_kranfight = "images/bgs/r1m4/bg_kranfight.jpg"
+
 # Sprites: Characters
 
 image ben1 = "images/sprites/chr/ben1.png"
@@ -109,6 +123,10 @@ image mc4_key = "images/sprites/chr/mc4_key.png"
 image mimayor = "images/sprites/chr/mayor.png"
 image OilMineWorker = "images/sprites/chr/OilMineWorker.png"
 image MininWorker2 = "images/sprites/chr/MininWorker2.png"
+image olmeper = "images/sprites/chr/olmeper.png"
+image matvey = "images/sprites/chr/matvey.png"
+image homer = "images/sprites/chr/homer.png"
+image mc7 = "images/sprites/chr/mc7.png"
 
 # Sprites: Enemy's
 

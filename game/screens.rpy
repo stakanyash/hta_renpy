@@ -115,7 +115,7 @@ screen enemy_ui():
 
     if EnemyType == "Boss":
         add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
-#        add BossIcon xalign X yalign Y (placeholder line)
+        add "gui/bossbar/icons/" + BossIcon xalign 0.957 yalign 0.865
     else:
         add "gui/bossbar/background_noboss.png" yalign 1.0 xalign 0.95
 

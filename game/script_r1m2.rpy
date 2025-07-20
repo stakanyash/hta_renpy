@@ -96,7 +96,7 @@ label defeateddefender:
         $ CurrentGun = "PKT"
     else:
         "Вы нашли оружие \"Шторм\"!"
-        $ CurrentGun = "Shtorm"
+        $ CurrentGun = "Storm"
 
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."

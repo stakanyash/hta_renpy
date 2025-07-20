@@ -780,6 +780,7 @@ label minin3rd_nl:
                         "Установить":
                             $ renpy.save("checkpoint-6")
                             "Вы установили кабину \"Шип\" и отдали 11000 монет."
+                            $ CurrentCabin = "Ship"
                             if elprice - 11000 >= 280:
                                 "У вас есть возможность установить второе оружие."
                                 python:
@@ -820,6 +821,7 @@ label minin3rd_nl:
 
                         "Не устанавливать":
                             $ renpy.save("checkpoint-6")
+                            $ CurrentCabin = "Bolt"
                             $ SecondGun = "None"
 
             "Оставить":
@@ -993,8 +995,5 @@ label minin5th_nl:
     "Вы направились вслед за караваном в соседний регион."
 
     jump firsthel_nl
-
-    # Temporary return
-    return
 
 # With Lisa route

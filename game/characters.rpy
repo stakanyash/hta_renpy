@@ -34,3 +34,9 @@ define sharki = Character('Рабочий Шарки', color="#FED11B")
 define mayor = Character('Мэр Минина', color="#FED11B")
 define chris = Character('Нефтяник Крис', color="#FED11B") 
 define rid = Character('Рабочий Рид', color="#FED11B")
+
+# Region 1, part 4
+
+define perchitto = Character('Перчитто', color="#FED11B")
+define matvey = Character('Матвей', color="#FED11B")
+define homer = Character('Гомер', color="#FED11B")
