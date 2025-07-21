@@ -496,9 +496,9 @@ label felixbeforefight:
             $ enemy_image = "felixteam"
             $ player_hp = 850
             $ player_max_hp = player_hp
-            $ max_heals = 10
+            $ max_heals = 20
             $ enemy_hp = player_hp
-            $ damage_range = (0.007, 0.02)
+            $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
             $ turn_count = 0
             $ enemy_max_hp = enemy_hp
             $ heal_count = 0
@@ -849,7 +849,19 @@ label KventinZaimka:
     hide mc3 with dissolve
     hide kventin with dissolve
 
+    $ CurrentGun = "Storm"
+
     "Вы ставите новое вооружение на свою машину и едете к Феликсу..."
+
+    "У вас есть возможность продать оружие \"Шершень\". Продажа принесёт вам 260 монет."
+
+    menu:
+        "Продать":
+            $ CurrentMoney = int(CurrentMoney) + 260
+            "Вы решили продать \"Шершень\" и получили 260 монет.\nВаш текущий баланс: [CurrentMoney]."
+
+        "Не продавать":
+            "Вы решили не продавать \"Шершень\".\nВаш текущий баланс: [CurrentMoney]."
 
     jump felixbase
 
@@ -922,13 +934,13 @@ label felix_battle:
         $ player_max_hp = player_hp
         $ max_heals = 10
         $ enemy_hp = player_hp * 2
-        $ damage_range = (0.008, 0.02)
     elif TakeGunFromZaimka == "False":
         $ player_hp = 500
         $ player_max_hp = 850
         $ max_heals = 20
         $ enemy_hp = player_hp * 1.5
-        $ damage_range = (0.005, 0.0175)
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0

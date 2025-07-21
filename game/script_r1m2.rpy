@@ -3,6 +3,8 @@
 # Without Lisa route
 
 label arrivetor1m2:
+
+    $ CurrentRegion = "r1m2"
     
     scene bg_ridzin with fade
 
@@ -43,7 +45,7 @@ label attackforloot:
     $ player_hp = 850
     $ player_max_hp = player_hp
     $ enemy_hp = 400
-    $ damage_range = (0.005, 0.0175)
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -98,6 +100,8 @@ label defeateddefender:
         "Вы нашли оружие \"Шторм\"!"
         $ CurrentGun = "Storm"
 
+    $ Inventory = "Hornet"
+
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."
 
@@ -107,6 +111,19 @@ label movetovostochnoe:
 
     play music "music/bar.ogg" fadeout 1.0
     scene bg_vostochnoe with fade
+
+    if Inventory == "Hornet":
+        "В вашем инвентаре есть предмет \"Шершень\"."
+        "Хотите его продать? Цена продажи: 260."
+
+        menu:
+            "Продать":
+                $ Inventory = "None"
+                $ CurrentMoney = int(CurrentMoney) + 260
+                "Предмет \"Шершень\" продан.\nВаш баланс: [CurrentMoney]"
+
+            "Не продавать":
+                "\"Шершень\" остался в вашем инвентаре."
 
     "Приехав в Восточное вы не знаете к кому обратиться."
     show hose at left with dissolve
@@ -313,20 +330,8 @@ label toportoe1:
     $ player_max_hp = player_hp
     $ enemy_hp = 850
     $ bgname = "bg_toporto"
-
-    if CurrentGun == "Storm":
-        $ damage_range = (0.008, 0.02)
-        $ max_heals = 10
-    elif CurrentGun == "PKT":
-        $ damage_range = (0.005, 0.0188)
-        $ max_heals = 20
-    elif CurrentGun == "Kord":
-        $ damage_range = (0.005, 0.0195)
-        $ max_heals = 15
-    else:
-        $ damage_range = (0.005, 0.0175)
-        $ max_heals = 20
-    
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -422,6 +427,8 @@ label backtomidgard:
     "Однако перед тем, как отправиться к Бену вы решили купить себе новую машину."
 
     pause 1.0
+
+    $ CurrentCar = "Molokovoz"
 
     "Вы купили новую машину \"Молоковоз\"."
     

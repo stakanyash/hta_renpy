@@ -85,6 +85,15 @@ image bg_boloto_1 = "images/bgs/r1m4/bg_boloto_1.jpg"
 image bg_boloto_2 = "images/bgs/r1m4/bg_boloto_2.jpg"
 image bg_kran = "images/bgs/r1m4/bg_kran.jpg"
 image bg_kranfight = "images/bgs/r1m4/bg_kranfight.jpg"
+image bg_bosskran_dead = "images/bgs/r1m4/bg_bosskran_dead.jpg"
+image bg_leaver1_cargo1_1 = "images/bgs/r1m4/bg_leaver1_cargo1_1.jpg"
+image bg_leaver1_cargo1_2 = "images/bgs/r1m4/bg_leaver1_cargo1_2.jpg"
+image bg_leaver1_cargo1_3 = "images/bgs/r1m4/bg_leaver1_cargo1_3.jpg"
+image bg_leaver1_cargo1_4 = "images/bgs/r1m4/bg_leaver1_cargo1_4.jpg"
+image bg_leaver1_cargo3_1 = "images/bgs/r1m4/bg_leaver1_cargo3_1.jpg"
+image bg_leaver1_cargo3_2 = "images/bgs/r1m4/bg_leaver1_cargo3_2.jpg"
+image bg_leaver1_cargo3_3 = "images/bgs/r1m4/bg_leaver1_cargo3_3.jpg"
+image bg_leaver1_cargo3_4 = "images/bgs/r1m4/bg_leaver1_cargo3_4.jpg"
 
 # Sprites: Characters
 

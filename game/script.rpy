@@ -15,6 +15,59 @@ label start:
 
     $ player_name = "Вы"
 
+    $ CurrentGun = "Hornet"
+    $ CurrentMoney = "0"
+    $ CurrentCar = "Van"
+    $ CurrentRegion = "r1m1"
+
+    $ Inventory = "None"
+
+    $ car_names = {
+        "Van": "Вэн",
+        "Molokovoz": "Молоковоз",
+        "Ural": "Урал"
+    }
+
+    $ region_names = {
+        "r1m1": "Край",
+        "r1m2": "Риджин",
+        "r1m3": "Фатерлянд",
+        "r1m4": "Хель",
+        "r2m1": "Либриум",
+        "r2m2": "Аржан",
+        "r3m1": "Роща Друидов",
+        "r3m2": "Игнотт",
+        "r4m1": "Вахат",
+        "r4m2": "Зармек",
+    }
+
+    $ gun_names = {
+        "Hornet": "Шершень",
+        "Storm": "Шторм",
+        "PKT": "ПКТ",
+        "Kord": "Корд",
+        "Vulcan": "Вулкан",
+        "KPVT": "КПВТ",
+        "Bumblebee": "Шмель",
+        "Hurricane": "Ураган",
+        "Flag": "Флаг",
+        "None": "-"
+    }
+
+    $ gun_stats = {
+        "Hornet": (0.0060, 0.0140),
+        "Specter": (0.0070, 0.0164),
+        "Storm": (0.0071, 0.0167),
+        "PKT": (0.0076, 0.0178),
+        "Kord": (0.0082, 0.0190),
+        "Hurricane": (0.0082, 0.0190),
+        "Flag": (0.0120, 0.0280),
+        "Vulcan": (0.0089, 0.0207),
+        "KPVT": (0.0090, 0.0210),
+        "Bumblebee": (0.0100, 0.0232),
+        "Vector": (0.0102, 0.0238)
+    }
+
     call screen name_input_screen
 
 label tutorial_check:

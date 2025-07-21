@@ -3,6 +3,8 @@
 # Default start-up
 
 label vaterlandfirst:
+    $ CurrentRegion = "r1m3"
+
     if LisaAgreed == "True":
         jump r1m3withlisa
     elif LisaAgreed == "False":
@@ -157,22 +159,8 @@ label mvillage:
     $ player_hp = 1500
     $ player_max_hp = player_hp
     $ enemy_hp = 2000
-
-
-    # Amount of heals increased because high enemy HP
-    if CurrentGun == "Storm":
-        $ damage_range = (0.008, 0.02)
-        $ max_heals = 15
-    elif CurrentGun == "PKT":
-        $ damage_range = (0.005, 0.0188)
-        $ max_heals = 25
-    elif CurrentGun == "Kord":
-        $ damage_range = (0.005, 0.0195)
-        $ max_heals = 20
-    else:
-        $ damage_range = (0.005, 0.0175)
-        $ max_heals = 25
-    
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -251,21 +239,8 @@ label brigdedestroy:
     $ player_hp = 1500
     $ player_max_hp = player_hp
     $ enemy_hp = player_hp
-
-
-    if CurrentGun == "Storm":
-        $ damage_range = (0.008, 0.02)
-        $ max_heals = 10
-    elif CurrentGun == "PKT":
-        $ damage_range = (0.005, 0.0188)
-        $ max_heals = 20
-    elif CurrentGun == "Kord":
-        $ damage_range = (0.005, 0.0195)
-        $ max_heals = 15
-    else:
-        $ damage_range = (0.005, 0.0175)
-        $ max_heals = 20
-    
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -444,6 +419,8 @@ label minin2nd_nl:
 
     sharki "Чего тебе, бродяга?"
 
+    show mc6 at left, stretch_in
+
     mc "Я ищу такое огромное сооружение. Говорят, раз увидишь - не забудешь. Оно должно быть где-то в ваших краях."
 
     sharki "Никогда не встречал ничего, подходящего под твоё яркое описание."
@@ -455,6 +432,9 @@ label minin2nd_nl:
     sharki "Спроси, конечно, но сперва дослушай. Так вот, я слышал от одного знакомого, который слышал от другого знакомого, который…"
 
     "Вам начинает это надоедать."
+
+    hide mc6
+    show mc_2 at left, stretch_in
 
     mc "Слушай, не томи!"
 
@@ -493,6 +473,8 @@ label minin2nd_nl:
     hide mworker with dissolve
 
     mc "Ужас какой-то! Так действовать на нервы надо уметь!"
+
+    hide mc_2 with dissolve
 
     "Вы идёте к мэру."
 
@@ -568,21 +550,8 @@ label oilmine1st:
     $ player_hp = 1500
     $ player_max_hp = player_hp
     $ enemy_hp = player_hp
-
-
-    if CurrentGun == "Storm":
-        $ damage_range = (0.008, 0.02)
-        $ max_heals = 10
-    elif CurrentGun == "PKT":
-        $ damage_range = (0.005, 0.0188)
-        $ max_heals = 20
-    elif CurrentGun == "Kord":
-        $ damage_range = (0.005, 0.0195)
-        $ max_heals = 15
-    else:
-        $ damage_range = (0.005, 0.0175)
-        $ max_heals = 20
-    
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -673,21 +642,8 @@ label followlastone:
     $ player_hp = 1500
     $ player_max_hp = player_hp
     $ enemy_hp = player_hp
-
-
-    if CurrentGun == "Storm":
-        $ damage_range = (0.008, 0.02)
-        $ max_heals = 10
-    elif CurrentGun == "PKT":
-        $ damage_range = (0.005, 0.0188)
-        $ max_heals = 20
-    elif CurrentGun == "Kord":
-        $ damage_range = (0.005, 0.0195)
-        $ max_heals = 15
-    else:
-        $ damage_range = (0.005, 0.0175)
-        $ max_heals = 20
-    
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -754,14 +710,22 @@ label minin3rd_nl:
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
 
-    $ elprice = random.randint(10000, 24353)
+    $ elprice = random.randint(19000, 28000)
 
     $ weapon_prices = {
-        "Шершень": 280,
-        "Спектр": 590,
-        "ПКТ": 1670,
-        "Шторм": 3450,
-        "Корд": 3680,
+        "Вектор": 5520,
+        "Вулкан": 5630,
+        "КПВТ": 6400,
+        "Шмель": 13310,
+        "Ураган": 14910,
+        "Флаг": 17860,
+    }
+
+    $ oldweapon_price = {
+        "Hornet": 280,
+        "PKT": 1670,
+        "Storm": 3450,
+        "Kord": 3680
     }
 
     if GotElephant == True:
@@ -772,62 +736,84 @@ label minin3rd_nl:
             "Продать":
                 $ renpy.save("checkpoint-5")
                 $ SelledElephant = True
+                $ CurrentMoney = elprice
                 "Вы продали предмет \"Слон\" и получили [elprice] монет."
-                if elprice >= 11000:
-                    "Ваших средств достаточно для обновления кабины."
-                    "Хотите установить кабину \"Шип\"? Цена покупки: 11000."
+                if elprice >= 19000:
+                    "Ваших средств достаточно для обновления кузова и установки нового оружия."
+                    "Хотите установить кузов \"Бокс\"? Цена покупки: 10000."
                     menu:
                         "Установить":
                             $ renpy.save("checkpoint-6")
-                            "Вы установили кабину \"Шип\" и отдали 11000 монет."
-                            $ CurrentCabin = "Ship"
-                            if elprice - 11000 >= 280:
-                                "У вас есть возможность установить второе оружие."
+                            $ CurrentMoney -= 10000
+                            "Вы установили кузов \"Бокс\" и отдали 10000 монет."
+                            $ OldWeaponPrice = oldweapon_price.get(CurrentGun, oldweapon_price["Hornet"])
+                            $ CurrentGun = "None"
+                            $ CurrentCargo = "Box"
+                            if CurrentMoney >= 5520:
+                                $ CurrentMoney = int(CurrentMoney) + OldWeaponPrice
+                                "Нужно установить новое оружие. Ваше старое оружие автоматически продано за [OldWeaponPrice] монет."
+
                                 python:
-                                    affordable_weapons = [name for name, price in weapon_prices.items() if price <= elprice - 11000]
+                                    affordable_weapons = [name for name, price in weapon_prices.items() if price <= CurrentMoney]
                                     weapon_text = ", ".join(affordable_weapons)
                                 "Ваших средств достаточно на: [weapon_text]."
                                 menu:
-                                    "Шершень" if elprice - 11000 >= 280:
-                                        "Вы установили второе оружие \"Шершень\" и отдали 280 монет."
-                                        $ SecondGun = "Hornet" 
+                                    "Вектор" if CurrentMoney >= 5520:
+                                        $ CurrentMoney -= 5520
+                                        $ CurrentGun = "Vector" 
+                                        $ GunType = "BigGun"
+                                        "Вы установили оружие \"Вектор\" и отдали 5520 монет. У вас осталось [CurrentMoney] монет."
                                         $ renpy.save("checkpoint-1")
 
-                                    "Спектр" if elprice - 11000 >= 590:
-                                        "Вы установили второе оружие \"Спектр\" и отдали 590 монет."  
-                                        $ SecondGun = "Specter" 
+                                    "Вулкан" if CurrentMoney >= 5630:
+                                        $ CurrentMoney -= 5630
+                                        $ CurrentGun = "Vulcan" 
+                                        $ GunType = "BigGun"
+                                        "Вы установили оружие \"Вулкан\" и отдали 5630 монет. У вас осталось [CurrentMoney] монет."  
                                         $ renpy.save("checkpoint-1")
 
-                                    "ПКТ" if elprice - 11000 >= 1670:
-                                        "Вы установили второе оружие \"ПКТ\" и отдали 1670 монет."  
-                                        $ SecondGun = "PKT" 
+                                    "КПВТ" if CurrentMoney >= 6400:
+                                        $ CurrentMoney -= 6400
+                                        $ CurrentGun = "KPVT" 
+                                        $ GunType = "BigGun"
+                                        "Вы установили оружие \"КПВТ\" и отдали 6400 монет. У вас осталось [CurrentMoney] монет."  
                                         $ renpy.save("checkpoint-1")
 
-                                    "Шторм" if elprice - 11000 >= 3450:
-                                        "Вы установили второе оружие \"Шторм\" и отдали 3450 монет."
-                                        $ SecondGun = "Storm" 
+                                    "Шмель" if CurrentMoney >= 13310:
+                                        $ CurrentMoney -= 13310
+                                        $ CurrentGun = "Bumblebee" 
+                                        $ GunType = "BigGun"
+                                        "Вы установили оружие \"Шмель\" и отдали 13310 монет. У вас осталось [CurrentMoney] монет."
                                         $ renpy.save("checkpoint-1")
 
-                                    "Корд" if elprice - 11000 >= 3680:
-                                        "Вы установили второе оружие \"Корд\" и отдали 3680 монет."
-                                        $ SecondGun = "Kord" 
+                                    "Ураган" if CurrentMoney >= 14910:
+                                        $ CurrentMoney -= 14910
+                                        $ CurrentGun = "Hurricane" 
+                                        $ GunType = "BigGun"
+                                        "Вы установили оружие \"Ураган\" и отдали 14910 монет. У вас осталось [CurrentMoney] монет."
                                         $ renpy.save("checkpoint-1")
 
-                                    "Не устанавливать второе оружие":
-                                        "Вы решили не устанавливать второе оружие."
-                                        $ SecondGun = "None" 
+                                    "Флаг" if CurrentMoney >= 17860:
+                                        $ CurrentMoney -= 17860
+                                        $ CurrentGun = "Flag" 
+                                        $ GunType = "BigGun"
+                                        "Вы установили оружие \"Флаг\" и отдали 17860 монет. У вас осталось [CurrentMoney] монет."
                                         $ renpy.save("checkpoint-1")
                                              
 
                         "Не устанавливать":
                             $ renpy.save("checkpoint-6")
-                            $ CurrentCabin = "Bolt"
-                            $ SecondGun = "None"
+                            $ CurrentCargo = "Tent"
+                            $ GunType = "SmlGun"
+                            $ CurrentMoney = elprice
+
+                            "Вы решили не устанавливать новый кузов. На вашем балансе: [elprice]"
 
             "Оставить":
                 $ renpy.save("checkpoint-5")
                 $ SelledElephant = False
-                $ SecondGun = "None"
+                $ GunType = "SmlGun"
+                $ CurrentMoney = "0"
 
     "Вернувшись в Минин вы сразу идёте к мэру."
 

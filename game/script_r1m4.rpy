@@ -2,6 +2,8 @@
 
 label firsthel_nl:
 
+    $ CurrentRegion = "r1m4"
+
     scene bg_helfirst with fade
     play music "music/driving7.ogg" fadeout 1.0
 
@@ -177,9 +179,9 @@ label tokranfight:
 
     $ renpy.movie_cutscene("movies/r1m4/bosskran.mp4")
 
+    play sound "audio/sfx/stand1_boss02.wav" channel "sfx2"
     play music "music/intensedialogue01.ogg"
     scene bg_kran with fade
-    play sound "audio/sfx/stand1_boss02.wav" channel "sfx2"
     
     mc "О господи! Это что ещё за...?"
     mc "Зачем только людям древности нужны были такие машины?"
@@ -192,23 +194,7 @@ label tokranfight:
 
     scene bg_kranfight with fade
 
-    $ gun_stats = {
-        "Storm": (0.008, 0.02),
-        "Specter": (0.005, 0.18),
-        "PKT": (0.005, 0.0188),
-        "Kord": (0.005, 0.0195),
-        "Hornet": (0.005, 0.0175),
-    }
-
-    $ dmg1 = gun_stats.get(CurrentGun, gun_stats["Hornet"])
-    $ dmg2 = gun_stats.get(SecondGun, (0, 0)) if SecondGun else (0, 0)
-
-    if SecondGun == "None":
-        $ dmg1 = (dmg1[0], dmg1[1])
-    else:
-        $ dmg1 = (dmg1[0] * 0.6, dmg1[1] * 0.6)
-    
-    $ dmg2 = (dmg2[0] * 0.4, dmg2[1] * 0.4)
+    pause 0.5
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -221,7 +207,7 @@ label tokranfight:
     $ player_hp = 1500
     $ player_max_hp = player_hp
     $ enemy_hp = player_hp * 2
-    $ damage_range = (dmg1[0] + dmg2[0], dmg1[1] + dmg2[1])
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -260,7 +246,63 @@ label tokranfight:
         hide kranboss with dissolve
         stop sfx2 fadeout 1.0
 
-        "..."
+        scene bg_bosskran_dead
+
+        mc "Чудище повержено. Пора двигаться дальше."
+
+        jump leaveregion1
+
+label leaveregion1:
+
+    play music "music/bio02.ogg" fadeout 1.0
+
+    # cargo3 bg's doesn't show for some reason...
+
+    if CurrentCargo == "Box":
+        scene bg_leaver1_cargo3_1 with fade
+    else:
+        scene bg_leaver1_cargo1_1 with fade
+
+    mc "Это то самое место, которое указал Гомер, но я не вижу никаких врат."
+    mc "Неужели всё зря?!"
+
+    pause 0.5
+
+    if CurrentCargo == "Box":
+        scene bg_leaver1_cargo3_2 with dissolve
+    else:
+        scene bg_leaver1_cargo1_2 with dissolve
+
+    mc "Что это лезет из-под воды? Покой нам только снится..."
+    mc "Только прикончил одного монстра, как второй на подходе..."
+    mc "Впрочем, этот поспокойнее будет."
+
+    play sound "sfx/boat_open.wav"
+    play sound "sfx/boat_motor_loop_mono.wav" channel "sfx2"
+
+    pause 0.5
+
+    if CurrentCargo == "Box":
+        scene bg_leaver1_cargo3_3 with dissolve
+    else:
+        scene bg_leaver1_cargo1_3 with dissolve
+
+    mc "Похоже, он приглашает меня к себе в пасть. Так это же и есть Морские Врата!"
+    mc "В животе чудища я и доплыву до Оракула."
+
+    pause 0.5
+
+    if CurrentCargo == "Box":
+        scene bg_leaver1_cargo3_4 with dissolve
+    else:
+        scene bg_leaver1_cargo1_4 with dissolve
+
+    mc "Страшно, конечно..."
+    mc "Ну, терять мне нечего. Только вперёд!"
+
+    scene black with fade
+
+    "Конец первой главы."
 
     return
 
