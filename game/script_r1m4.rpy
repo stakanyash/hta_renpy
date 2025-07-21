@@ -256,8 +256,6 @@ label leaveregion1:
 
     play music "music/bio02.ogg" fadeout 1.0
 
-    # cargo3 bg's doesn't show for some reason...
-
     if CurrentCargo == "Box":
         scene bg_leaver1_cargo3_1 with fade
     else:

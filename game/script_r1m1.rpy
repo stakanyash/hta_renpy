@@ -1058,21 +1058,13 @@ label felixdefeated:
     hide mcsurp with dissolve
     scene black with fade
 
-    # Temporary scene
     jump leaver1m1tovaterland
 
 label leaver1m1tovaterland:
 
-    if TakeGunFromZaimka == "True":
-        $ renpy.movie_cutscene("movies/leaver1m1/leaver1m1tom2_storm.mp4")
-    elif TakeGunFromZaimka == "False":
-        $ renpy.movie_cutscene("movies/leaver1m1/leaver1m1tom2_hornet.mp4")
+    "Далее контента нет."
 
-    "Автор (дебил)" "Временный перенос в r1m2 из-за того, что r1m3 (по нужной ветке) не начат."
-
-    pause 1.5
-
-    jump arrivetor1m2
+    return
 
 label leaver1m1toridzin:
 
