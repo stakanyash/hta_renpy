@@ -68,6 +68,14 @@ label start:
         "Vector": (0.0102, 0.0238)
     }
 
+    $ CarHP = {
+        "Van": 850,
+        "Molokovoz": 1500,
+        "Ural": 2000,
+        "Belaz": 2500,
+        "Mirotvorec": 3500
+    }
+
     call screen name_input_screen
 
 label tutorial_check:

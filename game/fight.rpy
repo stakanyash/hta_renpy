@@ -62,7 +62,7 @@ init python:
         apply_enemy_attack()
         renpy.restart_interaction()
 
-    ## Player healing (from 1% to 8% of max player HP, heal sound)
+    ## Player healing (from 2% to 10% of max player HP, heal sound)
     def heal():
         global player_hp, heal_count, max_heals, player_max_hp
         if heal_count < max_heals:
@@ -70,6 +70,7 @@ init python:
             heal_amount = int(player_max_hp * heal_per)
             player_hp = min(player_hp + heal_amount, player_max_hp)
             heal_count += 1
+            renpy.notify(f"Восстановлено {heal_amount} здоровья.")
 
             renpy.sound.play(f"audio/sfx/life.wav", channel="sound")
         renpy.restart_interaction()

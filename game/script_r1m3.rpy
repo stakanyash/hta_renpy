@@ -156,7 +156,7 @@ label mvillage:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "minerattackers"
-    $ player_hp = 1500
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 2000
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
@@ -236,7 +236,7 @@ label brigdedestroy:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "brigde_defender"
-    $ player_hp = 1500
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = player_hp
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
@@ -547,7 +547,7 @@ label oilmine1st:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "oilbandits"
-    $ player_hp = 1500
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = player_hp
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
@@ -639,7 +639,7 @@ label followlastone:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "banditsonbase"
-    $ player_hp = 1500
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = player_hp
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
@@ -980,6 +980,8 @@ label minin5th_nl:
 
     "Вы направились вслед за караваном в соседний регион."
 
-    jump firsthel_nl
+    $ r1m4SideQuest = "CanBeGiven"
+
+    jump r1m4start
 
 # With Lisa route

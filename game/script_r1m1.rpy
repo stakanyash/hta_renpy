@@ -494,7 +494,7 @@ label felixbeforefight:
             $ persistent._in_battle = True
             $ RunFromFelix = "False"
             $ enemy_image = "felixteam"
-            $ player_hp = 850
+            $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
             $ player_max_hp = player_hp
             $ max_heals = 20
             $ enemy_hp = player_hp
@@ -930,12 +930,12 @@ label felixbase:
 
 label felix_battle:
     if TakeGunFromZaimka == "True":
-        $ player_hp = 850
+        $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
         $ player_max_hp = player_hp
         $ max_heals = 10
         $ enemy_hp = player_hp * 2
     elif TakeGunFromZaimka == "False":
-        $ player_hp = 500
+        $ player_hp = int(CarHP.get(CurrentCar, CarHP["Van"])) - 350
         $ player_max_hp = 850
         $ max_heals = 20
         $ enemy_hp = player_hp * 1.5

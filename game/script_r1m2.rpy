@@ -42,7 +42,7 @@ label attackforloot:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "lootdefender"
-    $ player_hp = 850
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 400
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
@@ -326,7 +326,7 @@ label toportoe1:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "to_porto_e1"
-    $ player_hp = 850
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 850
     $ bgname = "bg_toporto"

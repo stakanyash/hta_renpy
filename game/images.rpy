@@ -94,6 +94,12 @@ image bg_leaver1_cargo3_1 = "images/bgs/r1m4/bg_leaver1_cargo3_1.jpg"
 image bg_leaver1_cargo3_2 = "images/bgs/r1m4/bg_leaver1_cargo3_2.jpg"
 image bg_leaver1_cargo3_3 = "images/bgs/r1m4/bg_leaver1_cargo3_3.jpg"
 image bg_leaver1_cargo3_4 = "images/bgs/r1m4/bg_leaver1_cargo3_4.jpg"
+image bg_warehouse = "images/bgs/r1m4/bg_warehouse.jpg"
+image bg_freeleader = "images/bgs/r1m4/bg_freeleader.jpg"
+image bg_freeleader_1 = "images/bgs/r1m4/bg_freeleader_1.jpg"
+image bg_freeleader_2 = "images/bgs/r1m4/bg_freeleader_2.jpg"
+image bg_freeleaderfight = "images/bgs/r1m4/bg_freeleaderfight.jpg"
+image bg_leaderisfree = "images/bgs/r1m4/bg_leaderisfree.jpg"
 
 # Sprites: Characters
 
@@ -136,6 +142,8 @@ image olmeper = "images/sprites/chr/olmeper.png"
 image matvey = "images/sprites/chr/matvey.png"
 image homer = "images/sprites/chr/homer.png"
 image mc7 = "images/sprites/chr/mc7.png"
+image galden = "images/sprites/chr/galden.png"
+image wsecurity = "images/sprites/chr/wsecurity.png"
 
 # Sprites: Enemy's
 

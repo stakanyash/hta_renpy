@@ -1,15 +1,22 @@
-# Without Lisa route
-
-label firsthel_nl:
-
+label r1m4start:
     $ CurrentRegion = "r1m4"
 
     scene bg_helfirst with fade
     play music "music/driving7.ogg" fadeout 1.0
 
     "Приехав в Хель вы сразу направились в Ольм."
-
+    
+    play music "music/town1.ogg" fadeout 1.0
     scene bg_olm with dissolve
+
+    if r1m4SideQuest == "CanBeGiven":
+        jump galdenquest
+    elif LisaAgreed == "False":
+        jump homersearch
+
+# Without Lisa route
+
+label homersearch:
 
     "В Ольме вы решили начать поиски Гомера."
 
@@ -204,7 +211,7 @@ label tokranfight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "kranboss"
-    $ player_hp = 1500
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = player_hp * 2
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
@@ -305,3 +312,309 @@ label leaveregion1:
     return
 
 # With Lisa route
+
+# Optional warehouse quest
+
+label galdenquest:
+
+    "Однако вас подзывает незнакомец."
+
+    show galden at left, stretch_in
+
+    unknown "Ты бы не мог нам помочь?"
+
+    show mchar at right, stretch_in
+
+    mc "Чем же я могу вам помочь?"
+
+    galden "Наш склад был захвачен местным населением."
+
+    "Вам не понятно причём тут вообще вы."
+
+    hide mchar
+    show mcsurp at right, stretch_in
+
+    mc "Почему же вы не можете его отбить силой?"
+
+    galden "Нам не хочется ссориться окончательно с жителями этих земель, поэтому мы и просим тебя."
+
+    menu:
+        "Согласиться":
+            $ r1m4SideQuest = "Taken"
+            mc "Хорошо, я попробую разобраться."
+            hide galden with dissolve
+            "Вы уезжаете на склад."
+            hide mcsurp
+            jump r1m4SideQuest_start
+
+        "Отказать":
+            $ r1m4SideQuest = "Failed"
+            mc "Мне это неинтересно."
+            hide galden with dissolve
+            "Вы спокойно уходите. Незнакомец ничего не говорит вам в след."
+            mc "Видимо ему уже не один раз отказали..."
+            hide mcsurp with dissolve
+            jump homersearch
+
+label r1m4SideQuest_start:
+
+    scene bg_warehouse with fade
+
+    "На складе вас явно не готовы принимать \"с распростертыми объятиями\"."
+
+    show wsecurity at right, stretch_in
+
+    wsec "Стой! Кто идёт?"
+
+    show mc6 at left with dissolve
+
+    mc "Спокойно, я не враг вам."
+
+    wsec "Это уж нам решать. Выкладывай, кто таков?"
+
+    mc "Мне поручили важную миссию: договориться с вами об освобождении склада."
+
+    wsec "Ха, торговцы поняли, что захват нашего лидера был не лучшим их поступком, и они готовы его освободить?"
+
+    mc "Они захватили вашего лидера?"
+    mc "\"Хоть бы меня предупредили!\""
+
+    wsec "У нас сейчас сложные времена, понимаешь. Этот склад - единственный рычаг, с помощью которого мы можем диктовать свои требования грязным торговцам."
+
+    mc "И чего же вы хотите?"
+
+    wsec "В данный момент мы просим освободить нашего лидера, только после этого мы уйдем со склада."
+
+    menu:
+        "Освободить лидера":
+            mc "Хорошо, я помогу вам. Где ваш лидер?"
+            wsec "Знали бы, сами освободили. Это и есть твоя основная задача - узнать, где он."
+            mc "Ладно, попробую всё выяснить."
+            hide wsecurity
+            hide mc6
+            jump r1m4SideQuest_whereisleader
+
+        "Отбить склад силой":
+            mc "Слишком это хлопотно, проще убить вас всех."
+            hide wsecurity
+            hide mc6
+            "Между вами начинается бой."
+            $ r1m4SideQuestLeaderSaved = False
+            jump r1m4SideQuest_warehousefight
+
+label r1m4SideQuest_warehousefight:
+
+    play music "music/battle7.ogg"
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = "warehouseguard"
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_max_hp = player_hp
+    $ enemy_hp = 4250
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 20
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Захватчики склада"
+    $ bgname = "bg_warehouse"
+    $ EnemyType = "Regular"
+    scene bg_warehouse
+    show warehouseguard at center
+
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        hide warehouseguard
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+
+        play sound "sfx/explosion04.wav"
+        hide warehouseguard with dissolve
+
+        mc "Эти бандиты больше не будут мешать торговцам."
+        mc "Осталось сообщить в Ольм об освобождении склада."
+
+        jump r1m4SideQuest_finish
+
+label r1m4SideQuest_whereisleader:
+
+    scene bg_olm with fade
+
+    show galden at left with dissolve
+
+    galden "Удалось освободить склад?"
+
+    show mcsurp at right, stretch_in
+
+    mc "Нет. Чёртовы аборигены стоят насмерть."
+    mc "Может быть, мне удастся уговорить их лидера распустить всех по домам?"
+
+    galden "Этого зверя? Вряд ли. Даже пойманный, он отказывается сотрудничать с нами."
+
+    mc "А всё-таки где он?"
+
+    galden "Сейчас фургон с ним должен выехать из рыбацкого поселка и направляется сюда."
+
+    mc "Спасибо. Я найду его."
+
+    jump r1m4SideQuest_freeleader
+
+label r1m4SideQuest_freeleader:
+    
+    play music "music/passage01unloop.ogg" fadeout 1.0
+    scene bg_freeleader with fade
+
+    extguard "Не приближаться! Любые подозрительные действия будут расцениваться как агрессия!"
+
+    mc "Вы перевозите груз, который мне нужен. Я готов щедро заплатить."
+
+    play music "music/intensedialogue01.ogg" fadeout 1.0
+    scene bg_freeleader_1 with dissolve
+
+    extguard "Попытка подкупа должностного лица при исполнении!"
+
+    mc "Похоже, придётся действовать по-плохому..."
+    mc "Освободите пленника и катитесь на все четыре стороны. Второго шанса у вас не будет."
+
+    scene bg_freeleader_2 with dissolve
+
+    extguard "Все к орудиям! Покажем этому наглецу, как связываться со служителями порядка!"
+
+    mc "Вы сами этого захотели. Главное - не задеть прицеп с пленником. Все остальные пусть горят синим пламенем!"
+
+    play music "music/battle7.ogg"
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = "leadertakers"
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_max_hp = player_hp
+    $ enemy_hp = 4050 # Summary HP of 3 Vans and 1 Lorry
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 20
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Захватчики лидера рыбаков"
+    $ bgname = "bg_freeleaderfight"
+    $ EnemyType = "Regular"
+    scene bg_freeleaderfight
+    show leadertakers at center
+
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        hide leadertakers
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+
+        play sound "sfx/explosion04.wav"
+        hide leadertakers with dissolve
+
+        jump r1m4SideQuest_leaderisfree
+
+label r1m4SideQuest_leaderisfree:
+
+    play music "music/intensedialogue03.ogg" fadeout 1.0
+    scene bg_leaderisfree with fade
+
+    mc "Чего ждёшь? Садись в мою машину. Торопись, они могли вызвать подмогу!"
+
+    extleader "Спасибо, что освободил меня, незнакомец. Но каковы твои мотивы? Я не уверен, могу ли тебе доверять."
+
+    mc "Я заключил договор с твоими бойцами, что освобожу тебя в обмен на одну нужную мне вещь."
+    mc "И лучше бы им выполнить свою часть сделки!"
+
+    jump r1m4SideQuest_leaderisback
+
+label r1m4SideQuest_leaderisback:
+
+    scene bg_warehouse with fade
+
+    show wsecurity at right, stretch_in
+
+    wsec "Я не верю своим глазам! Иноземец сдержал слово. Наш лидер снова с нами!"
+
+    show mc_2 at left, stretch_in
+
+    mc "Теперь и вы держите своё. Освобождайте склад."
+
+    $ RandomR1M4SQReward = random.randint(2000, 10000)
+    $ CurrentMoney = int(CurrentMoney) + RandomR1M4SQReward
+    $ renpy.notify(f"Вы получили {RandomR1M4SQReward} монет.")
+
+    wsec "Конечно, товарищ! Бери столько добра, сколько сможешь увезти, и возвращайся ещё."
+
+    mc "Обязательно вернусь."
+
+    hide wsecurity with dissolve
+
+    mc "Надеюсь в Ольме меня ни в чём не заподозрят..."
+
+    $ r1m4SideQuestLeaderSaved = True
+
+    jump r1m4SideQuest_finish
+
+label r1m4SideQuest_finish:
+
+    scene bg_olm with fade
+
+    if r1m4SideQuestLeaderSaved == True:
+        "Вернувшись в Ольм вы не замечаете ничего странного."
+
+    galden "Как продвигаются твои дела?"
+
+    mc "Склад чист, работа сделана."
+
+    $ CurrentMoney = int(CurrentMoney) + 2000
+    $ renpy.notify("Вы получили 2000 монет.")
+
+    galden "Отлично! Вот тебе награда."
+
+    mc "Супер!"

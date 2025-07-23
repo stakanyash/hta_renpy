@@ -85,11 +85,15 @@ style frame:
 ## Screen for fight
 
 style centered_text is text:
-    xpos 0.825
+    xpos 0.83
     yalign 0.883
     textalign 0.5
     color "#ffffff"
     padding (10, 10)
+
+style atk_button_text:
+    idle_color "#b1b1b1"
+    insensitive_color "#505050"
 
 screen enemy_ui():
 
@@ -97,6 +101,7 @@ screen enemy_ui():
         align (0.05, 0.98)
         padding (20, 40)
         xsize 450
+        background "gui/bossbar/frame.png"
 
         vbox:
             spacing 10
@@ -104,14 +109,14 @@ screen enemy_ui():
             text _("Выберите действие:") xalign 0.5
 
             if not attack_locked:
-                textbutton _("Атаковать") action Function(attack_enemy) xalign 0.5
+                textbutton _("Атаковать") style "atk_button" action Function(attack_enemy) xalign 0.5
             else:
-                textbutton _("Атаковать") xalign 0.5
+                textbutton _("Атаковать") style "atk_button" xalign 0.5 sensitive False
 
             if heal_count < max_heals:
-                textbutton _("Лечиться") action Function(heal) xalign 0.5 sensitive player_hp < player_max_hp
+                textbutton _("Лечиться") style "atk_button" action Function(heal) xalign 0.5 sensitive player_hp < player_max_hp
             else:
-                textbutton _("Лечиться") xalign 0.5 sensitive False
+                textbutton _("Лечиться") style "atk_button" xalign 0.5 sensitive False
 
     if EnemyType == "Boss":
         add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
@@ -1384,7 +1389,10 @@ screen notify(message):
     style_prefix "notify"
 
     frame at notify_appear:
-        text "[message!tq]"
+        xalign 0.5
+        yalign 0.03
+        
+        text "[message!tq]" xpos 20 yalign 0.5
 
     timer 3.25 action Hide('notify')
 
