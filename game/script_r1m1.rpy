@@ -267,6 +267,8 @@ label tozaimka:
 
     lisa "Здесь наши пути расходятся: надоело мне тащиться следом за твоей развалюхой. К тому же там, где для тебя нет дороги, моя машина пройдёт с лёгкостью."
 
+    $ CurrentMoney += 500
+
     lisa "Ты выполнил свою часть сделки. Держи свои деньги."
 
     play music "audio/music/passage01unloop.ogg" fadeout 1.0
@@ -857,7 +859,7 @@ label KventinZaimka:
 
     menu:
         "Продать":
-            $ CurrentMoney = int(CurrentMoney) + 260
+            $ CurrentMoney += 260
             "Вы решили продать \"Шершень\" и получили 260 монет.\nВаш текущий баланс: [CurrentMoney]."
 
         "Не продавать":

@@ -586,7 +586,7 @@ label r1m4SideQuest_leaderisback:
     mc "Теперь и вы держите своё. Освобождайте склад."
 
     $ RandomR1M4SQReward = random.randint(2000, 10000)
-    $ CurrentMoney = int(CurrentMoney) + RandomR1M4SQReward
+    $ CurrentMoney += RandomR1M4SQReward
     $ renpy.notify(f"Вы получили {RandomR1M4SQReward} монет.")
 
     wsec "Конечно, товарищ! Бери столько добра, сколько сможешь увезти, и возвращайся ещё."
@@ -612,7 +612,7 @@ label r1m4SideQuest_finish:
 
     mc "Склад чист, работа сделана."
 
-    $ CurrentMoney = int(CurrentMoney) + 2000
+    $ CurrentMoney += 2000
     $ renpy.notify("Вы получили 2000 монет.")
 
     galden "Отлично! Вот тебе награда."

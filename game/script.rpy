@@ -16,7 +16,7 @@ label start:
     $ player_name = "Вы"
 
     $ CurrentGun = "Hornet"
-    $ CurrentMoney = "0"
+    $ CurrentMoney = 0
     $ CurrentCar = "Van"
     $ CurrentRegion = "r1m1"
 

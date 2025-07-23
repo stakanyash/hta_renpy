@@ -100,7 +100,9 @@ label defeateddefender:
         "Вы нашли оружие \"Шторм\"!"
         $ CurrentGun = "Storm"
 
-    $ Inventory = "Hornet"
+    $ Inventory = [
+        "Hornet"
+    ]
 
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."
@@ -112,14 +114,14 @@ label movetovostochnoe:
     play music "music/bar.ogg" fadeout 1.0
     scene bg_vostochnoe with fade
 
-    if Inventory == "Hornet":
+    if "Hornet" in Inventory:
         "В вашем инвентаре есть предмет \"Шершень\"."
         "Хотите его продать? Цена продажи: 260."
 
         menu:
             "Продать":
-                $ Inventory = "None"
-                $ CurrentMoney = int(CurrentMoney) + 260
+                $ Inventory.remove("Hornet")
+                $ CurrentMoney += 260
                 "Предмет \"Шершень\" продан.\nВаш баланс: [CurrentMoney]"
 
             "Не продавать":
