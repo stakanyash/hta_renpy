@@ -76,8 +76,13 @@ label r1m3nolisa:
 
 label asgardboom:
 
+    $ TownType = "City"
+
     play music "music/town1.ogg" fadeout 1.0
     scene bg_asgard with fade
+
+    if Inventory:
+        call selling from _call_selling_9
 
     "Приехав в Асгард вы быстро находите магазин взрывчатки."
 
@@ -114,8 +119,13 @@ label asgardboom:
 
 label mvillage:
 
+    $ TownType = "Village"
+
     play music "music/bar.ogg" fadeout 1.0
     scene bg_mvillage with fade
+
+    if Inventory:
+        call selling from _call_selling_10
 
     "Не успели вы приехать, как вас сразу встречают."
 
@@ -203,6 +213,9 @@ label mvillageafterfight:
 
     scene bg_mvillage with dissolve
     play music "music/bar.ogg" fadeout 1.0
+
+    if Inventory:
+        call selling from _call_selling_11
 
     show miner at left with dissolve
     show mchar at right with dissolve
@@ -315,6 +328,11 @@ label peshtallow:
 
     "Вам открыли ворота и вы проехали через Пешт."
 
+    $ TownType = "City"
+
+    if Inventory:
+        call selling from _call_selling_12
+
     hide pguard
     hide mc5
 
@@ -322,8 +340,13 @@ label peshtallow:
 
 label minin1st_nl:
 
+    $ TownType = "City"
+
     scene bg_minin with fade
     play music "music/town3.ogg" fadeout 1.0
+
+    if Inventory:
+        call selling from _call_selling_13
 
     "В Минине вы сразу привлекаете внимание местного рабочего."
 
@@ -411,8 +434,13 @@ label aivenhouse:
 
 label minin2nd_nl:
 
+    $ TownType = "City"
+
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
+
+    if Inventory:
+        call selling from _call_selling_14
 
     "Вернувшись в Минин вы подходите к тому же рабочему, который указал вам на дом отца."
 
@@ -460,96 +488,199 @@ label minin2nd_nl:
 
 label hundredcointosharki:
 
-    if CurrentMoney >= 100:
-        $ CurrentMoney -= 100
-        $ renpy.notify("Вы отдали 100 монет.")
+    if Inventory and FarmEnabled == True:
+        $ FarmEnabled = False
+        call selling from _call_selling_15
 
-        mc "Вот тебе 100 монет..."
+    hide mworker
+    hide mc_2
+    show mworker at right
+    show mc_2 at left
 
-        sharki "Начинаю что-то вспоминать. Ага! Это же был старик Гомер."
+    menu:
+        "Дать 100 монет" if CurrentMoney >= 100:
+            $ CurrentMoney -= 100
+            $ renpy.notify("Вы отдали 100 монет.")
 
-        mc "Гомер? И где я могу его найти?"
+            mc "Вот тебе 100 монет..."
 
-        sharki "Где все рыбаки - на побережье! В посёлке. Только тут, видишь ли, встаёт ещё одна проблема."
-        sharki "Как ты уже заметил, у нас в городе напряг с бензином. Точнее, совсем его нет. Наши караваны не могут ехать на север. А путь до Ольма не самый простой! Один ты его не найдешь…"
+            sharki "Начинаю что-то вспоминать. Ага! Это же был старик Гомер."
 
-        mc "Что, пытаешься ещё денег выкачать?!"
+            mc "Гомер? И где я могу его найти?"
 
-        sharki "Да ты что? Наоборот! Я вижу, ты смелый парень. Если поможешь, то сможешь вместе с нашим караваном поехать на север. Они покажут дорогу в Ольм."
-        sharki "А сейчас обратись к мэру. Скажи, что Шарки послал помочь с проблемой."
+            sharki "Где все рыбаки - на побережье! В посёлке. Только тут, видишь ли, встаёт ещё одна проблема."
+            sharki "Как ты уже заметил, у нас в городе напряг с бензином. Точнее, совсем его нет. Наши караваны не могут ехать на север. А путь до Ольма не самый простой! Один ты его не найдешь…"
 
-        mc "Прямо сейчас к мэру и пойду."
+            mc "Что, пытаешься ещё денег выкачать?!"
 
-        hide mworker with dissolve
+            sharki "Да ты что? Наоборот! Я вижу, ты смелый парень. Если поможешь, то сможешь вместе с нашим караваном поехать на север. Они покажут дорогу в Ольм."
+            sharki "А сейчас обратись к мэру. Скажи, что Шарки послал помочь с проблемой."
 
-        mc "Ужас какой-то! Так действовать на нервы надо уметь!"
+            mc "Прямо сейчас к мэру и пойду."
 
-        hide mc_2 with dissolve
+            hide mworker with dissolve
 
-        "Вы идёте к мэру."
+            mc "Ужас какой-то! Так действовать на нервы надо уметь!"
 
-        "Однако он кажется не рад вас видеть."
+            hide mc_2 with dissolve
 
-        show mimayor at left, stretch_in
+            "Вы идёте к мэру."
 
-        mayor "Говори быстрее, я занят!"
+            "Однако он кажется не рад вас видеть."
 
-        show mchar at right with dissolve
+            show mimayor at left, stretch_in
 
-        mc "Шарки послал помочь с проблемой."
+            mayor "Говори быстрее, я занят!"
 
-        mayor "Тебя? Что ж, сейчас нам любая помощь пригодится…"
+            show mchar at right with dissolve
 
-        mc "Что у вас за проблемы?"
+            mc "Шарки послал помочь с проблемой."
 
-        mayor "Тут как в анекдоте: \"Пушки не стреляли по 20 причинам: первая - не было патронов\"."
-        mayor "Хех…"
-        mayor "Нефтяную вышку захватили бандиты. Они обосновались где-то поблизости и совершали рейды, пока совсем не истощили наши силы."
-        mayor "И теперь они окончательно отрезали нас от источника нефти. Наши запасы бензина подходят к концу."
+            mayor "Тебя? Что ж, сейчас нам любая помощь пригодится…"
 
-        hide mchar
-        show mcsurp at right, stretch_in
+            mc "Что у вас за проблемы?"
 
-        mc "То есть вы хотите, чтобы я один отправился сражаться с бандитами, когда вы всем городом не могли с ними справиться?!"
+            mayor "Тут как в анекдоте: \"Пушки не стреляли по 20 причинам: первая - не было патронов\"."
+            mayor "Хех…"
+            mayor "Нефтяную вышку захватили бандиты. Они обосновались где-то поблизости и совершали рейды, пока совсем не истощили наши силы."
+            mayor "И теперь они окончательно отрезали нас от источника нефти. Наши запасы бензина подходят к концу."
 
-        mayor "Признаться, мы не очень-то и сражались, так как были заняты внутренними проблемами: видишь ли, профсоюз работников объявил забастовку."
+            hide mchar
+            show mcsurp at right, stretch_in
 
-        mc "То есть мне придётся ещё и убедить работников работать или найти новых?"
+            mc "То есть вы хотите, чтобы я один отправился сражаться с бандитами, когда вы всем городом не могли с ними справиться?!"
 
-        mayor "В двух словах…"
-        mayor "Да."
+            mayor "Признаться, мы не очень-то и сражались, так как были заняты внутренними проблемами: видишь ли, профсоюз работников объявил забастовку."
 
-        mc "Ладно, начнём с простой проблемы: бандитов. Бензин, надеюсь, будет казённый."
+            mc "То есть мне придётся ещё и убедить работников работать или найти новых?"
 
-        mayor "В разумных пределах."
+            mayor "В двух словах…"
+            mayor "Да."
 
-        mc "Ладно."
+            mc "Ладно, начнём с простой проблемы: бандитов. Бензин, надеюсь, будет казённый."
 
-        hide mimayor with dissolve
-        hide mcsurp with dissolve
+            mayor "В разумных пределах."
 
-        "Вы уходите из кабинета мэра и направляетесь в сторону нефтянной вышки."
+            mc "Ладно."
 
-        stop music fadeout 1.0
+            hide mimayor with dissolve
+            hide mcsurp with dissolve
 
-        jump oilmine1st
-    else:
-        mc "У меня пока нет денег."
+            "Вы уходите из кабинета мэра и направляетесь в сторону нефтянной вышки."
 
-        hide mworker
-        hide hide mc_2 with dissolve
+            stop music fadeout 1.0
 
-        "Вы отправились искать врагов, чтобы заработать денег..."
+            jump oilmine1st
+        "\"У меня пока нет денег...\"" if R1M3FarmCount <= 5:
+            mc "У меня пока нет денег."
 
-        jump fightformoney
+            hide mworker
+            hide hide mc_2 with dissolve
+
+            "Вы отправились искать врагов, чтобы заработать денег..."
+
+            $ FarmEnabled = True
+
+            jump fightformoney
+        "Продать предметы" if Inventory:
+            jump r1m3sellalias
+
+label r1m3sellalias:
+
+    call selling from _call_selling_16
+
+    jump hundredcointosharki
 
 label fightformoney:
 
-    if Inventory == []:
-        return
-        # TODO: Make battle with random enemy's (create 3-4 sprites), random chance to drop loot and asking to continue after getting loot or back to storyline.
-        # NOTE: I'm tired as fuck so I'm too lazy to finish this rn. Also if u reading this then why tf are u doing this? Just why? Go do some more useful, lol.
-        # NOTE: Also "return" here is just because this fucking RenPy doesn't allow me to compile project. Just remove it when continue doing this useless feature.
+    if FarmEnabled == True and R1M3FarmCount <= 5:
+
+        $ R1M3FarmCount += 1
+
+        $ DropNames = {
+            "Hornet": "Шершень",
+            "Potato": "Картофель",
+            "ScrapMetal": "Металлолом",
+            "Wood": "Дрова",
+        }
+        scene bg_minin with fade
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+
+        "Ну чё, тестим."
+
+        $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+        $ enemyint = random.randint(1, 4)
+
+        $ _window_hide()
+        $ _game_menu_screen = None
+        $ _menu = False
+        $ config.keymap['save'] = []
+        $ config.keymap['load'] = []
+        $ config.keymap['game_menu'] = []
+        $ persistent._in_battle = True
+        $ enemy_image = f"randomenemy{enemyint}"
+        $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+        $ player_max_hp = player_hp
+        $ enemy_hp = random.randint(800, 1000)
+        $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+        $ max_heals = 20
+        $ turn_count = 0
+        $ enemy_max_hp = enemy_hp
+        $ heal_count = 0
+        $ remainheals = max_heals - heal_count
+        $ attack_locked = False
+        $ enemy_name = "Бандит"
+        $ bgname = "bg_minin"
+        $ EnemyType = "Regular"
+        $ renpy.show(enemy_image, at_list=[center], what=None)
+
+        while enemy_hp > 0 and player_hp > 0:
+            call screen enemy_ui
+
+        if player_hp <= 0:
+            $ _game_menu_screen = "save_screen"
+            $ _menu = True
+            $ config.keymap['save'] = ['save']
+            $ config.keymap['load'] = ['load']
+            $ config.keymap['game_menu'] = ['game_menu']
+            $ persistent._in_battle = False
+            
+            $ renpy.hide(enemy_image)
+            play sound "sfx/explosion04.wav"
+            jump fightlost
+        else:
+            $ _game_menu_screen = "save_screen"
+            $ _menu = True
+            $ config.keymap['save'] = ['save']
+            $ config.keymap['load'] = ['load']
+            $ config.keymap['game_menu'] = ['game_menu']
+            $ persistent._in_battle = False
+
+            play sound "sfx/explosion04.wav"
+            $ renpy.hide(enemy_image) 
+            with dissolve
+
+            $ drops = get_random_drops()
+
+            if drops:
+                python:
+                    drop_names_text = []
+                    for drop_id, drop_name in drops:
+                        if try_add_item(drop_id) == True:
+                            drop_names_text.append(drop_name)
+                            drop_names_str = ", ".join(drop_names_text)
+                            renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
+                        else:
+                            renpy.say(None, f"В вашем инвентаре не хватает места!")
+                    
+            play music "music/town3.ogg" fadeout 1.0
+            jump hundredcointosharki
+    else:
+        "Больше здесь добыть не получится."
+        play music "music/town3.ogg" fadeout 1.0
+        jump hundredcointosharki
 
 label oilmine1st:
 
@@ -933,8 +1064,13 @@ label mayorspy:
 
 label minin4th_nl:
 
+    $ TownType = "City"
+
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
+
+    if Inventory:
+        call selling from _call_selling_17
 
     "Вернувшись в Минин вы спешно ищете Шарки."
 
@@ -964,9 +1100,14 @@ label minin4th_nl:
     jump oilmine2nd
 
 label oilmine2nd:
+
+    $ TownType = "Village"
     
     play music "music/bar.ogg" fadeout 1.0
     scene bg_oil with fade
+
+    if Inventory:
+        call selling from _call_selling_18
 
     show OilMineWorker at left with dissolve
 
@@ -983,8 +1124,13 @@ label oilmine2nd:
 
 label minin5th_nl:
 
+    $ TownType = "City"
+
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
+
+    if Inventory:
+        call selling from _call_selling_19
 
     "Приехав в Минин вы выгружаете бочку."
 
@@ -1005,8 +1151,6 @@ label minin5th_nl:
     mc "Прощайте."
 
     "Вы направились вслед за караваном в соседний регион."
-
-    $ r1m4SideQuest = "CanBeGiven"
 
     jump r1m4start
 

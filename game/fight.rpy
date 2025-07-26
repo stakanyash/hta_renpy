@@ -39,6 +39,7 @@ init python:
             shootsound = random.randint(1, 13)
 
             renpy.sound.play(f"audio/sfx/bullet{shootsound}.wav", channel="shoot")
+            renpy.hide(enemy_image)
             renpy.show(enemy_image, at_list=[center, stretch_in], what=None)
             enemy_hp = max(0, enemy_hp - damage)
             consecutive_player_hits += 1

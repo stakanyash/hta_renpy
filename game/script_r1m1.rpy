@@ -223,7 +223,12 @@ label secondenemy:
 
 label tozaimka:
 
+    $ TownType = "Village"
+
     scene bg_zaimka with fade
+
+    if Inventory:
+        call selling from _call_selling
 
     "Вы приехали в Заимку. Остановившись вы услышали от Лисы..."
 
@@ -293,7 +298,12 @@ label tozaimka:
 
 label sergo:
 
+    $ TownType = "City"
+
     scene bg_insowth with fade
+
+    if Inventory:
+        call selling from _call_selling_1
 
     if LisaAgreed == "True":
         "Вы добрались до Южного и заехали в город. Спустя несколько секунд поисков вы находите Серго."
@@ -331,6 +341,9 @@ label sergo:
     hide sergo2
 
     show sergo3 at left, stretch_in
+
+    $ CurrentMoney += 200
+    $ renpy.notify("Вы получили 200 монет.")
 
     sergo "Товар, как всегда, отличный. Держи, это твоя награда за доставку."
 
@@ -697,10 +710,15 @@ label dyingfather:
 
 label sowthagain:
 
+    $ TownType = "City"
+
     stop sfx2
 
     scene bg_insowth with fade
     play music "music/town1.ogg" fadeout 1.0
+
+    if Inventory:
+        call selling from _call_selling_2
 
     if LisaAgreed == "True":
 
@@ -787,6 +805,7 @@ label sowthagain:
                 $ TakeGunFromZaimka = "False"
                 $ renpy.save("checkpoint-4")
                 jump felixbase
+
     elif LisaAgreed == "False":
 
         "Вы приехали в Южный и встретили местного бармена. Бармен начинает диалог сам."
@@ -826,7 +845,12 @@ label sowthagain:
 
 label KventinZaimka:
 
+    $ TownType = "Village"
+
     scene bg_zaimka with fade
+
+    if Inventory:
+        call selling from _call_selling_3
 
     "Приехав в Заимку вы ищете того, о ком говорил Дронн."
 
@@ -863,7 +887,12 @@ label KventinZaimka:
             "Вы решили продать \"Шершень\" и получили 260 монет.\nВаш текущий баланс: [CurrentMoney]."
 
         "Не продавать":
-            "Вы решили не продавать \"Шершень\".\nВаш текущий баланс: [CurrentMoney]."
+            if try_add_item("Hornet"):
+                $ inventory_text = ", ".join(Inventory)
+                "Вы решили не продавать \"Шершень\".\nВаш текущий инвентарь: [inventory_text]."
+            else:
+                $ CurrentMoney += 260
+                "В вашем инвентаре недостаточно места! \"Шершень\" автоматически продан.\nВаш текущий баланс: [CurrentMoney]."
 
     jump felixbase
 
@@ -1058,15 +1087,35 @@ label felixdefeated:
 
     hide felix with dissolve
     hide mcsurp with dissolve
-    scene black with fade
 
     jump leaver1m1tovaterland
 
 label leaver1m1tovaterland:
 
-    "Далее контента нет."
+    scene bg_sowth with Fade
 
-    return
+    "Перед тем, как ехать искать Лису вы решили заехать в Южный, чтобы рассказать Дронну, как всё прошло."
+
+    show dronn at left with dissolve
+
+    dronn "Ну, как дела?"
+
+    show mchar at right with dissolve
+
+    mc "Больше Феликс вас не побеспокоит. Я прогнал его."
+
+    dronn "За это прими наше большое человеческое спасибо."
+    $ CurrentMoney += 250
+    $ renpy.notify("Вы получили 250 монет.")
+    dronn "Вот, возьми: эти деньги я как раз собрал, чтобы заплатить очередные бандитские поборы."
+    dronn "Я даю их тебе в знак благодарности. Ты также можешь оставить себе моё оружие. Желаю тебе удачи в долгом и опасном путешествии."
+
+    mc "Прощай, добрый человек. Не знаю, вернусь ли я, но всегда буду помнить родные места."
+
+    hide dronn
+    hide mchar
+
+    jump vaterlandfirst
 
 label leaver1m1toridzin:
 

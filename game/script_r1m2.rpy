@@ -90,6 +90,12 @@ label defeateddefender:
     mc "Посмотрим, что в этом ящике..."
     $ randomgun = random.randint(1, 9)
 
+    if try_add_item("Hornet"):
+        $ renpy.notify("В ваш инвентарь добавлен \"Шершень\".")
+    else:
+        $ renpy.notify("В вашем инвентаре недостаточно места!")
+        "\"Шершень\" автоматически продан за 130 монет."
+
     if 1 <= randomgun <= 3:
         "Вы нашли оружие \"Корд\"!"
         $ CurrentGun = "Kord"
@@ -100,10 +106,6 @@ label defeateddefender:
         "Вы нашли оружие \"Шторм\"!"
         $ CurrentGun = "Storm"
 
-    $ Inventory = [
-        "Hornet"
-    ]
-
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."
 
@@ -111,21 +113,13 @@ label defeateddefender:
 
 label movetovostochnoe:
 
+    $ TownType = "City"
+
     play music "music/bar.ogg" fadeout 1.0
     scene bg_vostochnoe with fade
 
-    if "Hornet" in Inventory:
-        "В вашем инвентаре есть предмет \"Шершень\"."
-        "Хотите его продать? Цена продажи: 260."
-
-        menu:
-            "Продать":
-                $ Inventory.remove("Hornet")
-                $ CurrentMoney += 260
-                "Предмет \"Шершень\" продан.\nВаш баланс: [CurrentMoney]"
-
-            "Не продавать":
-                "\"Шершень\" остался в вашем инвентаре."
+    if Inventory:
+        call selling from _call_selling_4
 
     "Приехав в Восточное вы не знаете к кому обратиться."
     show hose at left with dissolve
@@ -180,8 +174,13 @@ label movetovostochnoe:
 
 label tolocus:
 
+    $ TownType = "Village"
+
     scene bg_locus with fade
     play music "music/town2.ogg" fadeout 1.0
+
+    if Inventory:
+        call selling from _call_selling_5
 
     "Приехав в Локус и узнав о том, где искать загадочную женщину вы подходите к её двери и стучите."
     "Спустя несколько секунд дверь открывается."
@@ -229,8 +228,13 @@ label tolocus:
 
 label tomidgard:
 
+    $ TownType = "City"
+
     scene bg_midgard with fade
     play music "music/town3.ogg" fadeout 1.0
+
+    if Inventory:
+        call selling from _call_selling_6
 
     "Заехав в Мидгард вы стокнулись с явным негостеприимством..."
 
@@ -373,9 +377,14 @@ label toportoe1:
 
 label portoa:
 
+    $ TownType = "City"
+
     play music "music/bar.ogg" fadeout 1.0
 
     scene bg_porto with fade
+
+    if Inventory:
+        call selling from _call_selling_7
 
     "Далее по пути вам больше никого не встретилось и вы спокойно доехали до Порто."
 
@@ -400,9 +409,14 @@ label portoa:
 
 label backtomidgard:
 
+    $ TownType = "City"
+
     scene bg_midgard with fade
 
     play music "music/town3.ogg" fadeout 1.0
+
+    if Inventory:
+        call selling from _call_selling_8
 
     "Обратно до Мидгарда вы добрались без каких-либо проишествий."
 

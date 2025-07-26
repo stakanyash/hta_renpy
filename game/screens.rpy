@@ -118,6 +118,9 @@ screen enemy_ui():
             else:
                 textbutton _("Лечиться") style "atk_button" xalign 0.5 sensitive False
 
+            if config.developer:
+                textbutton _("Убить") style "atk_button" action SetVariable("enemy_hp", 0) xalign 0.5
+
     if EnemyType == "Boss":
         add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
         add "gui/bossbar/icons/" + BossIcon xalign 0.957 yalign 0.865
@@ -387,8 +390,8 @@ screen quick_menu():
             textbutton _("Авто") activate_sound "audio/sfx/click.wav" action Preference("auto-forward", "toggle")
             textbutton _("Сохранить") activate_sound "audio/sfx/click.wav" action ShowMenu('save')
             textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu('load')
-            textbutton _("Статистика") action ShowMenu("statistics_screen")
             textbutton _("Опции") activate_sound "audio/sfx/click.wav" action ShowMenu('preferences')
+            textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
 
 
 ## Данный код гарантирует, что экран быстрого меню будет показан в игре в любое
@@ -508,7 +511,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.2 (250724a)" xpos 450 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.2.1 (250726a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -544,30 +547,32 @@ style main_menu_version:
 screen statistics_screen():
     tag menu
 
-    add Solid("#000000b6")
+    add Solid("#000000cb")
 
     frame:
         style "menu_frame"
         xalign 0.5
         yalign 0.5
-        xsize 600
+        xsize 700
         padding (40, 30)
 
         vbox:
             spacing 20
             xalign 0.5
 
-            text "Статистика\n" size 40 color "#404040" xalign 0.5
+            text "Профиль\n" size 40 color "#404040" xalign 0.5 ypos 10
 
-            text "Деньги: [CurrentMoney] монет" size 32
+            text "Имя: [player_name]" size 32 xalign 0.5
 
-            text "Оружие: [gun_names.get(CurrentGun, '—')]" size 32
+            text "Деньги: [CurrentMoney] монет\n" size 32 xalign 0.5
 
-            text "Машина: [car_names.get(CurrentCar, '—')]" size 32
+            text "Оружие: [gun_names.get(CurrentGun, '—')]" size 32 xalign 0.5
 
-            text "Текущий регион: [region_names.get(CurrentRegion, '—')]\n" size 32
+            text "Машина: [car_names.get(CurrentCar, '—')]\n" size 32 xalign 0.5
 
-            textbutton "Назад" action Return() xalign 0.5
+            text "Текущий регион: [region_names.get(CurrentRegion, '—')]\n" size 32 xalign 0.5
+
+            textbutton "Назад" action Return() xalign 0.5 ypos -10
 
 
 ## Экран игрового меню #########################################################

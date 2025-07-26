@@ -155,6 +155,11 @@ image brigde_defender = "images/sprites/enemy/brigde_defender.png"
 image minerattackers = "images/sprites/enemy/minerattackers.png"
 image oilbandits = "images/sprites/enemy/oilbandits.png"
 
+image randomenemy1 = "images/sprites/enemy/randomenemy1.png"
+image randomenemy2 = "images/sprites/enemy/randomenemy2.png"
+image randomenemy3 = "images/sprites/enemy/randomenemy3.png"
+image randomenemy4 = "images/sprites/enemy/randomenemy4.png"
+
 # Tutorial
 
 image tr_fight = "images/tutorial/tr_fight.jpg"
