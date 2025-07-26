@@ -93,36 +93,61 @@ label main_game:
 
     "Однако вы замечаете на своём пути явно недружественный автомобиль."
 
-    menu:
-        "Атаковать":
-            $ renpy.save("checkpoint-1")
-            jump attack
+    jump firstenemyfight
 
-        "Попытаться договориться":
-            $ renpy.save("checkpoint-1")
-            jump speak
+label firstenemyfight:
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = "firsteverenemy"
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_max_hp = player_hp
+    $ enemy_hp = 50
+    $ bgname = "bg_firstenemy"
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 15 
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Бандит"
+    $ EnemyType = "Regular"
+    scene bg_firstenemy
+    show firsteverenemy at center
 
-label attack:
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
 
-    "Вы атаковали враждебную машину и успешно с ней разделались."
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        hide firsteverenemy
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
 
-    play music "music/driving1.ogg" fadeout 1.0
+        play sound "sfx/explosion04.wav"
+        hide firsteverenemy with dissolve
 
-    mc "Вот чёрт, не успел в первый раз один поехать и уже ограбить захотели. Теперь я понимаю, почему отец так долго меня к этому не пускал."
+        play music "music/driving1.ogg" fadeout 1.0
 
-    jump afterfirstattack
-
-label speak:
-
-    "Вы пытаетесь договориться с бандитом, но он не идёт на контакт. Вам пришлось открыть огонь и убить его."
-
-    play music "music/driving1.ogg" fadeout 1.0
-
-    mc "Эх, был он разговорчивым, может и смогли бы договориться..."
-
-    mc "Хотя у меня всего 100 монет то в кармане, да и посылку я бы ему не отдал. О какой вообще договорённости может идти речь?"
-
-    jump afterfirstattack
+        jump afterfirstattack
 
 label afterfirstattack:
 
@@ -512,7 +537,7 @@ label felixbeforefight:
             $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
             $ player_max_hp = player_hp
             $ max_heals = 20
-            $ enemy_hp = player_hp
+            $ enemy_hp = player_hp * 0.7
             $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
             $ turn_count = 0
             $ enemy_max_hp = enemy_hp

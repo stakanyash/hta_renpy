@@ -6,6 +6,7 @@ init python:
     renpy.music.register_channel("shoot", mixer="sfx", loop=False, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("damage", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("missshot", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
+    renpy.music.register_channel("bossattack", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
 
     def try_add_item(item):
         limit = CarInventoryLimits.get(CurrentCar, 4)
@@ -83,18 +84,19 @@ label start:
     }
 
     $ gun_stats = {
-        "Hornet": (0.0060, 0.0140),
-        "Specter": (0.0070, 0.0164),
-        "Storm": (0.0071, 0.0167),
-        "PKT": (0.0076, 0.0178),
-        "Kord": (0.0082, 0.0190),
-        "Hurricane": (0.0082, 0.0190),
-        "Flag": (0.0120, 0.0280),
-        "Vulcan": (0.0089, 0.0207),
-        "KPVT": (0.0090, 0.0210),
-        "Bumblebee": (0.0100, 0.0232),
-        "Vector": (0.0102, 0.0238)
+        "Hornet": (6, 14),
+        "Specter": (9, 21),
+        "Storm": (10, 24),
+        "PKT": (11, 26),
+        "Vector": (11, 30),
+        "Kord": (13, 30),
+        "Hurricane": (20, 46),
+        "Vulcan": (17, 39),
+        "KPVT": (18, 41),
+        "Bumblebee": (32, 65),
+        "Flag": (50, 150)
     }
+
 
     $ CarHP = {
         "Van": 850,

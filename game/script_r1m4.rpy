@@ -223,7 +223,7 @@ label tokranfight:
     $ enemy_image = "kranboss"
     $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = player_hp * 2
+    $ enemy_hp = 1600
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0

@@ -117,9 +117,8 @@ screen enemy_ui():
                 textbutton _("Лечиться") style "atk_button" action Function(heal) xalign 0.5 sensitive player_hp < player_max_hp
             else:
                 textbutton _("Лечиться") style "atk_button" xalign 0.5 sensitive False
-
-            if config.developer:
-                textbutton _("Убить") style "atk_button" action SetVariable("enemy_hp", 0) xalign 0.5
+    if config.developer:
+        textbutton _("Убить") action SetVariable("enemy_hp", 0) xalign 0.5 yalign 0.9 background "#0000005b"
 
     if EnemyType == "Boss":
         add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
@@ -176,8 +175,12 @@ screen enemy_ui():
             for healing in get_heal_digit_images(get_remain_heals()):
                 add healing
 
-    if attack_locked:
-        timer .35 action SetVariable("attack_locked", False)
+    if CurrentGun == "Flag":
+        if attack_locked:
+            timer 1 action SetVariable("attack_locked", False)
+    else:
+        if attack_locked:
+            timer .35 action SetVariable("attack_locked", False)
 
     if enemy_hp <= 0 or player_hp <= 0:
         timer 0.1 action Return()
