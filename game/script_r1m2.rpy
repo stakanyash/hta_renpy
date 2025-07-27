@@ -83,6 +83,24 @@ label attackforloot:
         play sound "sfx/explosion04.wav"
         hide lootdefender with dissolve
 
+        $ drops = get_random_drops()
+
+        if drops:
+            python:
+                drop_names_text = []
+                dropped_something = False
+
+                for drop_id, drop_name in drops:
+                    if try_add_item(drop_id):
+                        drop_names_text.append(drop_name)
+                        dropped_something = True
+                    else:
+                        renpy.say(None, "В вашем инвентаре не хватает места!")
+
+                if dropped_something:
+                    drop_names_str = ", ".join(drop_names_text)
+                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
+
         jump defeateddefender
 
 label defeateddefender:
@@ -373,6 +391,24 @@ label toportoe1:
         play sound "sfx/explosion04.wav"
         hide to_porto_e1 with dissolve
 
+        $ drops = get_random_drops()
+
+        if drops:
+            python:
+                drop_names_text = []
+                dropped_something = False
+
+                for drop_id, drop_name in drops:
+                    if try_add_item(drop_id):
+                        drop_names_text.append(drop_name)
+                        dropped_something = True
+                    else:
+                        renpy.say(None, "В вашем инвентаре не хватает места!")
+
+                if dropped_something:
+                    drop_names_str = ", ".join(drop_names_text)
+                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
+
         jump portoa
 
 label portoa:
@@ -422,6 +458,9 @@ label backtomidgard:
 
     show scientist at left with dissolve
 
+    $ CurrentMoney += 1000
+    $ renpy.notify("Вы получили 1000 монет.")
+
     unknown "Кто помогает городу жить, тому и мы поможем. Что тебе было нужно?"
 
     show mchar at right with dissolve
@@ -440,15 +479,21 @@ label backtomidgard:
     hide scientist with dissolve
     hide mchar with dissolve
 
-    "Однако перед тем, как отправиться к Бену вы решили купить себе новую машину."
+    if CurrentMoney >= 5800:
 
-    pause 1.0
+        "У вас есть возможность купить новую машину \"Молоковоз\".\nЦена покупки: 5800 монет."
 
-    $ CurrentCar = "Molokovoz"
+        menu:
+            "Купить":
+                $ CurrentCar = "Molokovoz"
+                $ CurrentMoney -= 5800
+                $ renpy.notify("Вы отдали 5800 монет.")
 
-    "Вы купили новую машину \"Молоковоз\"."
-    
-    mc "Вот теперь можно ехать."
+                "Вы купили новую машину \"Молоковоз\".\nВаш текущий баланс: [CurrentMoney] монет."
+                
+                mc "Вот теперь можно ехать."
+            "Не покупать":
+                "Вы решили не покупать новую машину."
 
     jump firstmeetben
 

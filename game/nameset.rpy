@@ -16,7 +16,7 @@ screen name_input_screen():
                 style "centered_input"
 
             textbutton "Подтвердить" activate_sound "audio/sfx/click.wav" action [
-                SetVariable("player_name", temp_name.strip() or "Вы"),
+                SetVariable("player_name", temp_name.strip() or "Игрок"),
                 Hide("name_input_screen"),
                 Jump("tutorial_check")
             ] style "smaller_button" xalign 0.5

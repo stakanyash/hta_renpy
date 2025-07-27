@@ -28,6 +28,8 @@ image bg_troitckoe = "images/bgs/r1m1/bg_troitckoe.jpg"
 image bg_whatiffelix = "images/bgs/r1m1/bg_whatiffelix.jpg"
 image bg_zaimka = "images/bgs/r1m1/bg_zaimka.jpg"
 image bg_zapravka = "images/bgs/r1m1/bg_zapravka.jpg"
+image bg_firsteverenemy = "images/bgs/r1m1/bg_firsteverenemy.jpg"
+image bg_secondenemy = "images/bgs/r1m1/bg_secondenemy.jpg"
 
 # Backgrounds: r1m2
 
@@ -147,6 +149,8 @@ image wsecurity = "images/sprites/chr/wsecurity.png"
 
 # Sprites: Enemy's
 
+image firsteverenemy = "images/sprites/enemy/firsteverenemy.png"
+image secenemy = "images/sprites/enemy/secenemy.png"
 image felixcar = "images/sprites/enemy/felixcar.png"
 image felixteam = "images/sprites/enemy/felixteam.png"
 image lootdefender = "images/sprites/enemy/lootdefender.png"

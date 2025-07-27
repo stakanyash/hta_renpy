@@ -514,7 +514,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.2.1 (250726a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.2.1 (250727b)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox

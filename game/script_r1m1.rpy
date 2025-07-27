@@ -106,8 +106,8 @@ label firstenemyfight:
     $ enemy_image = "firsteverenemy"
     $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = 50
-    $ bgname = "bg_firstenemy"
+    $ enemy_hp = 250
+    $ bgname = "bg_firsteverenemy"
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 15 
     $ turn_count = 0
@@ -117,7 +117,7 @@ label firstenemyfight:
     $ attack_locked = False
     $ enemy_name = "Бандит"
     $ EnemyType = "Regular"
-    scene bg_firstenemy
+    scene bg_firsteverenemy
     show firsteverenemy at center
 
     while enemy_hp > 0 and player_hp > 0:
@@ -146,6 +146,24 @@ label firstenemyfight:
         hide firsteverenemy with dissolve
 
         play music "music/driving1.ogg" fadeout 1.0
+
+        $ drops = get_random_drops()
+
+        if drops:
+            python:
+                drop_names_text = []
+                dropped_something = False
+
+                for drop_id, drop_name in drops:
+                    if try_add_item(drop_id):
+                        drop_names_text.append(drop_name)
+                        dropped_something = True
+                    else:
+                        renpy.say(None, "В вашем инвентаре не хватает места!")
+
+                if dropped_something:
+                    drop_names_str = ", ".join(drop_names_text)
+                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
 
         jump afterfirstattack
 
@@ -233,18 +251,83 @@ label secondenemy:
 
     "Однако не успели вы отъехать от Южного как на вас снова нападает бандит. Только в этот раз он уже чутка серьёзнее Клопа."
 
-    play music "music/battle1.ogg"
-
     "Вам ничего не остаётся, кроме как начать с ним перестрелку."
 
-    play music "music/driving2.ogg" fadeout 1.0
+    play music "music/battle1.ogg"
 
-    if LisaAgreed == "True":
-        "После непродолжительного боя бандит был уничтожен, а вы дальше поехали к Заимке."
-        jump tozaimka
-    elif LisaAgreed == "False":
-        "После непродолжительного боя бандит был уничтожен, а вы дальше поехали к заправке."
-        jump dickzapravka
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = "secenemy"
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_max_hp = player_hp
+    $ enemy_hp = 500
+    $ bgname = "bg_secondenemy"
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 15 
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Бандит"
+    $ EnemyType = "Regular"
+    scene bg_secondenemy
+    show secenemy at center
+
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        hide secenemy
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+
+        play sound "sfx/explosion04.wav"
+        hide secenemy with dissolve
+
+        play music "music/driving2.ogg" fadeout 1.0
+
+        $ drops = get_random_drops()
+
+        if drops:
+            python:
+                drop_names_text = []
+                dropped_something = False
+
+                for drop_id, drop_name in drops:
+                    if try_add_item(drop_id):
+                        drop_names_text.append(drop_name)
+                        dropped_something = True
+                    else:
+                        renpy.say(None, "В вашем инвентаре не хватает места!")
+
+                if dropped_something:
+                    drop_names_str = ", ".join(drop_names_text)
+                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
+
+        if LisaAgreed == "True":
+            jump tozaimka
+        elif LisaAgreed == "False":
+            jump dickzapravka
 
 label tozaimka:
 

@@ -1,5 +1,5 @@
 default temp_name = ""
-default player_name = "Вы"
+default player_name = "Игрок"
 
 init python:
     renpy.music.register_channel("sfx2", mixer="sfx", loop=True, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
@@ -22,6 +22,9 @@ init python:
         elif CurrentRegion in ("r1m2", "r1m3", "r1m4"):
             keys = list(R1DropNames.keys())
             drop_count = random.randint(1, 2)
+        elif CurrentRegion in ("r1m4"):
+            keys = list(R1M4DropNames.keys())
+            drop_count = random.randint(1, 3)
         else:
             keys = list(DropNames.keys())
             drop_count = random.randint(1, 2)
@@ -35,7 +38,7 @@ transform stretch_in:
 
 label start:
 
-    $ player_name = "Вы"
+    $ player_name = "Игрок"
 
     $ CurrentGun = "Hornet"
     $ CurrentMoney = 0
@@ -107,23 +110,29 @@ label start:
     }
 
     $ ItemPricesCity = {
-        "Hornet": 260,
-        "Specter": 50,
-        "PKT": 200,
-        "Storm": 30,
+        "Hornet": 130,
+        "Specter": 295,
+        "PKT": 835,
+        "Storm": 1725,
         "Potato": 200,
         "ScrapMetal": 400,
         "Wood": 50,
+        "Oil": 200,
+        "Fuel": 1850,
+        "Elephant": 22250
     }
 
     $ ItemPricesVillage = {
-        "Hornet": 260,
-        "Specter": 50,
-        "PKT": 200,
-        "Storm": 30,
+        "Hornet": 130,
+        "Specter": 295,
+        "PKT": 835,
+        "Storm": 1725,
         "Potato": 30,
         "ScrapMetal": 450,
         "Wood": 285,
+        "Oil": 1100,
+        "Fuel": 900,
+        "Elephant": 22250
     }
 
     $ ItemNames = {
@@ -134,6 +143,9 @@ label start:
         "Potato": "Картофель",
         "ScrapMetal": "Металлолом",
         "Wood": "Дрова",
+        "Oil": "Нефть",
+        "Fuel": "Топливо",
+        "Elephant": "Слон"
     }
 
     $ R1M1DropNames = {
@@ -147,6 +159,12 @@ label start:
         "Potato": "Картофель",
         "ScrapMetal": "Металлолом",
         "Wood": "Дрова",
+    }
+
+    $ R1M4DropNames = {
+        "ScrapMetal": "Металлолом",
+        "Oil": "Нефть",
+        "Fuel": "Топливо"
     }
 
     $ DropNames = {

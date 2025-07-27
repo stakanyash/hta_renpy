@@ -638,3 +638,7 @@ label r1m4SideQuest_finish:
     galden "Отлично! Вот тебе награда."
 
     mc "Супер!"
+
+    mc "Надо возвращаться к основной задаче..."
+
+    jump homersearch
