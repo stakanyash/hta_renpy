@@ -389,7 +389,6 @@ screen quick_menu():
             yalign 0.98
 
             textbutton _("История") activate_sound "audio/sfx/click.wav" action ShowMenu('history')
-            textbutton _("Пропуск") activate_sound "audio/sfx/click.wav" action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Авто") activate_sound "audio/sfx/click.wav" action Preference("auto-forward", "toggle")
             textbutton _("Сохранить") activate_sound "audio/sfx/click.wav" action ShowMenu('save')
             textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu('load')
@@ -514,7 +513,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.2.1 (250727b)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.2.2 (250801a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -735,6 +734,8 @@ screen about():
             text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл RenPy.\n")
             text _("Посвящен 20-летию оригинальной Ex Machina/Hard Truck Apocalypse.\n")
 
+            text _("GitHub репозиторий проекта доступен {a=https://github.com/stakanyash/hta_renpy}здесь{/a}.\n")
+
             text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
 
 style about_label is gui_label
@@ -919,13 +920,6 @@ screen preferences():
                         label _("Режим экрана")
                         textbutton _("Оконный") action Preference("display", "window")
                         textbutton _("Полный") action Preference("display", "fullscreen")
-
-                vbox:
-                    style_prefix "check"
-                    label _("Пропуск")
-                    textbutton _("Всего текста") action Preference("skip", "toggle")
-                    textbutton _("После выборов") action Preference("after choices", "toggle")
-                    textbutton _("Переходов") action InvertSelected(Preference("transitions", "toggle"))
 
                 ## Дополнительные vbox'ы типа "radio_pref" или "check_pref"
                 ## могут быть добавлены сюда для добавления новых настроек.

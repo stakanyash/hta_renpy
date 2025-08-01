@@ -57,8 +57,6 @@ init python:
             enemy_hp = max(0, enemy_hp - damage)
             consecutive_player_hits += 1
 
-            renpy.notify(f"Нанесено {damage} урона")
-
             if consecutive_player_hits >= 10:
                 penalty_damage = int(player_max_hp * 0.1)
                 player_hp = max(0, player_hp - penalty_damage)

@@ -611,7 +611,7 @@ label hundredcointosharki:
             mc "У меня пока нет денег."
 
             hide mworker
-            hide hide mc_2 with dissolve
+            hide mc_2 with dissolve
 
             "Вы отправились искать врагов, чтобы заработать денег..."
 
@@ -633,91 +633,11 @@ label fightformoney:
 
         $ R1M3FarmCount += 1
 
-        $ DropNames = {
-            "Hornet": "Шершень",
-            "Potato": "Картофель",
-            "ScrapMetal": "Металлолом",
-            "Wood": "Дрова",
-        }
+        call randomfight
+
         scene bg_minin with fade
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-
-        "Ну чё, тестим."
-
-        $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
-
-        $ enemyint = random.randint(1, 4)
-
-        $ _window_hide()
-        $ _game_menu_screen = None
-        $ _menu = False
-        $ config.keymap['save'] = []
-        $ config.keymap['load'] = []
-        $ config.keymap['game_menu'] = []
-        $ persistent._in_battle = True
-        $ enemy_image = f"randomenemy{enemyint}"
-        $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
-        $ player_max_hp = player_hp
-        $ enemy_hp = random.randint(800, 1000)
-        $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
-        $ max_heals = 20
-        $ turn_count = 0
-        $ enemy_max_hp = enemy_hp
-        $ heal_count = 0
-        $ remainheals = max_heals - heal_count
-        $ attack_locked = False
-        $ enemy_name = "Бандит"
-        $ bgname = "bg_minin"
-        $ EnemyType = "Regular"
-        $ renpy.show(enemy_image, at_list=[center], what=None)
-
-        while enemy_hp > 0 and player_hp > 0:
-            call screen enemy_ui
-
-        if player_hp <= 0:
-            $ _game_menu_screen = "save_screen"
-            $ _menu = True
-            $ config.keymap['save'] = ['save']
-            $ config.keymap['load'] = ['load']
-            $ config.keymap['game_menu'] = ['game_menu']
-            $ persistent._in_battle = False
-            
-            $ renpy.hide(enemy_image)
-            play sound "sfx/explosion04.wav"
-            jump fightlost
-        else:
-            $ _game_menu_screen = "save_screen"
-            $ _menu = True
-            $ config.keymap['save'] = ['save']
-            $ config.keymap['load'] = ['load']
-            $ config.keymap['game_menu'] = ['game_menu']
-            $ persistent._in_battle = False
-
-            play sound "sfx/explosion04.wav"
-            $ renpy.hide(enemy_image) 
-            with dissolve
-
-            $ drops = get_random_drops()
-
-            if drops:
-                python:
-                    drop_names_text = []
-                    dropped_something = False
-
-                    for drop_id, drop_name in drops:
-                        if try_add_item(drop_id):
-                            drop_names_text.append(drop_name)
-                            dropped_something = True
-                        else:
-                            renpy.say(None, "В вашем инвентаре не хватает места!")
-
-                    if dropped_something:
-                        drop_names_str = ", ".join(drop_names_text)
-                        renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
-                    
-            play music "music/town3.ogg" fadeout 1.0
-            jump hundredcointosharki
+        play music "music/town3.ogg" fadeout 1.0
+        jump hundredcointosharki
     else:
         "Больше здесь добыть не получится."
         play music "music/town3.ogg" fadeout 1.0
@@ -884,14 +804,7 @@ label followlastone:
 
 label banditbaseelim:
 
-    init python:
-        import random
-
-        elrandom = random.randint(1,2)
-
-    $ renpy.notify(f"Random: {elrandom}")
-
-    if elrandom == 1:
+    if random.random() <= 0.4:
         if try_add_item("Elephant") == True:
             "Расправившись с бандитами вы заметили, что у одного из них стоит неплохое оружие."
 
@@ -907,9 +820,17 @@ label banditbaseelim:
 
     mc "Пора ехать в Минин."
 
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
     jump minin3rd_nl
 
 label minin3rd_nl:
+
+    $ TownType = "City"
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
@@ -932,93 +853,79 @@ label minin3rd_nl:
         "Kord": 3680
     }
 
-    if GotElephant == True:
-        "В вашем инвентаре есть предмет \"Слон\"."
-        "Хотите его продать? Цена продажи: [elprice]."
+    if Inventory:
+        call selling
 
-        menu:
-            "Продать":
-                $ renpy.save("checkpoint-5")
-                $ SelledElephant = True
-                $ CurrentMoney = elprice
-                $ Inventory.remove("Elephant")
-                "Вы продали предмет \"Слон\" и получили [elprice] монет."
-                if CurrentCar == "Molokovoz":
-                    if elprice >= 19000:
-                        "Ваших средств достаточно для обновления кузова и установки нового оружия."
-                        "Хотите установить кузов \"Бокс\"? Цена покупки: 10000."
+    if CurrentCar == "Molokovoz":
+        if CurrentMoney >= 19000:
+            "Ваших средств достаточно для обновления кузова и установки нового оружия."
+            "Хотите установить кузов \"Бокс\"? Цена покупки: 10000."
+            menu:
+                "Установить":
+                    $ renpy.save("checkpoint-6")
+                    $ CurrentMoney -= 10000
+                    "Вы установили кузов \"Бокс\" и отдали 10000 монет."
+                    $ OldWeaponPrice = oldweapon_price.get(CurrentGun, oldweapon_price["Hornet"])
+                    $ CurrentGun = "None"
+                    $ CurrentCargo = "Box"
+                    if CurrentMoney >= 5520:
+                        $ CurrentMoney += OldWeaponPrice
+                        "Нужно установить новое оружие. Ваше старое оружие автоматически продано за [OldWeaponPrice] монет."
+
+                        python:
+                            affordable_weapons = [name for name, price in weapon_prices.items() if price <= CurrentMoney]
+                            weapon_text = ", ".join(affordable_weapons)
+                        "Ваших средств достаточно на: [weapon_text]."
                         menu:
-                            "Установить":
-                                $ renpy.save("checkpoint-6")
-                                $ CurrentMoney -= 10000
-                                "Вы установили кузов \"Бокс\" и отдали 10000 монет."
-                                $ OldWeaponPrice = oldweapon_price.get(CurrentGun, oldweapon_price["Hornet"])
-                                $ CurrentGun = "None"
-                                $ CurrentCargo = "Box"
-                                if CurrentMoney >= 5520:
-                                    $ CurrentMoney = int(CurrentMoney) + OldWeaponPrice
-                                    "Нужно установить новое оружие. Ваше старое оружие автоматически продано за [OldWeaponPrice] монет."
+                            "Вектор" if CurrentMoney >= 5520:
+                                $ CurrentMoney -= 5520
+                                $ CurrentGun = "Vector" 
+                                $ GunType = "BigGun"
+                                "Вы установили оружие \"Вектор\" и отдали 5520 монет. У вас осталось [CurrentMoney] монет."
+                                $ renpy.save("checkpoint-1")
 
-                                    python:
-                                        affordable_weapons = [name for name, price in weapon_prices.items() if price <= CurrentMoney]
-                                        weapon_text = ", ".join(affordable_weapons)
-                                    "Ваших средств достаточно на: [weapon_text]."
-                                    menu:
-                                        "Вектор" if CurrentMoney >= 5520:
-                                            $ CurrentMoney -= 5520
-                                            $ CurrentGun = "Vector" 
-                                            $ GunType = "BigGun"
-                                            "Вы установили оружие \"Вектор\" и отдали 5520 монет. У вас осталось [CurrentMoney] монет."
-                                            $ renpy.save("checkpoint-1")
+                            "Вулкан" if CurrentMoney >= 5630:
+                                $ CurrentMoney -= 5630
+                                $ CurrentGun = "Vulcan" 
+                                $ GunType = "BigGun"
+                                "Вы установили оружие \"Вулкан\" и отдали 5630 монет. У вас осталось [CurrentMoney] монет."  
+                                $ renpy.save("checkpoint-1")
 
-                                        "Вулкан" if CurrentMoney >= 5630:
-                                            $ CurrentMoney -= 5630
-                                            $ CurrentGun = "Vulcan" 
-                                            $ GunType = "BigGun"
-                                            "Вы установили оружие \"Вулкан\" и отдали 5630 монет. У вас осталось [CurrentMoney] монет."  
-                                            $ renpy.save("checkpoint-1")
+                            "КПВТ" if CurrentMoney >= 6400:
+                                $ CurrentMoney -= 6400
+                                $ CurrentGun = "KPVT" 
+                                $ GunType = "BigGun"
+                                "Вы установили оружие \"КПВТ\" и отдали 6400 монет. У вас осталось [CurrentMoney] монет."  
+                                $ renpy.save("checkpoint-1")
 
-                                        "КПВТ" if CurrentMoney >= 6400:
-                                            $ CurrentMoney -= 6400
-                                            $ CurrentGun = "KPVT" 
-                                            $ GunType = "BigGun"
-                                            "Вы установили оружие \"КПВТ\" и отдали 6400 монет. У вас осталось [CurrentMoney] монет."  
-                                            $ renpy.save("checkpoint-1")
+                            "Шмель" if CurrentMoney >= 13310:
+                                $ CurrentMoney -= 13310
+                                $ CurrentGun = "Bumblebee" 
+                                $ GunType = "BigGun"
+                                "Вы установили оружие \"Шмель\" и отдали 13310 монет. У вас осталось [CurrentMoney] монет."
+                                $ renpy.save("checkpoint-1")
 
-                                        "Шмель" if CurrentMoney >= 13310:
-                                            $ CurrentMoney -= 13310
-                                            $ CurrentGun = "Bumblebee" 
-                                            $ GunType = "BigGun"
-                                            "Вы установили оружие \"Шмель\" и отдали 13310 монет. У вас осталось [CurrentMoney] монет."
-                                            $ renpy.save("checkpoint-1")
+                            "Ураган" if CurrentMoney >= 14910:
+                                $ CurrentMoney -= 14910
+                                $ CurrentGun = "Hurricane" 
+                                $ GunType = "BigGun"
+                                "Вы установили оружие \"Ураган\" и отдали 14910 монет. У вас осталось [CurrentMoney] монет."
+                                $ renpy.save("checkpoint-1")
 
-                                        "Ураган" if CurrentMoney >= 14910:
-                                            $ CurrentMoney -= 14910
-                                            $ CurrentGun = "Hurricane" 
-                                            $ GunType = "BigGun"
-                                            "Вы установили оружие \"Ураган\" и отдали 14910 монет. У вас осталось [CurrentMoney] монет."
-                                            $ renpy.save("checkpoint-1")
+                            "Флаг" if CurrentMoney >= 17860:
+                                $ CurrentMoney -= 17860
+                                $ CurrentGun = "Flag" 
+                                $ GunType = "BigGun"
+                                "Вы установили оружие \"Флаг\" и отдали 17860 монет. У вас осталось [CurrentMoney] монет."
+                                $ renpy.save("checkpoint-1")
+                                    
 
-                                        "Флаг" if CurrentMoney >= 17860:
-                                            $ CurrentMoney -= 17860
-                                            $ CurrentGun = "Flag" 
-                                            $ GunType = "BigGun"
-                                            "Вы установили оружие \"Флаг\" и отдали 17860 монет. У вас осталось [CurrentMoney] монет."
-                                            $ renpy.save("checkpoint-1")
-                                                
+                "Не устанавливать":
+                    $ renpy.save("checkpoint-6")
+                    $ CurrentCargo = "Tent"
+                    $ GunType = "SmlGun"
 
-                            "Не устанавливать":
-                                $ renpy.save("checkpoint-6")
-                                $ CurrentCargo = "Tent"
-                                $ GunType = "SmlGun"
-                                $ CurrentMoney = elprice
-
-                                "Вы решили не устанавливать новый кузов. На вашем балансе: [elprice]"
-
-            "Оставить":
-                $ renpy.save("checkpoint-5")
-                $ SelledElephant = False
-                $ GunType = "SmlGun"
+                    "Вы решили не устанавливать новый кузов. На вашем балансе: [CurrentMoney] монет."
 
     "Вернувшись в Минин вы сразу идёте к мэру."
 
@@ -1108,6 +1015,12 @@ label mayorspy:
 
     "С этой мыслью вы аккуратно покидаете место событий и уезжаете обратно в Минин."
 
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
     jump minin4th_nl
 
 label minin4th_nl:
@@ -1145,6 +1058,12 @@ label minin4th_nl:
 
     "Шарки и рабочие залезают в ваш грузовик и вы направляетесь на нефтяную вышку."
 
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
     jump oilmine2nd
 
 label oilmine2nd:
@@ -1167,6 +1086,12 @@ label oilmine2nd:
     mc "Специально поставлю её в кабину, чтобы ничего не случилось…"
 
     "Вы грузите бочку нефти в машину и уезжаете в Минин."
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump minin5th_nl
 
@@ -1199,6 +1124,12 @@ label minin5th_nl:
     mc "Прощайте."
 
     "Вы направились вслед за караваном в соседний регион."
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump r1m4start
 

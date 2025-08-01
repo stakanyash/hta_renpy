@@ -17,20 +17,22 @@ init python:
 
     def get_random_drops():
         if CurrentRegion in ("r1m1"):
-            keys = list(R1M1DropNames.keys())
+            drop_dict = R1M1DropNames
             drop_count = random.randint(1, 2)
-        elif CurrentRegion in ("r1m2", "r1m3", "r1m4"):
-            keys = list(R1DropNames.keys())
+        elif CurrentRegion in ("r1m2", "r1m3"):
+            drop_dict = R1DropNames
             drop_count = random.randint(1, 2)
         elif CurrentRegion in ("r1m4"):
-            keys = list(R1M4DropNames.keys())
+            drop_dict = R1M4DropNames
             drop_count = random.randint(1, 3)
         else:
-            keys = list(DropNames.keys())
+            drop_dict = DropNames
             drop_count = random.randint(1, 2)
 
+        keys = list(drop_dict.keys())
         drop_ids = random.sample(keys, drop_count)
-        return [(item_id, DropNames[item_id]) for item_id in drop_ids]
+        return [(item_id, drop_dict[item_id]) for item_id in drop_ids]
+        
 
 transform stretch_in:
     yzoom 0.95
@@ -183,6 +185,84 @@ label start:
     }
 
     call screen name_input_screen
+
+label randomfight:
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ enemyint = random.randint(1, 4)
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = f"randomenemy{enemyint}"
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_max_hp = player_hp
+    $ enemy_hp = random.randint(250, 1000)
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 20
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Бандит"
+    $ bgname = f"bg_{CurrentRegion}_randomfight"
+    $ EnemyType = "Regular"
+    $ renpy.show(bgname, at_list=[center], what=None)
+    $ renpy.show(enemy_image, at_list=[center], what=None)
+
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        $ renpy.hide(enemy_image)
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+
+        play sound "sfx/explosion04.wav"
+        $ renpy.hide(enemy_image) 
+        with dissolve
+
+        $ drops = get_random_drops()
+
+        if drops:
+            python:
+                drop_names_text = []
+                dropped_something = False
+                no_space_warning_shown = False
+
+                for drop_id, drop_name in drops:
+                    if try_add_item(drop_id) == True:
+                        drop_names_text.append(drop_name)
+                        dropped_something = True
+                    else:
+                        if not no_space_warning_shown:
+                            renpy.say(None, "В вашем инвентаре не хватает места!")
+                            no_space_warning_shown = True
+
+                if dropped_something:
+                    drop_names_str = ", ".join(drop_names_text)
+                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
+                
+        return
 
 label selling:
     if TownType == "City":

@@ -102,6 +102,14 @@ image bg_freeleader_1 = "images/bgs/r1m4/bg_freeleader_1.jpg"
 image bg_freeleader_2 = "images/bgs/r1m4/bg_freeleader_2.jpg"
 image bg_freeleaderfight = "images/bgs/r1m4/bg_freeleaderfight.jpg"
 image bg_leaderisfree = "images/bgs/r1m4/bg_leaderisfree.jpg"
+image bg_leaver1_van_1 = "images/bgs/r1m4/bg_leaver1_van_1.jpg"
+image bg_leaver1_van_2 = "images/bgs/r1m4/bg_leaver1_van_2.jpg"
+image bg_leaver1_van_3 = "images/bgs/r1m4/bg_leaver1_van_3.jpg"
+image bg_leaver1_van_4 = "images/bgs/r1m4/bg_leaver1_van_4.jpg"
+image bg_leaver1_ural_1 = "images/bgs/r1m4/bg_leaver1_ural_1.jpg"
+image bg_leaver1_ural_2 = "images/bgs/r1m4/bg_leaver1_ural_2.jpg"
+image bg_leaver1_ural_3 = "images/bgs/r1m4/bg_leaver1_ural_3.jpg"
+image bg_leaver1_ural_4 = "images/bgs/r1m4/bg_leaver1_ural_4.jpg"
 
 # Sprites: Characters
 

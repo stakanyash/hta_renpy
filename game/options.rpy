@@ -19,6 +19,7 @@ define config.mouse = {
 }
 
 define config.rollback_enabled = config.developer
+define config.allow_skipping = config.developer
 
 init python:
     style.say_dialogue.outlines = [(2, "#858585", 0, 0), (1, "#404040", 0, 0)]
@@ -32,7 +33,7 @@ define gui.show_name = False
 
 ## Версия игры.
 
-define config.version = "0.2.1"
+define config.version = "0.2.2"
 
 
 ## Текст, помещённый в экран "Об игре". Поместите текст между тройными скобками.

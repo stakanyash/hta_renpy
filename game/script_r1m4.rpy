@@ -59,6 +59,12 @@ label homersearch:
 
     "Вы начали искать Гомера в рыбацких посёлках."
 
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
     scene bg_lauka with fade
 
     "В Лауке его нет."
@@ -68,6 +74,12 @@ label homersearch:
     "В Калисе тоже..."
 
     mc "Мне что, придётся весь регион объездить в его поисках?!"
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     scene bg_kordan with fade
 
@@ -99,6 +111,12 @@ label homersearch:
     mc "Осталось только одно место, где я ещё не был..."
 
     hide mcsurp
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     $ TownType = "Village"
     
@@ -172,6 +190,12 @@ label homersearch:
     hide mcsurp with dissolve
 
     "Вы поехали к месту, указанному Гомером."
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump tokranfight
 
@@ -273,20 +297,30 @@ label leaveregion1:
 
     play music "music/bio02.ogg" fadeout 1.0
 
-    if CurrentCargo == "Box":
-        scene bg_leaver1_cargo3_1 with fade
+    if CurrentCar == "Molokovoz":
+        if CurrentCargo == "Box":
+            scene bg_leaver1_cargo3_1 with dissolve
+        else:
+            scene bg_leaver1_cargo1_1 with dissolve
+    elif CurrentCar == "Ural":
+        scene bg_leaver1_ural_1 with dissolve
     else:
-        scene bg_leaver1_cargo1_1 with fade
+        scene bg_leaver1_van_1 with dissolve
 
     mc "Это то самое место, которое указал Гомер, но я не вижу никаких врат."
     mc "Неужели всё зря?!"
 
     pause 0.5
 
-    if CurrentCargo == "Box":
-        scene bg_leaver1_cargo3_2 with dissolve
+    if CurrentCar == "Molokovoz":
+        if CurrentCargo == "Box":
+            scene bg_leaver1_cargo3_2 with dissolve
+        else:
+            scene bg_leaver1_cargo1_2 with dissolve
+    elif CurrentCar == "Ural":
+        scene bg_leaver1_ural_2 with dissolve
     else:
-        scene bg_leaver1_cargo1_2 with dissolve
+        scene bg_leaver1_van_2 with dissolve
 
     mc "Что это лезет из-под воды? Покой нам только снится..."
     mc "Только прикончил одного монстра, как второй на подходе..."
@@ -297,20 +331,30 @@ label leaveregion1:
 
     pause 0.5
 
-    if CurrentCargo == "Box":
-        scene bg_leaver1_cargo3_3 with dissolve
+    if CurrentCar == "Molokovoz":
+        if CurrentCargo == "Box":
+            scene bg_leaver1_cargo3_3 with dissolve
+        else:
+            scene bg_leaver1_cargo1_3 with dissolve
+    elif CurrentCar == "Ural":
+        scene bg_leaver1_ural_3 with dissolve
     else:
-        scene bg_leaver1_cargo1_3 with dissolve
+        scene bg_leaver1_van_3 with dissolve
 
     mc "Похоже, он приглашает меня к себе в пасть. Так это же и есть Морские Врата!"
     mc "В животе чудища я и доплыву до Оракула."
 
     pause 0.5
 
-    if CurrentCargo == "Box":
-        scene bg_leaver1_cargo3_4 with dissolve
+    if CurrentCar == "Molokovoz":
+        if CurrentCargo == "Box":
+            scene bg_leaver1_cargo3_4 with dissolve
+        else:
+            scene bg_leaver1_cargo1_4 with dissolve
+    elif CurrentCar == "Ural":
+        scene bg_leaver1_ural_4 with dissolve
     else:
-        scene bg_leaver1_cargo1_4 with dissolve
+        scene bg_leaver1_van_4 with dissolve
 
     mc "Страшно, конечно..."
     mc "Ну, терять мне нечего. Только вперёд!"
@@ -355,6 +399,13 @@ label galdenquest:
             hide galden with dissolve
             "Вы уезжаете на склад."
             hide mcsurp
+
+            if random.random() <= 0.3:
+                $ randommus = random.randint(1, 2)
+                $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+                "На вас нападают!"
+                call randomfight
+            
             jump r1m4SideQuest_start
 
         "Отказать":
@@ -402,6 +453,13 @@ label r1m4SideQuest_start:
             mc "Ладно, попробую всё выяснить."
             hide wsecurity
             hide mc6
+
+            if random.random() <= 0.3:
+                $ randommus = random.randint(1, 2)
+                $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+                "На вас нападают!"
+                call randomfight
+            
             jump r1m4SideQuest_whereisleader
 
         "Отбить склад силой":
@@ -586,6 +644,12 @@ label r1m4SideQuest_leaderisfree:
     mc "Я заключил договор с твоими бойцами, что освобожу тебя в обмен на одну нужную мне вещь."
     mc "И лучше бы им выполнить свою часть сделки!"
 
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
     jump r1m4SideQuest_leaderisback
 
 label r1m4SideQuest_leaderisback:
@@ -613,6 +677,12 @@ label r1m4SideQuest_leaderisback:
     mc "Надеюсь в Ольме меня ни в чём не заподозрят..."
 
     $ r1m4SideQuestLeaderSaved = True
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump r1m4SideQuest_finish
 

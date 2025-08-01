@@ -165,6 +165,12 @@ label firstenemyfight:
                     drop_names_str = ", ".join(drop_names_text)
                     renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
 
+        if random.randint(1,2) == 1:
+            $ randommus = random.randint(1, 2)
+            $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+            "На вас нападают!"
+            call randomfight
+
         jump afterfirstattack
 
 label afterfirstattack:
@@ -223,6 +229,12 @@ label lisaagree:
     hide mc_2 with dissolve
 
     "Вы поехали по соседним деревням. Сначала решили заехать в Заимку."
+
+    if random.randint(1,2) == 1:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump secondenemy
 
@@ -350,6 +362,12 @@ label tozaimka:
 
     hide lisa2 with dissolve
 
+    if random.randint(1,2) == 1:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
     scene bg_gugulino with dissolve
 
     "Всё тоже самое было в Гугулино..."
@@ -399,6 +417,12 @@ label tozaimka:
     hide mc_2 with dissolve
 
     "Вы направились в Южный."
+
+    if random.randint(1,2) == 1:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     play music "music/town1.ogg" fadeout 1.0
 
@@ -491,9 +515,16 @@ label sergo:
             hide farmerdi with dissolve
             hide mcsurp with dissolve
             "Фермер сел в вашу машину и вы поехали в сторону заправки по его наводке."
+
             if LisaAgreed == "False":
                 jump secondenemy
             elif LisaAgreed == "True":
+                if random.randint(1,2) == 1:
+                    $ randommus = random.randint(1, 2)
+                    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+                    "На вас нападают!"
+                    call randomfight
+                
                 jump dickzapravka
 
         "Отказать":
@@ -755,6 +786,12 @@ label deadfather:
 
     "Полностью раздосадованный вы уезжаете обратно в Южный."
 
+    if random.randint(1,2) == 1:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
     jump sowthagain
 
 
@@ -813,6 +850,12 @@ label dyingfather:
     mc "Кто бы это ни был, надеюсь, он поможет мне обрести себя."
 
     mc "Может быть, в Южном слышали о нём?"
+
+    if random.randint(1,2) == 1:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump sowthagain
 
@@ -906,12 +949,22 @@ label sowthagain:
             "Ехать в Заимку":
                 $ TakeGunFromZaimka = "True"
                 $ renpy.save("checkpoint-4")
+                if random.randint(1,2) == 1:
+                    $ randommus = random.randint(1, 2)
+                    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+                    "На вас нападают!"
+                    call randomfight
                 play music "music/town2.ogg" fadeout 1.0
                 jump KventinZaimka
 
             "Ехать сразу к Феликсу":
                 $ TakeGunFromZaimka = "False"
                 $ renpy.save("checkpoint-4")
+                if random.randint(1,2) == 1:
+                    $ randommus = random.randint(1, 2)
+                    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+                    "На вас нападают!"
+                    call randomfight
                 jump felixbase
 
     elif LisaAgreed == "False":
@@ -946,9 +999,15 @@ label sowthagain:
 
         hide dronn with dissolve
         hide mc3 with dissolve
+
+        if random.randint(1,2) == 1:
+            $ randommus = random.randint(1, 2)
+            $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+            "На вас нападают!"
+            call randomfight
+
         scene black with fade
 
-        # Temporary "return" (replace with jump to Ridzin)
         jump leaver1m1toridzin
 
 label KventinZaimka:
@@ -1195,6 +1254,12 @@ label felixdefeated:
 
     hide felix with dissolve
     hide mcsurp with dissolve
+
+    if random.randint(1,2) == 1:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump leaver1m1tovaterland
 

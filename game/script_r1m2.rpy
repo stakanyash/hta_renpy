@@ -112,7 +112,8 @@ label defeateddefender:
         $ renpy.notify("В ваш инвентарь добавлен \"Шершень\".")
     else:
         $ renpy.notify("В вашем инвентаре недостаточно места!")
-        "\"Шершень\" автоматически продан за 130 монет."
+        $ CurrentMoney += 65
+        "\"Шершень\" автоматически продан за 65 монет."
 
     if 1 <= randomgun <= 3:
         "Вы нашли оружие \"Корд\"!"
@@ -148,7 +149,7 @@ label movetovostochnoe:
 
     "Поняв, что \"дружеского\" приветствия не получится вы решаете сразу перейти к делу."
 
-    show mchar at right with dissolve
+    show mchar at right, stretch_in
 
     mc "Мне нужен Бен Дроссель!"
 
@@ -187,6 +188,12 @@ label movetovostochnoe:
 
     hide hose with dissolve
     hide mcsurp with dissolve
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump tolocus
 
@@ -241,6 +248,12 @@ label tolocus:
     mc "Ладно, надо ехать в Мидгард."
 
     hide mc6 with dissolve
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump tomidgard
 
@@ -441,6 +454,12 @@ label portoa:
     hide mc4 with dissolve
     hide shon with dissolve
 
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
     jump backtomidgard
 
 label backtomidgard:
@@ -600,6 +619,12 @@ label firstmeetben:
 
     hide ben3 with dissolve
     hide mc5 with dissolve
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump vaterlandfirst
 
