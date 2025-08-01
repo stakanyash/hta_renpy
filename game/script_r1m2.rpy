@@ -193,7 +193,7 @@ label movetovostochnoe:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_11
 
     jump tolocus
 
@@ -253,7 +253,7 @@ label tolocus:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_12
 
     jump tomidgard
 
@@ -458,7 +458,7 @@ label portoa:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_13
 
     jump backtomidgard
 
@@ -624,7 +624,7 @@ label firstmeetben:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_14
 
     jump vaterlandfirst
 

@@ -513,7 +513,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.2.2 (250801a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.2.2 (250801b)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -571,6 +571,8 @@ screen statistics_screen():
             text "Оружие: [gun_names.get(CurrentGun, '—')]" size 32 xalign 0.5
 
             text "Машина: [car_names.get(CurrentCar, '—')]\n" size 32 xalign 0.5
+
+            text "Сложность: [DifficultyNames.get(difficulty, '—')]" size 32 xalign 0.5
 
             text "Текущий регион: [region_names.get(CurrentRegion, '—')]\n" size 32 xalign 0.5
 

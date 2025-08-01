@@ -169,7 +169,7 @@ label firstenemyfight:
             $ randommus = random.randint(1, 2)
             $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
             "На вас нападают!"
-            call randomfight
+            call randomfight from _call_randomfight
 
         jump afterfirstattack
 
@@ -234,7 +234,7 @@ label lisaagree:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_1
 
     jump secondenemy
 
@@ -366,7 +366,7 @@ label tozaimka:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_2
 
     scene bg_gugulino with dissolve
 
@@ -422,7 +422,7 @@ label tozaimka:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_3
 
     play music "music/town1.ogg" fadeout 1.0
 
@@ -523,7 +523,7 @@ label sergo:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                     "На вас нападают!"
-                    call randomfight
+                    call randomfight from _call_randomfight_4
                 
                 jump dickzapravka
 
@@ -790,7 +790,7 @@ label deadfather:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_5
 
     jump sowthagain
 
@@ -855,7 +855,7 @@ label dyingfather:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_6
 
     jump sowthagain
 
@@ -953,7 +953,7 @@ label sowthagain:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                     "На вас нападают!"
-                    call randomfight
+                    call randomfight from _call_randomfight_7
                 play music "music/town2.ogg" fadeout 1.0
                 jump KventinZaimka
 
@@ -964,7 +964,7 @@ label sowthagain:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                     "На вас нападают!"
-                    call randomfight
+                    call randomfight from _call_randomfight_8
                 jump felixbase
 
     elif LisaAgreed == "False":
@@ -1004,7 +1004,7 @@ label sowthagain:
             $ randommus = random.randint(1, 2)
             $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
             "На вас нападают!"
-            call randomfight
+            call randomfight from _call_randomfight_9
 
         scene black with fade
 
@@ -1259,7 +1259,7 @@ label felixdefeated:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_10
 
     jump leaver1m1tovaterland
 

@@ -633,7 +633,7 @@ label fightformoney:
 
         $ R1M3FarmCount += 1
 
-        call randomfight
+        call randomfight from _call_randomfight_15
 
         scene bg_minin with fade
         play music "music/town3.ogg" fadeout 1.0
@@ -824,7 +824,7 @@ label banditbaseelim:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_16
 
     jump minin3rd_nl
 
@@ -854,7 +854,7 @@ label minin3rd_nl:
     }
 
     if Inventory:
-        call selling
+        call selling from _call_selling_24
 
     if CurrentCar == "Molokovoz":
         if CurrentMoney >= 19000:
@@ -1019,7 +1019,7 @@ label mayorspy:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_17
 
     jump minin4th_nl
 
@@ -1062,7 +1062,7 @@ label minin4th_nl:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_18
 
     jump oilmine2nd
 
@@ -1091,7 +1091,7 @@ label oilmine2nd:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_19
 
     jump minin5th_nl
 
@@ -1129,7 +1129,7 @@ label minin5th_nl:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_20
 
     jump r1m4start
 

@@ -63,7 +63,7 @@ label homersearch:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_21
 
     scene bg_lauka with fade
 
@@ -79,7 +79,7 @@ label homersearch:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_22
 
     scene bg_kordan with fade
 
@@ -116,7 +116,7 @@ label homersearch:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_23
 
     $ TownType = "Village"
     
@@ -195,7 +195,7 @@ label homersearch:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_24
 
     jump tokranfight
 
@@ -404,7 +404,7 @@ label galdenquest:
                 $ randommus = random.randint(1, 2)
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                 "На вас нападают!"
-                call randomfight
+                call randomfight from _call_randomfight_25
             
             jump r1m4SideQuest_start
 
@@ -418,6 +418,8 @@ label galdenquest:
             jump homersearch
 
 label r1m4SideQuest_start:
+
+    play music "music/town4.ogg" fadeout 1.0
 
     scene bg_warehouse with fade
 
@@ -458,7 +460,7 @@ label r1m4SideQuest_start:
                 $ randommus = random.randint(1, 2)
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                 "На вас нападают!"
-                call randomfight
+                call randomfight from _call_randomfight_26
             
             jump r1m4SideQuest_whereisleader
 
@@ -531,6 +533,8 @@ label r1m4SideQuest_warehousefight:
 label r1m4SideQuest_whereisleader:
 
     $ TownType = "City"
+
+    play music "music/town1.ogg" fadeout 1.0
 
     scene bg_olm with fade
 
@@ -648,11 +652,13 @@ label r1m4SideQuest_leaderisfree:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_27
 
     jump r1m4SideQuest_leaderisback
 
 label r1m4SideQuest_leaderisback:
+
+    play music "music/town4.ogg" fadeout 1.0
 
     scene bg_warehouse with fade
 
@@ -682,13 +688,15 @@ label r1m4SideQuest_leaderisback:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_28
 
     jump r1m4SideQuest_finish
 
 label r1m4SideQuest_finish:
 
     $ TownType = "City"
+
+    play music "music/town1.ogg" fadeout 1.0
 
     scene bg_olm with fade
 
@@ -698,7 +706,11 @@ label r1m4SideQuest_finish:
     if r1m4SideQuestLeaderSaved == True:
         "Вернувшись в Ольм вы не замечаете ничего странного."
 
+    show galden at left with dissolve
+
     galden "Как продвигаются твои дела?"
+
+    show mcsurp at right with dissolve
 
     mc "Склад чист, работа сделана."
 
@@ -709,6 +721,10 @@ label r1m4SideQuest_finish:
 
     mc "Супер!"
 
+    hide galden with dissolve
+
     mc "Надо возвращаться к основной задаче..."
+
+    hide mcsurp
 
     jump homersearch

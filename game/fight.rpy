@@ -17,8 +17,8 @@ init python:
 
             renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
 
-            renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
             renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
+            renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
 
             turn_count = 0
         else:
@@ -28,8 +28,8 @@ init python:
 
                 renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
 
-                renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
                 renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
+                renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
 
                 enemy_damage_multiplier = 0.0
                 turn_count = 0
@@ -62,14 +62,14 @@ init python:
                 player_hp = max(0, player_hp - penalty_damage)
 
                 renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
-                renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=7)])
                 renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
+                renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=7)])
 
                 consecutive_player_hits = 0
                 enemy_damage_multiplier = 0.0
         else:
             renpy.sound.play(f"audio/sfx/shoot_miss01.ogg", channel="missshot")
-            enemy_damage_multiplier += 0.03
+            enemy_damage_multiplier += difficulty_base_multiplier
             consecutive_player_hits = 0
         
         apply_enemy_attack()

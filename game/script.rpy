@@ -1,5 +1,7 @@
 default temp_name = ""
 default player_name = "Игрок"
+default difficulty = "normal"
+default difficulty_base_multiplier = 0.03
 
 init python:
     renpy.music.register_channel("sfx2", mixer="sfx", loop=True, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
@@ -184,7 +186,16 @@ label start:
         "Mirotvorec": 12,
     }
 
+    $ DifficultyNames = {
+        "easy": "Новичок",
+        "normal": "Бывалый",
+        "hard": "Профессионал",
+        "expert": "Мастер",
+    }
+
     call screen name_input_screen
+    call screen difficulty_select
+    jump tutorial_check
 
 label randomfight:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
