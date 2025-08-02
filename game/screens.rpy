@@ -377,6 +377,14 @@ style choice_button_text is default:
 
 screen quick_menu():
 
+    python:
+        available_cars = [
+            name for name, price in CarPrices.items()
+            if price <= CurrentMoney
+            and name != CurrentCar
+            and region_allowed(CurrentRegion, CarMinRegion.get(name, "r1m1"))
+        ]
+
     ## Гарантирует, что оно появляется поверх других экранов.
     zorder 100
 
@@ -395,8 +403,9 @@ screen quick_menu():
             textbutton _("Опции") activate_sound "audio/sfx/click.wav" action ShowMenu('preferences')
             textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
 
-            if TownType == "City" and [car_names[name] for name, price in CarPrices.items() if price <= CurrentMoney and name != CurrentCar]:
+            if TownType == "City" and available_cars:
                 textbutton _("Сменить автомобиль") activate_sound "audio/sfx/click.wav" action Call("newcarbuying")
+
 
 
 ## Данный код гарантирует, что экран быстрого меню будет показан в игре в любое

@@ -34,6 +34,13 @@ init python:
         keys = list(drop_dict.keys())
         drop_ids = random.sample(keys, drop_count)
         return [(item_id, drop_dict[item_id]) for item_id in drop_ids]
+
+    def region_allowed(current, required):
+        region_order = ["r1m1", "r1m2", "r1m3", "r1m4"]
+        try:
+            return region_order.index(current) >= region_order.index(required)
+        except ValueError:
+            return False
         
 
 transform stretch_in:
@@ -207,6 +214,12 @@ label start:
         "Ural": 15501,
         "Belaz": 47405,
         "Mirotvorec": 180001,
+    }
+
+    $ CarMinRegion = {
+        "Van": "r1m1",
+        "Molokovoz": "r1m2",
+        "Ural": "r1m4",
     }
 
     call screen name_input_screen
@@ -444,29 +457,34 @@ label newcarbuying:
     $ oldcarsell_value = CarSellPrices.get(CurrentCar, 0)
 
     python:
-        affordable_cars = [car_names[name] for name, price in CarPrices.items() if price <= CurrentMoney and name != CurrentCar]
+        affordable_cars = [
+            car_names[name]
+            for name, price in CarPrices.items()
+            if price <= CurrentMoney
+            and (name != CurrentCar or CarPrices[name] < CarPrices.get(CurrentCar, 0))
+            and region_allowed(CurrentRegion, CarMinRegion.get(name, "r1m1"))
+        ]
+
         car_text = ", ".join(affordable_cars)
-    
+
     "Ваших средств достаточно на: [car_text]."
 
     menu:
-        "Купить Вэн" if CurrentMoney >= 1401 and CurrentCar != "Van":
+        "Купить Вэн" if CurrentMoney >= 1401 and CurrentCar != "Van" and region_allowed(CurrentRegion, "r1m1"):
             $ sellprice = 1401 - oldcarsell_value
             $ CurrentMoney -= sellprice
             $ CurrentCar = "Van"
-
             if sellprice > 0:
                 $ renpy.notify(f"Вы отдали {sellprice} монет.")
                 "Вы купили Вэн и отдали [sellprice] монет."
             elif sellprice < 0:
                 $ renpy.notify(f"Вы получили {abs(sellprice)} монет.")
                 "Вы купили Вэн и получили [abs(sellprice)] монет из-за того, что ваш старый автомобиль дороже нового."
-        
-        "Купить Молоковоз" if CurrentMoney >= 6501 and CurrentCar != "Molokovoz":
+
+        "Купить Молоковоз" if CurrentMoney >= 6501 and CurrentCar != "Molokovoz" and region_allowed(CurrentRegion, "r1m2"):
             $ sellprice = 6501 - oldcarsell_value
             $ CurrentMoney -= sellprice
             $ CurrentCar = "Molokovoz"
-
             if sellprice > 0:
                 $ renpy.notify(f"Вы отдали {sellprice} монет.")
                 "Вы купили Молоковоз и отдали [sellprice] монет."
@@ -474,11 +492,10 @@ label newcarbuying:
                 $ renpy.notify(f"Вы получили {abs(sellprice)} монет.")
                 "Вы купили Молоковоз и получили [abs(sellprice)] монет из-за того, что ваш старый автомобиль дороже нового."
 
-        "Купить Урал" if CurrentMoney >= 31001 and CurrentCar != "Ural":
+        "Купить Урал" if CurrentMoney >= 31001 and CurrentCar != "Ural" and region_allowed(CurrentRegion, "r1m4"):
             $ sellprice = 31001 - oldcarsell_value
             $ CurrentMoney -= sellprice
             $ CurrentCar = "Ural"
-
             if sellprice > 0:
                 $ renpy.notify(f"Вы отдали {sellprice} монет.")
                 "Вы купили Урал и отдали [sellprice] монет."
