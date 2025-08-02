@@ -498,22 +498,6 @@ label backtomidgard:
     hide scientist with dissolve
     hide mchar with dissolve
 
-    if CurrentMoney >= 5800:
-
-        "У вас есть возможность купить новую машину \"Молоковоз\".\nЦена покупки: 5800 монет."
-
-        menu:
-            "Купить":
-                $ CurrentCar = "Molokovoz"
-                $ CurrentMoney -= 5800
-                $ renpy.notify("Вы отдали 5800 монет.")
-
-                "Вы купили новую машину \"Молоковоз\".\nВаш текущий баланс: [CurrentMoney] монет."
-                
-                mc "Вот теперь можно ехать."
-            "Не покупать":
-                "Вы решили не покупать новую машину."
-
     jump firstmeetben
 
 label firstmeetben:

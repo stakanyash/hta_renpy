@@ -193,6 +193,22 @@ label start:
         "expert": "Мастер",
     }
 
+    $ CarPrices = {
+        "Van": 1401,
+        "Molokovoz": 6501,
+        "Ural": 31001,
+        "Belaz": 170001,
+        "Mirotvorec": 360001,
+    }
+
+    $ CarSellPrices = {
+        "Van": 701,
+        "Molokovoz": 3251,
+        "Ural": 15501,
+        "Belaz": 47405,
+        "Mirotvorec": 180001,
+    }
+
     call screen name_input_screen
     call screen difficulty_select
     jump tutorial_check
@@ -422,4 +438,52 @@ label fightlost:
     else:
         mc "{cps=7}Прощайте, братцы!{/cps}"
     
+    return
+
+label newcarbuying:
+    $ oldcarsell_value = CarSellPrices.get(CurrentCar, 0)
+
+    python:
+        affordable_cars = [car_names[name] for name, price in CarPrices.items() if price <= CurrentMoney and name != CurrentCar]
+        car_text = ", ".join(affordable_cars)
+    
+    "Ваших средств достаточно на: [car_text]."
+
+    menu:
+        "Купить Вэн" if CurrentMoney >= 1401 and CurrentCar != "Van":
+            $ sellprice = 1401 - oldcarsell_value
+            $ CurrentMoney -= sellprice
+            $ CurrentCar = "Van"
+
+            if sellprice > 0:
+                $ renpy.notify(f"Вы отдали {sellprice} монет.")
+                "Вы купили Вэн и отдали [sellprice] монет."
+            elif sellprice < 0:
+                $ renpy.notify(f"Вы получили {abs(sellprice)} монет.")
+                "Вы купили Вэн и получили [abs(sellprice)] монет из-за того, что ваш старый автомобиль дороже нового."
+        
+        "Купить Молоковоз" if CurrentMoney >= 6501 and CurrentCar != "Molokovoz":
+            $ sellprice = 6501 - oldcarsell_value
+            $ CurrentMoney -= sellprice
+            $ CurrentCar = "Molokovoz"
+
+            if sellprice > 0:
+                $ renpy.notify(f"Вы отдали {sellprice} монет.")
+                "Вы купили Молоковоз и отдали [sellprice] монет."
+            elif sellprice < 0:
+                $ renpy.notify(f"Вы получили {abs(sellprice)} монет.")
+                "Вы купили Молоковоз и получили [abs(sellprice)] монет из-за того, что ваш старый автомобиль дороже нового."
+
+        "Купить Урал" if CurrentMoney >= 31001 and CurrentCar != "Ural":
+            $ sellprice = 31001 - oldcarsell_value
+            $ CurrentMoney -= sellprice
+            $ CurrentCar = "Ural"
+
+            if sellprice > 0:
+                $ renpy.notify(f"Вы отдали {sellprice} монет.")
+                "Вы купили Урал и отдали [sellprice] монет."
+            elif sellprice < 0:
+                $ renpy.notify(f"Вы получили {abs(sellprice)} монет.")
+                "Вы купили Урал и получили [abs(sellprice)] монет из-за того, что ваш старый автомобиль дороже нового."
+
     return

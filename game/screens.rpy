@@ -395,6 +395,9 @@ screen quick_menu():
             textbutton _("Опции") activate_sound "audio/sfx/click.wav" action ShowMenu('preferences')
             textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
 
+            if TownType == "City" and [car_names[name] for name, price in CarPrices.items() if price <= CurrentMoney and name != CurrentCar]:
+                textbutton _("Сменить автомобиль") activate_sound "audio/sfx/click.wav" action Call("newcarbuying")
+
 
 ## Данный код гарантирует, что экран быстрого меню будет показан в игре в любое
 ## время, если только игрок не скроет интерфейс.
@@ -513,7 +516,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.2.2 (250801b)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.2.3 (250802a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -576,7 +579,7 @@ screen statistics_screen():
 
             text "Текущий регион: [region_names.get(CurrentRegion, '—')]\n" size 32 xalign 0.5
 
-            textbutton "Назад" action Return() xalign 0.5 ypos -10
+            textbutton "Назад" activate_sound "audio/sfx/click.wav" action Return() xalign 0.5 ypos -10
 
 
 ## Экран игрового меню #########################################################
