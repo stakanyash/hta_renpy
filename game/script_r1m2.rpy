@@ -189,6 +189,8 @@ label movetovostochnoe:
     hide hose with dissolve
     hide mcsurp with dissolve
 
+    $ TownType = "NotInCity"
+
     if random.random() <= 0.3:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
@@ -333,6 +335,8 @@ label tomidgard:
     hide mchar with dissolve
     hide zavhoz with dissolve
 
+    $ TownType = "NotInCity"
+
     "Вы выдвигаетесь в сторону Порто."
 
     jump toportoe1
@@ -454,6 +458,8 @@ label portoa:
     hide mc4 with dissolve
     hide shon with dissolve
 
+    $ TownType = "NotInCity"
+
     if random.random() <= 0.3:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
@@ -494,6 +500,8 @@ label backtomidgard:
     unknown "Давай помечу на твоей карте."
 
     mc "Спасибо. Наконец-то я узнаю, кто я такой."
+
+    $ TownType = "NotInCity"
 
     hide scientist with dissolve
     hide mchar with dissolve

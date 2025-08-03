@@ -525,6 +525,7 @@ label sergo:
                     "На вас нападают!"
                     call randomfight from _call_randomfight_4
                 
+                $ TownType = "NotInCity"
                 jump dickzapravka
 
         "Отказать":
@@ -540,8 +541,10 @@ label sergo:
             "Вы спокойно уходите, а Фермер продолжает ругаться на вас в след."
             "Странный какой-то тип. Не зря я ему отказал."
             if LisaAgreed == "True":
+                $ TownType = "NotInCity"
                 jump felixmeet
             elif LisaAgreed == "False":
+                $ TownType = "NotInCity"
                 jump glukhoeburn
 
 label dickzapravka:
@@ -949,6 +952,7 @@ label sowthagain:
             "Ехать в Заимку":
                 $ TakeGunFromZaimka = "True"
                 $ renpy.save("checkpoint-4")
+                $ TownType = "NotInCity"
                 if random.randint(1,2) == 1:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
@@ -960,6 +964,7 @@ label sowthagain:
             "Ехать сразу к Феликсу":
                 $ TakeGunFromZaimka = "False"
                 $ renpy.save("checkpoint-4")
+                $ TownType = "NotInCity"
                 if random.randint(1,2) == 1:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
@@ -999,6 +1004,8 @@ label sowthagain:
 
         hide dronn with dissolve
         hide mc3 with dissolve
+
+        $ TownType = "NotInCity"
 
         if random.randint(1,2) == 1:
             $ randommus = random.randint(1, 2)
@@ -1265,6 +1272,8 @@ label felixdefeated:
 
 label leaver1m1tovaterland:
 
+    $ TownType = "City"
+
     scene bg_sowth with Fade
 
     "Перед тем, как ехать искать Лису вы решили заехать в Южный, чтобы рассказать Дронну, как всё прошло."
@@ -1287,6 +1296,8 @@ label leaver1m1tovaterland:
 
     hide dronn
     hide mchar
+    
+    $ TownType = "NotInCity"
 
     jump vaterlandfirst
 

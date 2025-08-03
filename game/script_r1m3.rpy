@@ -112,8 +112,16 @@ label asgardboom:
 
     mc "Спасибо!"
 
+    $ TownType = "NotInCity"
+
     hide seller
     hide mcsurp
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
 
     jump mvillage
 
@@ -372,6 +380,14 @@ label peshtallow:
     hide pguard
     hide mc5
 
+    $ TownType = "NotInCity"
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
     jump minin1st_nl
 
 label minin1st_nl:
@@ -402,6 +418,8 @@ label minin1st_nl:
 
     hide mc_2
     hide mworker
+
+    $ TownType = "NotInCity"
 
     jump aivenhouse
 
@@ -524,6 +542,8 @@ label minin2nd_nl:
 
 label hundredcointosharki:
 
+    $ TownType = "City"
+
     if Inventory and FarmEnabled == True:
         $ FarmEnabled = False
         call selling from _call_selling_15
@@ -604,6 +624,8 @@ label hundredcointosharki:
 
             "Вы уходите из кабинета мэра и направляетесь в сторону нефтянной вышки."
 
+            $ TownType = "NotInCity"
+
             stop music fadeout 1.0
 
             jump oilmine1st
@@ -615,6 +637,7 @@ label hundredcointosharki:
 
             "Вы отправились искать врагов, чтобы заработать денег..."
 
+            $ TownType = "NotInCity"
             $ FarmEnabled = True
 
             jump fightformoney
@@ -974,6 +997,8 @@ label minin3rd_nl:
     hide mc6 with dissolve
     hide mworker with dissolve
 
+    $ TownType = "NotInCity"
+
     jump mayorspy
 
 label mayorspy:
@@ -1058,6 +1083,8 @@ label minin4th_nl:
 
     "Шарки и рабочие залезают в ваш грузовик и вы направляетесь на нефтяную вышку."
 
+    $ TownType = "NotInCity"
+
     if random.random() <= 0.3:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
@@ -1124,6 +1151,8 @@ label minin5th_nl:
     mc "Прощайте."
 
     "Вы направились вслед за караваном в соседний регион."
+
+    $ TownType = "NotInCity"
 
     if random.random() <= 0.3:
         $ randommus = random.randint(1, 2)

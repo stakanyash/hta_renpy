@@ -57,6 +57,8 @@ label homersearch:
 
     mc "Интересно получается. Все значит тут рыбаки, а они - нет? Странно."
 
+    $ TownType = "NotInCity"
+
     "Вы начали искать Гомера в рыбацких посёлках."
 
     if random.random() <= 0.3:
@@ -65,6 +67,7 @@ label homersearch:
         "На вас нападают!"
         call randomfight from _call_randomfight_21
 
+    play music "music/driving7.ogg" fadeout 1.0
     scene bg_lauka with fade
 
     "В Лауке его нет."
@@ -398,6 +401,7 @@ label galdenquest:
             mc "Хорошо, я попробую разобраться."
             hide galden with dissolve
             "Вы уезжаете на склад."
+            $ TownType = "NotInCity"
             hide mcsurp
 
             if random.random() <= 0.3:
@@ -558,6 +562,8 @@ label r1m4SideQuest_whereisleader:
 
     mc "Спасибо. Я найду его."
 
+    $ TownType = "NotInCity"
+
     jump r1m4SideQuest_freeleader
 
 label r1m4SideQuest_freeleader:
@@ -595,7 +601,7 @@ label r1m4SideQuest_freeleader:
     $ enemy_image = "leadertakers"
     $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = 4050 # Summary HP of 3 Vans and 1 Lorry
+    $ enemy_hp = 2025 # 50% HP of 3 Vans and 1 Lorry
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
