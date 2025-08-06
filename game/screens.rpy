@@ -377,14 +377,6 @@ style choice_button_text is default:
 
 screen quick_menu():
 
-    python:
-        available_cars = [
-            name for name, price in CarPrices.items()
-            if price <= CurrentMoney
-            and name != CurrentCar
-            and region_allowed(CurrentRegion, CarMinRegion.get(name, "r1m1"))
-        ]
-
     ## Гарантирует, что оно появляется поверх других экранов.
     zorder 100
 
@@ -402,9 +394,10 @@ screen quick_menu():
             textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu('load')
             textbutton _("Опции") activate_sound "audio/sfx/click.wav" action ShowMenu('preferences')
             textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
+            textbutton _("Тест") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
 
-            if TownType == "City" and available_cars:
-                textbutton _("Сменить автомобиль") activate_sound "audio/sfx/click.wav" action Call("newcarbuying")
+            if TownType == "City":
+                textbutton _("Магазин") activate_sound "audio/sfx/click.wav" action Call("shopmenu")
 
 
 
@@ -561,34 +554,74 @@ style main_menu_version:
 screen statistics_screen():
     tag menu
 
-    add Solid("#000000cb")
+    python:
+        def format_time(seconds):
+            minutes = seconds // 60
+            hours = minutes // 60
+            minutes = minutes % 60
+            return "%02d:%02d" % (hours, minutes)
 
     frame:
         style "menu_frame"
-        xalign 0.5
-        yalign 0.5
-        xsize 700
-        padding (40, 30)
+        background "gui/townmenu/backstats.png"
+        xsize 1920
+        ysize 1080
+
+        if 0 <= CurrentMoney <= 9:
+            text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
+            text "[CurrentMoney] монет" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+        elif 10 <= CurrentMoney <= 99:
+            text "Деньги:" size 19 xpos 65 ypos 20 textalign 0.5 color "#404040"
+            text "[CurrentMoney] монет" size 19 xpos 135 ypos 20 textalign 0.5 color "#404040"
+        elif 100 <= CurrentMoney <= 999:
+            text "Деньги:" size 19 xpos 60 ypos 20 textalign 0.5 color "#404040"
+            text "[CurrentMoney] монет" size 19 xpos 130 ypos 20 textalign 0.5 color "#404040"
+        elif 1000 <= CurrentMoney <= 9999:
+            text "Деньги:" size 19 xpos 55 ypos 20 textalign 0.5 color "#404040"
+            text "[CurrentMoney] монет" size 19 xpos 125 ypos 20 textalign 0.5 color "#404040"
+        elif 10000 <= CurrentMoney <= 99999:
+            text "Деньги:" size 19 xpos 50 ypos 20 textalign 0.5 color "#404040"
+            text "[CurrentMoney] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
+        elif 100000 <= CurrentMoney <= 999999:
+            text "Деньги:" size 19 xpos 45 ypos 20 textalign 0.5 color "#404040"
+            text "[CurrentMoney] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
+        elif CurrentMoney >= 1000000:
+            text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
+            text "[format_money(CurrentMoney)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/close_e.png" 
+            hover "gui/townmenu/close_h.png"
+            action Return()
+            xalign 0.99
+            yalign 0.0
+            focus_mask True 
+
+        text "Молодой человек, только вступивший во взрослую жизнь, которая\nготовит ему массу неприятных сюрпризов." size 22 xalign 0.145 yalign 0.715 color "#404040"
 
         vbox:
             spacing 20
-            xalign 0.5
+            xalign 0.645
+            yalign 0.365
+            text "Имя" size 24 color "#2a2a2a"
+            text "Оружие" size 24 color "#2a2a2a"
+            text "Второе оружие" size 24 color "#2a2a2a"
+            text "Машина" size 24 color "#2a2a2a"
+            text "Сложность" size 24 color "#2a2a2a"
+            text "Регион" size 24 color "#2a2a2a"
+            text "Текущее время игры (ч : мин)" size 24 color "#2a2a2a"
 
-            text "Профиль\n" size 40 color "#404040" xalign 0.5 ypos 10
-
-            text "Имя: [player_name]" size 32 xalign 0.5
-
-            text "Деньги: [CurrentMoney] монет\n" size 32 xalign 0.5
-
-            text "Оружие: [gun_names.get(CurrentGun, '—')]" size 32 xalign 0.5
-
-            text "Машина: [car_names.get(CurrentCar, '—')]\n" size 32 xalign 0.5
-
-            text "Сложность: [DifficultyNames.get(difficulty, '—')]" size 32 xalign 0.5
-
-            text "Текущий регион: [region_names.get(CurrentRegion, '—')]\n" size 32 xalign 0.5
-
-            textbutton "Назад" activate_sound "audio/sfx/click.wav" action Return() xalign 0.5 ypos -10
+        vbox:
+            spacing 20
+            xalign 0.85
+            yalign 0.365
+            text "[player_name]" size 24 color "#2a2a2a"
+            text "[gun_names.get(CurrentGun, '—')]" size 24 color "#2a2a2a"
+            text "[gun_names.get(CurrentSecondGun, '—')]" size 24 color "#2a2a2a"
+            text "[car_names.get(CurrentCar, '—')]" size 24 color "#2a2a2a"
+            text "[DifficultyNames.get(difficulty, '—')]" size 24 color "#2a2a2a"
+            text "[region_names.get(CurrentRegion, '—')]" size 24 color "#2a2a2a"
+            text "[format_time(renpy.get_game_runtime())]" size 24 color "#2a2a2a"
 
 
 ## Экран игрового меню #########################################################

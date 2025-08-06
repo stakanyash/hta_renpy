@@ -41,6 +41,12 @@ init python:
             return region_order.index(current) >= region_order.index(required)
         except ValueError:
             return False
+
+    def format_money(val):
+        if val >= 1_000_000:
+            return f"{val / 1_000_000:.1f} млн"
+        else:
+            return str(val)
         
 
 transform stretch_in:
@@ -52,6 +58,7 @@ label start:
     $ player_name = "Игрок"
 
     $ CurrentGun = "Hornet"
+    $ CurrentSecondGun = None
     $ CurrentMoney = 0
     $ CurrentCar = "Van"
     $ CurrentRegion = "r1m1"
@@ -62,6 +69,30 @@ label start:
     $ R1M3FarmCount = 0
 
     $ r1m4SideQuest = "CanBeGiven"
+
+    $ smallweapon_prices = {
+        "Шершень": 280,
+        "Спектр": 590,
+        "ПКТ": 1670,
+        "Корд": 3680,
+        "Шторм": 3450,
+        "Максим": 53200,
+        "Фагот": 51200
+    }
+
+    $ bigweapon_prices = {
+        "Вектор": 5520,
+        "Вулкан": 5630,
+        "КПВТ": 6400,
+        "Шмель": 13310,
+        "Ураган": 14910,
+        "Флаг": 17860,
+        "Рапира": 20400,
+        "Рейнметалл": 24580,
+        "Слон": 45100,
+        "Омега": 42000,
+        "Один": 51250
+    }
 
     $ car_names = {
         "Van": "Вэн",
@@ -98,19 +129,19 @@ label start:
     }
 
     $ gun_stats = {
-        "Hornet": (6, 14),
-        "Specter": (9, 21),
-        "Storm": (10, 24),
-        "PKT": (11, 26),
-        "Vector": (11, 30),
-        "Kord": (13, 30),
+        "Hornet": (4, 6),
+        "Specter": (4, 6),
+        "Storm": (130, 160),
+        "PKT": (5, 7),
+        "Vector": (10, 15),
+        "Kord": (8, 12),
         "Hurricane": (20, 46),
-        "Vulcan": (17, 39),
-        "KPVT": (18, 41),
-        "Bumblebee": (32, 65),
-        "Flag": (50, 150)
+        "Vulcan": (4, 6),
+        "KPVT": (6, 9),
+        "Bumblebee": (100, 130),
+        "Flag": (50, 150),
+        "Rainmetal": (12, 20),
     }
-
 
     $ CarHP = {
         "Van": 850,
@@ -220,6 +251,8 @@ label start:
         "Van": "r1m1",
         "Molokovoz": "r1m2",
         "Ural": "r1m4",
+        "Belaz": "r3m1",
+        "Mirotvorec": "r4m1"
     }
 
     call screen name_input_screen
@@ -453,7 +486,37 @@ label fightlost:
     
     return
 
-label newcarbuying:
+label shopmenu:
+    $ SelShopPoint = None
+
+    python:
+        available_cars = [
+            name for name, price in CarPrices.items()
+            if price <= CurrentMoney
+            and name != CurrentCar
+            and region_allowed(CurrentRegion, CarMinRegion.get(name, "r1m1"))
+        ]
+
+    menu:
+        "Купить автомобиль" if available_cars:
+            $ SelShopPoint = "car"
+        
+        "Купить оружие":
+            $ SelShopPoint = "weapon"
+
+        "Продать предметы из инвентаря" if Inventory:
+            $ SelShopPoint = "selling"
+
+    if SelShopPoint == "car":
+        call carshop
+    elif SelShopPoint == "weapon":
+        call weaponshop
+    elif SelShopPoint == "selling":
+        call selling
+
+    return
+
+label carshop:
     $ oldcarsell_value = CarSellPrices.get(CurrentCar, 0)
 
     python:
@@ -508,3 +571,71 @@ label newcarbuying:
             return
 
     return
+
+label weaponshop:
+    $ selweashop = None
+
+    menu:
+        "Магазин маленького оружия":
+            $ selweashop = "small"
+
+        "Магазин среднего оружия":
+            $ selweashop = "big"
+
+    if selweashop == "small":
+        call smallgunweaponshop
+    elif selweashop == "big":
+        call biggunweaponshop
+
+    return
+    
+label smallgunweaponshop:
+    python:
+        affordable_weapons = [name for name, price in smallweapon_prices.items() if price <= CurrentMoney]
+        weapon_text = ", ".join(affordable_weapons)
+    
+    "Ваших средств достаточно на: [weapon_text]."
+
+    menu:
+        "Шершень" if CurrentMoney >= 280 and CurrentGun != "Hornet":
+            $ CurrentMoney -= 280
+            $ CurrentGun = "Hornet"
+            "Вы установили оружие \"Шершень\" и отдали 280 монет.\nУ вас осталось [CurrentMoney] монет."
+
+label biggunweaponshop:
+    python:
+        affordable_weapons = [name for name, price in bigweapon_prices.items() if price <= CurrentMoney]
+        weapon_text = ", ".join(affordable_weapons)
+    
+    "Ваших средств достаточно на: [weapon_text]."
+
+    menu:
+        "Вектор" if CurrentMoney >= 5520 and CurrentGun != "Vector":
+            $ CurrentMoney -= 5520
+            $ CurrentGun = "Vector"
+            "Вы установили оружие \"Вектор\" и отдали 5520 монет.\nУ вас осталось [CurrentMoney] монет."
+
+        "Вулкан" if CurrentMoney >= 5630 and CurrentGun != "Vulcan":
+            $ CurrentMoney -= 5630
+            $ CurrentGun = "Vulcan"
+            "Вы установили оружие \"Вулкан\" и отдали 5630 монет.\nУ вас осталось [CurrentMoney] монет."  
+
+        "КПВТ" if CurrentMoney >= 6400 and CurrentGun != "KPVT":
+            $ CurrentMoney -= 6400
+            $ CurrentGun = "KPVT"
+            "Вы установили оружие \"КПВТ\" и отдали 6400 монет.\nУ вас осталось [CurrentMoney] монет."  
+
+        "Шмель" if CurrentMoney >= 13310 and CurrentGun != "Bumbleebee":
+            $ CurrentMoney -= 13310
+            $ CurrentGun = "Bumblebee"
+            "Вы установили оружие \"Шмель\" и отдали 13310 монет.\nУ вас осталось [CurrentMoney] монет."
+
+        "Ураган" if CurrentMoney >= 14910 and CurrentGun != "Hurricane":
+            $ CurrentMoney -= 14910
+            $ CurrentGun = "Hurricane"
+            "Вы установили оружие \"Ураган\" и отдали 14910 монет.\nУ вас осталось [CurrentMoney] монет."
+
+        "Флаг" if CurrentMoney >= 17860 and CurrentGun != "Flag":
+            $ CurrentMoney -= 17860
+            $ CurrentGun = "Flag"
+            "Вы установили оружие \"Флаг\" и отдали 17860 монет.\nУ вас осталось [CurrentMoney] монет."
