@@ -255,6 +255,24 @@ label start:
         "Mirotvorec": "r4m1"
     }
 
+    $ ItemDatabase = {
+        "Hornet": {
+            "name": "Шершень",
+            "desc": "Пулемёт калибра 5,45 - пожалуй, самое слабое автоматическое оружие, которым можно оборудовать грузовик.",
+            "icon": "gui/townmenu/items/hornet.png",
+        },
+        "Potato": {
+            "name": "Картошка",
+            "desc": "Картошка - она и есть. Что тут добавишь. Основной источник пропитания для всех людей.",
+            "icon": "gui/townmenu/items/potatoe.png",
+        },
+        "Elephant": {
+            "name": "Слон",
+            "desc": "Весьма достойный плазмомёт. Во всяком случае, никто из противников не жаловался.",
+            "icon": "gui/townmenu/items/elephant.png",
+        },
+    }
+
     call screen name_input_screen
     call screen difficulty_select
     jump tutorial_check

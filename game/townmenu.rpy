@@ -85,6 +85,28 @@ style gamemenu_button_text is default:
 screen Selling_Menu():
     tag menu
 
+    default selected_item = None
+
+    python:
+        def sell_item_with_confirm(item_key):
+            if TownType == "City":
+                price = ItemPricesCity.get(item_key)
+            else:
+                price = ItemPricesVillage.get(item_key)
+
+            if price is None:
+                return
+
+            item = ItemDatabase.get(item_key)
+            if item is None:
+                return
+
+            if renpy.confirm("Продать «{}» за {} монет?".format(item["name"], price)):
+                global CurrentMoney, Inventory
+                CurrentMoney += price
+                Inventory.remove(item_key)
+
+
     frame:
         style "menu_frame"
         background "gui/townmenu/backmain.png"
@@ -120,6 +142,69 @@ screen Selling_Menu():
             xalign 0.99
             yalign 0.0
             focus_mask True 
+
+        viewport:
+            xpos 235
+            ypos 290
+            xsize 500
+            ysize 900
+            scrollbars None
+            mousewheel False
+
+            grid 3 4 spacing 25:
+
+                for item_id in Inventory:
+
+                    $ item_data = ItemDatabase.get(item_id)
+
+                    if item_data:
+
+                        frame:
+                            xsize 140
+                            ysize 140
+                            background Solid("#8b8a8ac0")
+
+                            imagebutton:
+                                idle item_data["icon"]
+                                hover item_data["icon"]
+                                action SetScreenVariable("selected_item", item_id)
+                                focus_mask True
+
+        textbutton _("Продать") action Function(sell_item_with_confirm, selected_item) xalign 0.5
+
+        if selected_item:
+            $ item_data = ItemDatabase[selected_item]
+            $ price = ItemPricesVillage[selected_item] if TownType == "Village" else ItemPricesCity[selected_item]
+        
+            frame:
+                xpos 1150
+                ypos 285
+                xsize 500
+                ysize 300
+                background None
+                padding (20, 20)
+
+                text item_data["name"] size 40 color "#353535"
+
+            frame:
+                xpos 800
+                ypos 380
+                xsize 930
+                ysize 300
+                background None
+                padding (20, 20)
+
+                text item_data["desc"] size 25 color "#353535"
+
+            frame:
+                xpos 800
+                ypos 705
+                xsize 960
+                ysize 300
+                background None
+                padding (20, 20)
+
+                text "Цена: [price] монет" size 30 color "#353535"
 
 # Gun Shop
 
