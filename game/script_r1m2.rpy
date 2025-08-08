@@ -137,9 +137,6 @@ label movetovostochnoe:
     play music "music/bar.ogg" fadeout 1.0
     scene bg_vostochnoe with fade
 
-    if Inventory:
-        call selling from _call_selling_4
-
     "Приехав в Восточное вы не знаете к кому обратиться."
     show hose at left with dissolve
     "Однако замечаете человека, похожего на фермера и решаете подойти к нему."
@@ -206,9 +203,6 @@ label tolocus:
     scene bg_locus with fade
     play music "music/town2.ogg" fadeout 1.0
 
-    if Inventory:
-        call selling from _call_selling_5
-
     "Приехав в Локус и узнав о том, где искать загадочную женщину вы подходите к её двери и стучите."
     "Спустя несколько секунд дверь открывается."
 
@@ -265,9 +259,6 @@ label tomidgard:
 
     scene bg_midgard with fade
     play music "music/town3.ogg" fadeout 1.0
-
-    if Inventory:
-        call selling from _call_selling_6
 
     "Заехав в Мидгард вы стокнулись с явным негостеприимством..."
 
@@ -436,9 +427,6 @@ label portoa:
 
     scene bg_porto with fade
 
-    if Inventory:
-        call selling from _call_selling_7
-
     "Далее по пути вам больше никого не встретилось и вы спокойно доехали до Порто."
 
     show shon at right with dissolve
@@ -475,9 +463,6 @@ label backtomidgard:
     scene bg_midgard with fade
 
     play music "music/town3.ogg" fadeout 1.0
-
-    if Inventory:
-        call selling from _call_selling_8
 
     "Обратно до Мидгарда вы добрались без каких-либо проишествий."
 

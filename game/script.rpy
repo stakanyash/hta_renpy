@@ -9,6 +9,7 @@ init python:
     renpy.music.register_channel("damage", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("missshot", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("bossattack", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
+    renpy.music.register_channel("sellitem", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
 
     def try_add_item(item):
         limit = CarInventoryLimits.get(CurrentCar, 4)
@@ -265,6 +266,26 @@ label start:
             "name": "Картошка",
             "desc": "Картошка - она и есть. Что тут добавишь. Основной источник пропитания для всех людей.",
             "icon": "gui/townmenu/items/potatoe.png",
+        },
+        "Wood": {
+            "name": "Дрова",
+            "desc": "Дерево всегда было источником тепла. Как в качестве топлива, так и в качестве дешёвого строительного материала.",
+            "icon": "gui/townmenu/items/trees.png",
+        },
+        "ScrapMetal": {
+            "name": "Металлолом",
+            "desc": "Из обломков иногда удаётся сколотить неплохие детали для грузовика. Ещё говорят, что кто-то научился переплавлять ржавый металл в слитки.",
+            "icon": "gui/townmenu/items/lom.png",
+        },
+        "Oil": {
+            "name": "Нефть",
+            "desc": "Тот, кто контролирует нефть, контролирует и грузоперевозки. Поэтому вокруг этого ценного товара часто плетутся интриги.",
+            "icon": "gui/townmenu/items/oil.png",
+        },
+        "Fuel": {
+            "name": "Топливо",
+            "desc": "Высокооктановое горючее встречается очень редко и обладает немалой стоимостью.",
+            "icon": "gui/townmenu/items/fuel.png",
         },
         "Elephant": {
             "name": "Слон",

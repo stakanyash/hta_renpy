@@ -11,9 +11,6 @@ label r1m4start:
     play music "music/town1.ogg" fadeout 1.0
     scene bg_olm with dissolve
 
-    if Inventory:
-        call selling from _call_selling_20
-
     if r1m4SideQuest == "CanBeGiven":
         jump galdenquest
     elif LisaAgreed == "False":
@@ -125,9 +122,6 @@ label homersearch:
     
     play music "music/bar.ogg" fadeout 1.0
     scene bg_saliniom with fade
-
-    if Inventory:
-        call selling from _call_selling_21
 
     "Приехав в Салиниом вы подходите к человеку, который подходит под описание Гомера."
 
@@ -542,9 +536,6 @@ label r1m4SideQuest_whereisleader:
 
     scene bg_olm with fade
 
-    if Inventory:
-        call selling from _call_selling_22
-
     show galden at left with dissolve
 
     galden "Удалось освободить склад?"
@@ -705,9 +696,6 @@ label r1m4SideQuest_finish:
     play music "music/town1.ogg" fadeout 1.0
 
     scene bg_olm with fade
-
-    if Inventory:
-        call selling from _call_selling_23
 
     if r1m4SideQuestLeaderSaved == True:
         "Вернувшись в Ольм вы не замечаете ничего странного."

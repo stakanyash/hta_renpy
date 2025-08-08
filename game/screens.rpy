@@ -518,7 +518,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.2.3 (250802a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.2.5 (250808c)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -1702,6 +1702,8 @@ screen quick_menu():
             textbutton _("Пропуск") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Авто") action Preference("auto-forward", "toggle")
             textbutton _("Меню") action ShowMenu()
+            textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
+            textbutton _("Тест") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
 
 
 style window:

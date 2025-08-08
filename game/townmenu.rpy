@@ -31,29 +31,32 @@ screen InGameMenu():
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
             text "[format_money(CurrentMoney)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
-        textbutton "Магазин автомобилей" activate_sound "audio/sfx/click.wav":
+        frame:
+            background None
             xalign 0.5
-            ypos 400
-            xsize gui.choice_button_width
-            ysize gui.choice_button_height
-            style "gamemenu_button"
-            action [Hide("test"), Show("Car_Shop")]
+            yalign 0.5
 
-        textbutton "Магазин оружия" activate_sound "audio/sfx/click.wav":
-            xalign 0.5
-            ypos 500
-            xsize gui.choice_button_width
-            ysize gui.choice_button_height
-            style "gamemenu_button"
-            action [Hide("test"), Show("Gun_Shop_Menu")]
+            vbox:
+                spacing 20
+                if TownType == "City":
+                    textbutton "Магазин автомобилей" activate_sound "audio/sfx/click.wav":
+                        xsize gui.choice_button_width
+                        ysize gui.choice_button_height
+                        style "gamemenu_button"
+                        action [Hide("test"), Show("Car_Shop")]
 
-        textbutton "Продажа из инвентаря" activate_sound "audio/sfx/click.wav":
-            xalign 0.5
-            ypos 600
-            xsize gui.choice_button_width
-            ysize gui.choice_button_height
-            style "gamemenu_button"
-            action [Hide("test"), Show("Selling_Menu")]
+                if TownType == "City":
+                    textbutton "Магазин оружия" activate_sound "audio/sfx/click.wav":
+                        xsize gui.choice_button_width
+                        ysize gui.choice_button_height
+                        style "gamemenu_button"
+                        action [Hide("test"), Show("Gun_Shop_Menu")]
+
+                textbutton "Продажа из инвентаря" activate_sound "audio/sfx/click.wav":
+                    xsize gui.choice_button_width
+                    ysize gui.choice_button_height
+                    style "gamemenu_button"
+                    action [Hide("test"), Show("Selling_Menu")]
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
@@ -88,7 +91,10 @@ screen Selling_Menu():
     default selected_item = None
 
     python:
-        def sell_item_with_confirm(item_key):
+        def sell_item_immediately(item_key):
+            if item_key is None:
+                return
+
             if TownType == "City":
                 price = ItemPricesCity.get(item_key)
             else:
@@ -101,15 +107,16 @@ screen Selling_Menu():
             if item is None:
                 return
 
-            if renpy.confirm("Продать «{}» за {} монет?".format(item["name"], price)):
-                global CurrentMoney, Inventory
-                CurrentMoney += price
+            global CurrentMoney, Inventory
+            CurrentMoney += price
+            if item_key in Inventory:
+                renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
                 Inventory.remove(item_key)
 
 
     frame:
         style "menu_frame"
-        background "gui/townmenu/backmain.png"
+        background "gui/townmenu/backinv.png"
         xsize 1920
         ysize 1080
 
@@ -144,14 +151,14 @@ screen Selling_Menu():
             focus_mask True 
 
         viewport:
-            xpos 235
+            xpos 230
             ypos 290
             xsize 500
             ysize 900
             scrollbars None
             mousewheel False
 
-            grid 3 4 spacing 25:
+            grid 3 4 spacing -15:
 
                 for item_id in Inventory:
 
@@ -160,25 +167,27 @@ screen Selling_Menu():
                     if item_data:
 
                         frame:
-                            xsize 140
-                            ysize 140
-                            background Solid("#8b8a8ac0")
+                            xsize 180
+                            ysize 180
+                            background None
 
-                            imagebutton:
+                            imagebutton activate_sound "audio/sfx/click.wav":
                                 idle item_data["icon"]
                                 hover item_data["icon"]
+                                hover_background Solid("#50505031")
                                 action SetScreenVariable("selected_item", item_id)
                                 focus_mask True
 
-        textbutton _("Продать") action Function(sell_item_with_confirm, selected_item) xalign 0.5
+        textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item
+        textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action NullAction() xpos 1193 yalign 0.859 sensitive selected_item
 
         if selected_item:
             $ item_data = ItemDatabase[selected_item]
             $ price = ItemPricesVillage[selected_item] if TownType == "Village" else ItemPricesCity[selected_item]
         
             frame:
-                xpos 1150
-                ypos 285
+                xpos 1170
+                ypos 280
                 xsize 500
                 ysize 300
                 background None
@@ -198,7 +207,7 @@ screen Selling_Menu():
 
             frame:
                 xpos 800
-                ypos 705
+                ypos 702
                 xsize 960
                 ysize 300
                 background None
@@ -247,6 +256,8 @@ screen Gun_Shop_Menu():
             yalign 0.0
             focus_mask True 
 
+        text "WIP" size 60 xalign 0.5 yalign 0.5 color "#353535"
+
 # Car Shop
 
 screen Car_Shop():
@@ -287,4 +298,6 @@ screen Car_Shop():
             xalign 0.99
             yalign 0.0
             focus_mask True 
+
+        text "WIP" size 60 xalign 0.5 yalign 0.5 color "#353535"
     

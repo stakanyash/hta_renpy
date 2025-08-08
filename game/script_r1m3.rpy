@@ -81,9 +81,6 @@ label asgardboom:
     play music "music/town1.ogg" fadeout 1.0
     scene bg_asgard with fade
 
-    if Inventory:
-        call selling from _call_selling_9
-
     "Приехав в Асгард вы быстро находите магазин взрывчатки."
 
     show seller at left with dissolve
@@ -131,9 +128,6 @@ label mvillage:
 
     play music "music/bar.ogg" fadeout 1.0
     scene bg_mvillage with fade
-
-    if Inventory:
-        call selling from _call_selling_10
 
     "Не успели вы приехать, как вас сразу встречают."
 
@@ -239,9 +233,6 @@ label mvillageafterfight:
 
     scene bg_mvillage with dissolve
     play music "music/bar.ogg" fadeout 1.0
-
-    if Inventory:
-        call selling from _call_selling_11
 
     show miner at left with dissolve
     show mchar at right with dissolve
@@ -374,9 +365,6 @@ label peshtallow:
 
     $ TownType = "City"
 
-    if Inventory:
-        call selling from _call_selling_12
-
     hide pguard
     hide mc5
 
@@ -396,9 +384,6 @@ label minin1st_nl:
 
     scene bg_minin with fade
     play music "music/town3.ogg" fadeout 1.0
-
-    if Inventory:
-        call selling from _call_selling_13
 
     "В Минине вы сразу привлекаете внимание местного рабочего."
 
@@ -493,9 +478,6 @@ label minin2nd_nl:
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
 
-    if Inventory:
-        call selling from _call_selling_14
-
     "Вернувшись в Минин вы подходите к тому же рабочему, который указал вам на дом отца."
 
     show mworker at right with dissolve
@@ -544,9 +526,8 @@ label hundredcointosharki:
 
     $ TownType = "City"
 
-    if Inventory and FarmEnabled == True:
+    if FarmEnabled == True:
         $ FarmEnabled = False
-        call selling from _call_selling_15
 
     hide mworker
     hide mc_2
@@ -641,14 +622,6 @@ label hundredcointosharki:
             $ FarmEnabled = True
 
             jump fightformoney
-        "Продать предметы" if Inventory:
-            jump r1m3sellalias
-
-label r1m3sellalias:
-
-    call selling from _call_selling_16
-
-    jump hundredcointosharki
 
 label fightformoney:
 
@@ -876,9 +849,6 @@ label minin3rd_nl:
         "Kord": 3680
     }
 
-    if Inventory:
-        call selling from _call_selling_24
-
     if CurrentCar == "Molokovoz":
         if CurrentMoney >= 19000:
             "Ваших средств достаточно для обновления кузова и установки нового оружия."
@@ -1055,9 +1025,6 @@ label minin4th_nl:
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
 
-    if Inventory:
-        call selling from _call_selling_17
-
     "Вернувшись в Минин вы спешно ищете Шарки."
 
     "Ему сразу понятно, что вам есть о чём рассказать."
@@ -1100,9 +1067,6 @@ label oilmine2nd:
     play music "music/bar.ogg" fadeout 1.0
     scene bg_oil with fade
 
-    if Inventory:
-        call selling from _call_selling_18
-
     show OilMineWorker at left with dissolve
 
     chris "Вот и первая бочка нефти."
@@ -1128,9 +1092,6 @@ label minin5th_nl:
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
-
-    if Inventory:
-        call selling from _call_selling_19
 
     "Приехав в Минин вы выгружаете бочку."
 

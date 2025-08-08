@@ -347,9 +347,6 @@ label tozaimka:
 
     scene bg_zaimka with fade
 
-    if Inventory:
-        call selling from _call_selling
-
     "Вы приехали в Заимку. Остановившись вы услышали от Лисы..."
 
     show lisa2 at right with dissolve
@@ -433,9 +430,6 @@ label sergo:
     $ TownType = "City"
 
     scene bg_insowth with fade
-
-    if Inventory:
-        call selling from _call_selling_1
 
     if LisaAgreed == "True":
         "Вы добрались до Южного и заехали в город. Спустя несколько секунд поисков вы находите Серго."
@@ -871,9 +865,6 @@ label sowthagain:
     scene bg_insowth with fade
     play music "music/town1.ogg" fadeout 1.0
 
-    if Inventory:
-        call selling from _call_selling_2
-
     if LisaAgreed == "True":
 
         "Вы приехали в Южный и встретили местного бармена."
@@ -1022,9 +1013,6 @@ label KventinZaimka:
     $ TownType = "Village"
 
     scene bg_zaimka with fade
-
-    if Inventory:
-        call selling from _call_selling_3
 
     "Приехав в Заимку вы ищете того, о ком говорил Дронн."
 
