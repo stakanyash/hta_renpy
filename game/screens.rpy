@@ -394,10 +394,7 @@ screen quick_menu():
             textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu('load')
             textbutton _("Опции") activate_sound "audio/sfx/click.wav" action ShowMenu('preferences')
             textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
-            textbutton _("Тест") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
-
-            if TownType == "City":
-                textbutton _("Магазин") activate_sound "audio/sfx/click.wav" action Call("shopmenu")
+            textbutton _("Меню города") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
 
 
 
@@ -1703,7 +1700,7 @@ screen quick_menu():
             textbutton _("Авто") action Preference("auto-forward", "toggle")
             textbutton _("Меню") action ShowMenu()
             textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
-            textbutton _("Тест") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
+            textbutton _("Меню города") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
 
 
 style window:

@@ -112,6 +112,10 @@ screen Selling_Menu():
             if item_key in Inventory:
                 renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
                 Inventory.remove(item_key)
+        
+        def delete_item(item_key):
+            if item_key in Inventory:
+                Inventory.remove(item_key)
 
 
     frame:
@@ -178,8 +182,8 @@ screen Selling_Menu():
                                 action SetScreenVariable("selected_item", item_id)
                                 focus_mask True
 
-        textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item
-        textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action NullAction() xpos 1193 yalign 0.859 sensitive selected_item
+        textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item is not None
+        textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action [Confirm("Вы действительно хотите удалить этот предмет?\nВНИМАНИЕ: Действие необратимо!", yes=Function(delete_item, selected_item), no=None), SetScreenVariable("selected_item", None)] xpos 1193 yalign 0.859 sensitive selected_item is not None
 
         if selected_item:
             $ item_data = ItemDatabase[selected_item]
