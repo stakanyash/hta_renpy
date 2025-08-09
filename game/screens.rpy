@@ -390,7 +390,9 @@ screen quick_menu():
             textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu('load')
             textbutton _("Опции") activate_sound "audio/sfx/click.wav" action ShowMenu('preferences')
             textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
-            textbutton _("Меню города") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
+
+            if TownType == "City" or TownType == "Village":
+                textbutton _("Меню города") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
 
 
 
@@ -511,7 +513,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.2.5 (250808c)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.2.6 (250809b)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -615,6 +617,36 @@ screen statistics_screen():
             text "[DifficultyNames.get(difficulty, '—')]" size 24 color "#2a2a2a"
             text "[region_names.get(CurrentRegion, '—')]" size 24 color "#2a2a2a"
             text "[format_time(renpy.get_game_runtime())]" size 24 color "#2a2a2a"
+
+        imagebutton:
+            idle "gui/townmenu/buttons/tab_stats_s.png" 
+            hover "gui/townmenu/buttons/tab_stats_s.png"
+            action NullAction()
+            xpos 350
+            focus_mask True 
+
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_invent_e.png" 
+            hover "gui/townmenu/buttons/tab_invent_s.png"
+            action [Hide("statistics_screen"), Show("Selling_Menu")]
+            xpos 1630
+            focus_mask True 
+
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_weapon_e.png" 
+            hover "gui/townmenu/buttons/tab_weapon_s.png"
+            action [Hide("statistics_screen"), Show("Gun_Shop_Menu")]
+            xpos 1450
+            ypos 1
+            focus_mask True 
+
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_truck_e.png" 
+            hover "gui/townmenu/buttons/tab_truck_s.png"
+            action [Hide("statistics_screen"), Show("Car_Shop")]
+            xpos 1270
+            ypos 1
+            focus_mask True 
 
 
 ## Экран игрового меню #########################################################

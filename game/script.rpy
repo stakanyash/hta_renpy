@@ -98,7 +98,9 @@ label start:
     $ CurrentCar = "Van"
     $ CurrentRegion = "r1m1"
 
-    $ TownType = "None"
+    $ TownType = None
+    $ TownName = None
+    $ GroupLogo = None
 
     $ BigGunInstall = None
 

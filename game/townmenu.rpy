@@ -36,28 +36,6 @@ screen InGameMenu():
             xalign 0.5
             yalign 0.5
 
-            vbox:
-                spacing 20
-                if TownType == "City":
-                    textbutton "Магазин автомобилей" activate_sound "audio/sfx/click.wav":
-                        xsize gui.choice_button_width
-                        ysize gui.choice_button_height
-                        style "gamemenu_button"
-                        action [Hide("InGameMenu"), Show("Car_Shop")]
-
-                if TownType == "City":
-                    textbutton "Магазин оружия" activate_sound "audio/sfx/click.wav":
-                        xsize gui.choice_button_width
-                        ysize gui.choice_button_height
-                        style "gamemenu_button"
-                        action [Hide("InGameMenu"), Show("Gun_Shop_Menu")]
-
-                textbutton "Продажа из инвентаря" activate_sound "audio/sfx/click.wav":
-                    xsize gui.choice_button_width
-                    ysize gui.choice_button_height
-                    style "gamemenu_button"
-                    action [Hide("InGameMenu"), Show("Selling_Menu")]
-
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
             hover "gui/townmenu/close_h.png"
@@ -66,22 +44,51 @@ screen InGameMenu():
             yalign 0.0
             focus_mask True 
 
-style gamemenu_vbox is vbox
-style gamemenu_button is button
-style gamemenu_button_text is button_text
+        if TownType == "City":
+            imagebutton activate_sound "audio/sfx/click.wav":
+                idle "gui/townmenu/buttons/tab_stats_e.png" 
+                hover "gui/townmenu/buttons/tab_stats_s.png"
+                action [Hide("InGameMenu"), Show("statistics_screen")]
+                xpos 350
+                focus_mask True 
 
-style gamemenu_vbox:
-    xalign 0.5
-    ypos 405
-    yanchor 0.5
+            imagebutton activate_sound "audio/sfx/click.wav":
+                idle "gui/townmenu/buttons/tab_invent_e.png" 
+                hover "gui/townmenu/buttons/tab_invent_s.png"
+                action [Hide("InGameMenu"), Show("Selling_Menu")]
+                xpos 1630
+                focus_mask True 
 
-    spacing gui.choice_spacing
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_weapon_e.png" 
+            hover "gui/townmenu/buttons/tab_weapon_s.png"
+            action [Hide("InGameMenu"), Show("Gun_Shop_Menu")]
+            xpos 1450
+            ypos 1
+            focus_mask True 
 
-style gamemenu_button is default:
-    properties gui.button_properties("choice_button")
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_truck_e.png" 
+            hover "gui/townmenu/buttons/tab_truck_s.png"
+            action [Hide("InGameMenu"), Show("Car_Shop")]
+            xpos 1270
+            ypos 1
+            focus_mask True 
 
-style gamemenu_button_text is default:
-    properties gui.text_properties("choice_button")
+        hbox:
+            xsize 527
+            ysize 63
+            xpos 1365
+            yalign 0.12
+            text TownName xalign 0.5 yalign 0.5 size 28 color "#404040"
+
+        add f"gui/townmenu/clans/{GroupLogo}.png" xpos 1510 ypos 450
+
+style centered_towntext is text:
+    xpos 0.83
+    yalign 0.13
+    textalign 0.5
+    padding (10, 10)
 
 # Inventory selling
 
@@ -149,7 +156,7 @@ screen Selling_Menu():
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
             hover "gui/townmenu/close_h.png"
-            action Return()
+            action [Hide("Selling_Menu"), Show("InGameMenu")]
             xalign 0.99
             yalign 0.0
             focus_mask True 
@@ -219,6 +226,38 @@ screen Selling_Menu():
 
                 text "Цена: [price] монет" size 30 color "#353535"
 
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_stats_e.png" 
+        hover "gui/townmenu/buttons/tab_stats_s.png"
+        action [Hide("Selling_Menu"), Show("statistics_screen")]
+        xpos 356
+        ypos 6
+        focus_mask True 
+
+    imagebutton:
+        idle "gui/townmenu/buttons/tab_invent_s.png" 
+        hover "gui/townmenu/buttons/tab_invent_s.png"
+        action NullAction()
+        xpos 1636
+        ypos 6
+        focus_mask True 
+
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_weapon_e.png" 
+        hover "gui/townmenu/buttons/tab_weapon_s.png"
+        action [Hide("Selling_Menu"), Show("Gun_Shop_Menu")]
+        xpos 1456
+        ypos 7
+        focus_mask True 
+
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_truck_e.png" 
+        hover "gui/townmenu/buttons/tab_truck_s.png"
+        action [Hide("Selling_Menu"), Show("Car_Shop")]
+        xpos 1276
+        ypos 7
+        focus_mask True 
+
 # Gun Shop
 
 screen Gun_Shop_Menu():
@@ -258,7 +297,7 @@ screen Gun_Shop_Menu():
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
             hover "gui/townmenu/close_h.png"
-            action Return()
+            action [Hide("Gun_Shop_Menu"), Show("InGameMenu")]
             xalign 0.99
             yalign 0.0
             focus_mask True 
@@ -266,9 +305,9 @@ screen Gun_Shop_Menu():
         # Список оружия
         viewport:
             xpos 245
-            ypos 295
-            xsize 485
-            ysize 650
+            ypos 280
+            xsize 480
+            ysize 660
             scrollbars "vertical"
             mousewheel True
 
@@ -319,9 +358,6 @@ screen Gun_Shop_Menu():
             $ min_dmg, max_dmg = gun_stats.get(selected_shop_item, (0, 0))
             $ base_desc = item_data["desc"]
             $ full_desc = f"{base_desc}\n\nНаносимый урон: от {min_dmg} до {max_dmg} единиц"
-
-            if selected_shop_item in bigweapon_prices:
-                $ full_desc += "\n\nДанное оружие может быть установлено только на дополнительный слот!"
         
             frame:
                 xpos 1170
@@ -349,7 +385,39 @@ screen Gun_Shop_Menu():
             no=NullAction()
         )
 
-        textbutton _("Купить как второе оружие") activate_sound "audio/sfx/click.wav" action NullAction() xpos 1050 yalign 0.859 sensitive selected_shop_item in bigweapon_prices
+        textbutton _("Купить как второе оружие") activate_sound "audio/sfx/click.wav" action NullAction() xpos 1045 yalign 0.86 sensitive selected_shop_item in bigweapon_prices
+
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_stats_e.png" 
+        hover "gui/townmenu/buttons/tab_stats_s.png"
+        action [Hide("Gun_Shop_Menu"), Show("statistics_screen")]
+        xpos 356
+        ypos 6
+        focus_mask True 
+
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_invent_e.png" 
+        hover "gui/townmenu/buttons/tab_invent_s.png"
+        action [Hide("Gun_Shop_Menu"), Show("Selling_Menu")]
+        xpos 1636
+        ypos 6
+        focus_mask True 
+
+    imagebutton:
+        idle "gui/townmenu/buttons/tab_weapon_s.png" 
+        hover "gui/townmenu/buttons/tab_weapon_s.png"
+        action NullAction()
+        xpos 1456
+        ypos 7
+        focus_mask True
+
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_truck_e.png" 
+        hover "gui/townmenu/buttons/tab_truck_s.png"
+        action [Hide("Gun_Shop_Menu"), Show("Car_Shop")]
+        xpos 1276
+        ypos 7
+        focus_mask True 
 
 # Car Shop
 
@@ -387,10 +455,42 @@ screen Car_Shop():
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
             hover "gui/townmenu/close_h.png"
-            action Return()
+            action [Hide("Car_Shop"), Show("InGameMenu")]
             xalign 0.99
             yalign 0.0
             focus_mask True 
 
-        text "WIP" size 60 xalign 0.5 yalign 0.5 color "#353535"
+        text "Work in progress..." size 60 xalign 0.5 yalign 0.5 color "#FFF"
+
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_stats_e.png" 
+        hover "gui/townmenu/buttons/tab_stats_s.png"
+        action [Hide("Car_Shop"), Show("statistics_screen")]
+        xpos 356
+        ypos 6
+        focus_mask True 
+
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_invent_e.png" 
+        hover "gui/townmenu/buttons/tab_invent_s.png"
+        action [Hide("Car_Shop"), Show("Selling_Menu")]
+        xpos 1636
+        ypos 6
+        focus_mask True 
+
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_weapon_e.png" 
+        hover "gui/townmenu/buttons/tab_weapon_s.png"
+        action [Hide("Car_Shop"), Show("Gun_Shop_Menu")]
+        xpos 1456
+        ypos 7
+        focus_mask True
+
+    imagebutton:
+        idle "gui/townmenu/buttons/tab_truck_s.png" 
+        hover "gui/townmenu/buttons/tab_truck_s.png"
+        action NullAction()
+        xpos 1276
+        ypos 7
+        focus_mask True 
     

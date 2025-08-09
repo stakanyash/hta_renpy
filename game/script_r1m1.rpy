@@ -428,6 +428,8 @@ label tozaimka:
 label sergo:
 
     $ TownType = "City"
+    $ TownName = "Южный"
+    $ GroupLogo = "farmers_union"
 
     scene bg_insowth with fade
 
