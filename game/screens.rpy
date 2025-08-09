@@ -175,12 +175,8 @@ screen enemy_ui():
             for healing in get_heal_digit_images(get_remain_heals()):
                 add healing
 
-    if CurrentGun == "Flag":
-        if attack_locked:
-            timer 1 action SetVariable("attack_locked", False)
-    else:
-        if attack_locked:
-            timer .35 action SetVariable("attack_locked", False)
+    if attack_locked:
+        timer .35 action SetVariable("attack_locked", False)
 
     if enemy_hp <= 0 or player_hp <= 0:
         timer 0.1 action Return()

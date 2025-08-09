@@ -2,6 +2,7 @@ default temp_name = ""
 default player_name = "Игрок"
 default difficulty = "normal"
 default difficulty_base_multiplier = 0.03
+default selected_shop_item = None
 
 init python:
     renpy.music.register_channel("sfx2", mixer="sfx", loop=True, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
@@ -48,6 +49,39 @@ init python:
             return f"{val / 1_000_000:.1f} млн"
         else:
             return str(val)
+
+    def buy_weapon(weapon_name):
+        global CurrentMoney, CurrentGun, CurrentSecondGun
+
+        if weapon_name in smallweapon_prices:
+            price = smallweapon_prices[weapon_name]
+            if CurrentMoney >= price:
+                CurrentMoney -= price
+                CurrentGun = weapon_name
+                return True
+            else:
+                renpy.notify("Ваших средств недостаточно для покупки!")
+
+        elif weapon_name in bigweapon_prices:
+            price = bigweapon_prices[weapon_name]
+            if CurrentMoney >= price:
+                CurrentMoney -= price
+                CurrentSecondGun = weapon_name
+                return True
+            else:
+                renpy.notify("Ваших средств недостаточно для покупки!")
+
+    def try_buy_weapon(weapon_name):
+        if buy_weapon(weapon_name):
+            return NullAction()
+        else:
+            return NullAction()
+        return NullAction()
+
+    def buy_and_clear(weapon_name):
+        try_buy_weapon(weapon_name)
+        store.selected_shop_item = None
+        return None
         
 
 transform stretch_in:
@@ -66,33 +100,31 @@ label start:
 
     $ TownType = "None"
 
+    $ BigGunInstall = None
+
     $ Inventory = []
     $ R1M3FarmCount = 0
 
     $ r1m4SideQuest = "CanBeGiven"
 
     $ smallweapon_prices = {
-        "Шершень": 280,
-        "Спектр": 590,
-        "ПКТ": 1670,
-        "Корд": 3680,
-        "Шторм": 3450,
-        "Максим": 53200,
-        "Фагот": 51200
+        "Hornet": 280,
+        "Specter": 590,
+        "PKT": 1670,
+        "Kord": 3680,
+        "Storm": 3450,
     }
 
     $ bigweapon_prices = {
-        "Вектор": 5520,
-        "Вулкан": 5630,
-        "КПВТ": 6400,
-        "Шмель": 13310,
-        "Ураган": 14910,
-        "Флаг": 17860,
-        "Рапира": 20400,
-        "Рейнметалл": 24580,
-        "Слон": 45100,
-        "Омега": 42000,
-        "Один": 51250
+        "Vector": 5520,
+        "Vulcan": 5630,
+        "KPVT": 6400,
+        "Bumblebee": 13310,
+        "Hurricane": 14910,
+        "Flag": 17860,
+        "Rapier": 20400,
+        "Rainmetal": 24580,
+        "Omega": 42000,
     }
 
     $ car_names = {
@@ -118,30 +150,39 @@ label start:
 
     $ gun_names = {
         "Hornet": "Шершень",
+        "Specter": "Спектр",
         "Storm": "Шторм",
         "PKT": "ПКТ",
         "Kord": "Корд",
+        "Maxim": "Максим",
+        "Fagot": "Фагот",
         "Vulcan": "Вулкан",
         "KPVT": "КПВТ",
         "Bumblebee": "Шмель",
         "Hurricane": "Ураган",
         "Flag": "Флаг",
+        "Vector": "Вектор",
+        "Rapier": "Рапира",
+        "Rainmetal": "Рейнметалл",
+        "Omega": "Омега",
         "None": "-"
     }
 
     $ gun_stats = {
         "Hornet": (4, 6),
-        "Specter": (4, 6),
-        "Storm": (130, 160),
-        "PKT": (5, 7),
+        "Specter": (5, 8),
+        "Storm": (30, 100),
+        "PKT": (6, 10),
         "Vector": (10, 15),
         "Kord": (8, 12),
         "Hurricane": (20, 46),
-        "Vulcan": (4, 6),
-        "KPVT": (6, 9),
-        "Bumblebee": (100, 130),
-        "Flag": (50, 150),
-        "Rainmetal": (12, 20),
+        "Vulcan": (15, 20),
+        "KPVT": (13, 18),
+        "Bumblebee": (30, 130),
+        "Flag": (50, 180),
+        "Rainmetal": (25, 70),
+        "Rapier": (25, 45),
+        "Omega": (50, 150),
     }
 
     $ CarHP = {
@@ -254,6 +295,78 @@ label start:
         "Ural": "r1m4",
         "Belaz": "r3m1",
         "Mirotvorec": "r4m1"
+    }
+
+    $ GunDatabase = {
+        "Hornet": {
+            "name": "Шершень",
+            "desc": "Пулемёт калибра 5,45 - пожалуй, самое слабое автоматическое оружие, которым можно оборудовать грузовик.",
+        },
+
+        "Specter": {
+            "name": "Спектр",
+            "desc": "Спаренный пулемёт калибра 5,45. Два ствола и малое время перезарядки позволяют вести почти непрерывный огонь.",
+        },
+
+        "PKT": {
+            "name": "ПКТ",
+            "desc": "Пулемёт калибра 7,62 - с ним уже можно не бояться отправляться в недалёкое путешествие.",
+        },
+
+        "Kord": {
+            "name": "Корд",
+            "desc": "Пулемёт калибра 12,7 - достойное оружие для борца с бандитами.",
+        },
+
+        "Storm": {
+            "name": "Шторм",
+            "desc": "Дробовик наносит значительные повреждения на близком расстоянии.",
+        },
+
+        "Vector": {
+            "name": "Вектор",
+            "desc": "Мелкокалиберная пушка - хороший выбор для начинающего путешественника.",
+        },
+
+        "Vulcan": {
+            "name": "Вулкан",
+            "desc": "Многоствольный пулемёт калибра 5,56 посылает во врага море свинца. Правда, мощная отдача может даже перевернуть небольшой автомобиль.",
+        },
+
+        "KPVT": {
+            "name": "КПВТ",
+            "desc": "Пулемёт калибра 14,5 - настоящий монстр, прошивающий тонкую броню, как бумагу.",
+        },
+
+        "Bumblebee": {
+            "name": "Шмель",
+            "desc": "Поражение значительной площади с большой скоростью - это то, что нужно честному торговцу в борьбе с шайкой бандитов.",
+        },
+
+        "Hurricane": {
+            "name": "Ураган",
+            "desc": "Это ракетница выстреливает ракеты с небольшим зарядом, но она выпускает очень много таких ракет.",
+        },
+
+        "Flag": {
+            "name": "Флаг",
+            "desc": "Тяжёлый дробовик - это веский аргумент для врагов, чтобы не подходить к вашей машине вплотную.",
+        },
+
+        "Rapier": {
+            "name": "Рапира",
+            "desc": "Дальнобойная пушка калибра 23 мм является серьёзным оружием в умелых руках.",
+        },
+
+        "Rainmetal": {
+            "name": "Рейнметалл",
+            "desc": "Скорострельная пушка калибра 20 мм - прекрасный выбор для охоты на двуногого зверя.",
+        },
+
+        "Omega": {
+            "name": "Омега",
+            "desc": "Если враг пытается взять вас не умением, а числом, то эта пушка как раз для такого случая.",
+        },
     }
 
     $ ItemDatabase = {

@@ -43,20 +43,20 @@ screen InGameMenu():
                         xsize gui.choice_button_width
                         ysize gui.choice_button_height
                         style "gamemenu_button"
-                        action [Hide("test"), Show("Car_Shop")]
+                        action [Hide("InGameMenu"), Show("Car_Shop")]
 
                 if TownType == "City":
                     textbutton "Магазин оружия" activate_sound "audio/sfx/click.wav":
                         xsize gui.choice_button_width
                         ysize gui.choice_button_height
                         style "gamemenu_button"
-                        action [Hide("test"), Show("Gun_Shop_Menu")]
+                        action [Hide("InGameMenu"), Show("Gun_Shop_Menu")]
 
                 textbutton "Продажа из инвентаря" activate_sound "audio/sfx/click.wav":
                     xsize gui.choice_button_width
                     ysize gui.choice_button_height
                     style "gamemenu_button"
-                    action [Hide("test"), Show("Selling_Menu")]
+                    action [Hide("InGameMenu"), Show("Selling_Menu")]
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
@@ -224,9 +224,11 @@ screen Selling_Menu():
 screen Gun_Shop_Menu():
     tag menu
 
+    default selected_shop_item = None
+
     frame:
         style "menu_frame"
-        background "gui/townmenu/backmain.png"
+        background "gui/townmenu/backgunshop.png"
         xsize 1920
         ysize 1080
 
@@ -252,6 +254,7 @@ screen Gun_Shop_Menu():
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
             text "[format_money(CurrentMoney)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
+        # Кнопка закрытия
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
             hover "gui/townmenu/close_h.png"
@@ -260,7 +263,93 @@ screen Gun_Shop_Menu():
             yalign 0.0
             focus_mask True 
 
-        text "WIP" size 60 xalign 0.5 yalign 0.5 color "#353535"
+        # Список оружия
+        viewport:
+            xpos 245
+            ypos 295
+            xsize 485
+            ysize 650
+            scrollbars "vertical"
+            mousewheel True
+
+            has vbox
+
+            python:
+                combined_weapons = dict(smallweapon_prices)
+
+                if BigGunInstall == "Possible":
+                    combined_weapons.update(bigweapon_prices)
+
+            grid 1 len(combined_weapons) spacing 20:
+
+                for weapon_name, price in combined_weapons.items():
+
+                    $ icon_path = f"gui/townmenu/items/{weapon_name}.png"
+
+                    frame:
+                        xsize 500
+                        ysize 100
+                        background None
+
+                        button:
+                            xsize 450
+                            background None
+                            action SetScreenVariable("selected_shop_item", weapon_name)
+                            hover_background Solid("#50505031")
+                            
+                            hbox:
+                                spacing 15
+                                yalign 0.5
+
+                                imagebutton:
+                                    idle im.Scale(icon_path, 90, 90)
+                                    hover im.Scale(icon_path, 90, 90)
+                                    action NullAction()
+                                    focus_mask True
+
+                                vbox:
+                                    spacing 5
+                                    yalign 0.5
+                                    xpos 20
+                                    text "[gun_names.get(weapon_name, weapon_name)]" size 30 color "#353535"
+                                    text "[price] монет" size 28 color "#353535"
+
+        if selected_shop_item:
+            $ item_data = GunDatabase[selected_shop_item]
+            $ min_dmg, max_dmg = gun_stats.get(selected_shop_item, (0, 0))
+            $ base_desc = item_data["desc"]
+            $ full_desc = f"{base_desc}\n\nНаносимый урон: от {min_dmg} до {max_dmg} единиц"
+
+            if selected_shop_item in bigweapon_prices:
+                $ full_desc += "\n\nДанное оружие может быть установлено только на дополнительный слот!"
+        
+            frame:
+                xpos 1170
+                ypos 280
+                xsize 500
+                ysize 300
+                background None
+                padding (20, 20)
+
+                text item_data["name"] size 40 color "#353535"
+
+            frame:
+                xpos 800
+                ypos 380
+                xsize 930
+                ysize 300
+                background None
+                padding (20, 20)
+
+                text full_desc size 25 color "#353535"
+
+        textbutton _("Купить") xpos 1190 yalign 0.788 sensitive selected_shop_item is not None action Confirm(
+            _("Вы уверены, что хотите купить это оружие?"),
+            yes=Function(buy_and_clear, selected_shop_item),
+            no=NullAction()
+        )
+
+        textbutton _("Купить как второе оружие") activate_sound "audio/sfx/click.wav" action NullAction() xpos 1050 yalign 0.859 sensitive selected_shop_item in bigweapon_prices
 
 # Car Shop
 
