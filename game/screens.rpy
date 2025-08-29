@@ -632,21 +632,22 @@ screen statistics_screen():
             xpos 1630
             focus_mask True 
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/buttons/tab_weapon_e.png" 
-            hover "gui/townmenu/buttons/tab_weapon_s.png"
-            action [Hide("statistics_screen"), Show("Gun_Shop_Menu")]
-            xpos 1450
-            ypos 1
-            focus_mask True 
+        if TownType == "City" or TownType == "Village":
+            imagebutton activate_sound "audio/sfx/click.wav":
+                idle "gui/townmenu/buttons/tab_weapon_e.png" 
+                hover "gui/townmenu/buttons/tab_weapon_s.png"
+                action [Hide("statistics_screen"), Show("Gun_Shop_Menu")]
+                xpos 1450
+                ypos 1
+                focus_mask True 
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/buttons/tab_truck_e.png" 
-            hover "gui/townmenu/buttons/tab_truck_s.png"
-            action [Hide("statistics_screen"), Show("Car_Shop")]
-            xpos 1270
-            ypos 1
-            focus_mask True 
+            imagebutton activate_sound "audio/sfx/click.wav":
+                idle "gui/townmenu/buttons/tab_truck_e.png" 
+                hover "gui/townmenu/buttons/tab_truck_s.png"
+                action [Hide("statistics_screen"), Show("Car_Shop")]
+                xpos 1270
+                ypos 1
+                focus_mask True 
 
 
 ## Экран игрового меню #########################################################

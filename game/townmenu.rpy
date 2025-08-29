@@ -44,36 +44,36 @@ screen InGameMenu():
             yalign 0.0
             focus_mask True 
 
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_stats_e.png" 
+            hover "gui/townmenu/buttons/tab_stats_s.png"
+            action [Hide("InGameMenu"), Show("statistics_screen")]
+            xpos 350
+            focus_mask True 
+
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_invent_e.png" 
+            hover "gui/townmenu/buttons/tab_invent_s.png"
+            action [Hide("InGameMenu"), Show("Selling_Menu")]
+            xpos 1630
+            focus_mask True 
+
         if TownType == "City":
             imagebutton activate_sound "audio/sfx/click.wav":
-                idle "gui/townmenu/buttons/tab_stats_e.png" 
-                hover "gui/townmenu/buttons/tab_stats_s.png"
-                action [Hide("InGameMenu"), Show("statistics_screen")]
-                xpos 350
+                idle "gui/townmenu/buttons/tab_weapon_e.png" 
+                hover "gui/townmenu/buttons/tab_weapon_s.png"
+                action [Hide("InGameMenu"), Show("Gun_Shop_Menu")]
+                xpos 1450
+                ypos 1
                 focus_mask True 
 
             imagebutton activate_sound "audio/sfx/click.wav":
-                idle "gui/townmenu/buttons/tab_invent_e.png" 
-                hover "gui/townmenu/buttons/tab_invent_s.png"
-                action [Hide("InGameMenu"), Show("Selling_Menu")]
-                xpos 1630
+                idle "gui/townmenu/buttons/tab_truck_e.png" 
+                hover "gui/townmenu/buttons/tab_truck_s.png"
+                action [Hide("InGameMenu"), Show("Car_Shop")]
+                xpos 1270
+                ypos 1
                 focus_mask True 
-
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/buttons/tab_weapon_e.png" 
-            hover "gui/townmenu/buttons/tab_weapon_s.png"
-            action [Hide("InGameMenu"), Show("Gun_Shop_Menu")]
-            xpos 1450
-            ypos 1
-            focus_mask True 
-
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/buttons/tab_truck_e.png" 
-            hover "gui/townmenu/buttons/tab_truck_s.png"
-            action [Hide("InGameMenu"), Show("Car_Shop")]
-            xpos 1270
-            ypos 1
-            focus_mask True 
 
         hbox:
             xsize 527
@@ -156,7 +156,7 @@ screen Selling_Menu():
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
             hover "gui/townmenu/close_h.png"
-            action [Hide("Selling_Menu"), Show("InGameMenu")]
+            action Return()
             xalign 0.99
             yalign 0.0
             focus_mask True 
@@ -189,8 +189,16 @@ screen Selling_Menu():
                                 action SetScreenVariable("selected_item", item_id)
                                 focus_mask True
 
-        textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item is not None
-        textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action [Confirm("Вы действительно хотите удалить этот предмет?\nВНИМАНИЕ: Действие необратимо!", yes=Function(delete_item, selected_item), no=None), SetScreenVariable("selected_item", None)] xpos 1193 yalign 0.859 sensitive selected_item is not None
+        frame:
+            xalign 0.9
+            yalign 0.145
+            xsize 100
+            ysize 60
+            
+            text "[len(Inventory)]/[CarInventoryLimits.get(CurrentCar, 0)]" xalign 0.5 yalign 0.5 color "#404040"
+
+        textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item is not None and (TownType == "City" or TownType == "Village")
+        textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action [Confirm("Вы действительно хотите удалить этот предмет?\nВНИМАНИЕ: Действие необратимо!", yes=Function(delete_item, selected_item), no=None), SetScreenVariable("selected_item", None)] xpos 1193 yalign 0.859 sensitive selected_item is not None and (TownType == "City" or TownType == "Village")
 
         if selected_item:
             $ item_data = ItemDatabase[selected_item]
@@ -242,21 +250,22 @@ screen Selling_Menu():
         ypos 6
         focus_mask True 
 
-    imagebutton activate_sound "audio/sfx/click.wav":
-        idle "gui/townmenu/buttons/tab_weapon_e.png" 
-        hover "gui/townmenu/buttons/tab_weapon_s.png"
-        action [Hide("Selling_Menu"), Show("Gun_Shop_Menu")]
-        xpos 1456
-        ypos 7
-        focus_mask True 
+    if TownType == "City" or TownType == "Village":
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_weapon_e.png" 
+            hover "gui/townmenu/buttons/tab_weapon_s.png"
+            action [Hide("Selling_Menu"), Show("Gun_Shop_Menu")]
+            xpos 1456
+            ypos 7
+            focus_mask True 
 
-    imagebutton activate_sound "audio/sfx/click.wav":
-        idle "gui/townmenu/buttons/tab_truck_e.png" 
-        hover "gui/townmenu/buttons/tab_truck_s.png"
-        action [Hide("Selling_Menu"), Show("Car_Shop")]
-        xpos 1276
-        ypos 7
-        focus_mask True 
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_truck_e.png" 
+            hover "gui/townmenu/buttons/tab_truck_s.png"
+            action [Hide("Selling_Menu"), Show("Car_Shop")]
+            xpos 1276
+            ypos 7
+            focus_mask True 
 
 # Gun Shop
 
@@ -411,13 +420,14 @@ screen Gun_Shop_Menu():
         ypos 7
         focus_mask True
 
-    imagebutton activate_sound "audio/sfx/click.wav":
-        idle "gui/townmenu/buttons/tab_truck_e.png" 
-        hover "gui/townmenu/buttons/tab_truck_s.png"
-        action [Hide("Gun_Shop_Menu"), Show("Car_Shop")]
-        xpos 1276
-        ypos 7
-        focus_mask True 
+    if TownType == "City":
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_truck_e.png" 
+            hover "gui/townmenu/buttons/tab_truck_s.png"
+            action [Hide("Gun_Shop_Menu"), Show("Car_Shop")]
+            xpos 1276
+            ypos 7
+            focus_mask True 
 
 # Car Shop
 
@@ -478,13 +488,14 @@ screen Car_Shop():
         ypos 6
         focus_mask True 
 
-    imagebutton activate_sound "audio/sfx/click.wav":
-        idle "gui/townmenu/buttons/tab_weapon_e.png" 
-        hover "gui/townmenu/buttons/tab_weapon_s.png"
-        action [Hide("Car_Shop"), Show("Gun_Shop_Menu")]
-        xpos 1456
-        ypos 7
-        focus_mask True
+    if TownType == "City" or TownType == "Village":
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_weapon_e.png" 
+            hover "gui/townmenu/buttons/tab_weapon_s.png"
+            action [Hide("Car_Shop"), Show("Gun_Shop_Menu")]
+            xpos 1456
+            ypos 7
+            focus_mask True
 
     imagebutton:
         idle "gui/townmenu/buttons/tab_truck_s.png" 

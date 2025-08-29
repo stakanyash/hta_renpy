@@ -101,6 +101,8 @@ label start:
     $ TownType = None
     $ TownName = None
     $ GroupLogo = None
+    
+    $ FarmEnabled = None
 
     $ BigGunInstall = None
 
