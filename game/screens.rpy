@@ -427,10 +427,10 @@ screen navigation():
     vbox:
         style_prefix "navigation"
 
-        xpos gui.navigation_xpos
+        xpos 50
         yalign 0.5
 
-        spacing gui.navigation_spacing
+        spacing 9
 
         if main_menu:
 
@@ -778,7 +778,7 @@ style game_menu_label_text:
     yalign 0.4
 
 style return_button:
-    xpos gui.navigation_xpos
+    xpos 50
     yalign 0.8
 
 
@@ -1294,14 +1294,6 @@ screen mouse_help():
     hbox:
         label _("Правый клик")
         text _("Вход в игровое меню.")
-
-    hbox:
-        label _("Колёсико вверх")
-        text _("Откат назад по сюжету игры.")
-
-    hbox:
-        label _("Колёсико вниз")
-        text _("Откатывает предыдущее действие вперёд.")
 
 
 style help_button is gui_button

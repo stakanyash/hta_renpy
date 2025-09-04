@@ -194,6 +194,7 @@ screen Selling_Menu():
             yalign 0.145
             xsize 100
             ysize 60
+            background None
             
             text "[len(Inventory)]/[CarInventoryLimits.get(CurrentCar, 0)]" xalign 0.5 yalign 0.5 color "#404040"
 
