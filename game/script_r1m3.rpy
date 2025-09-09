@@ -118,7 +118,7 @@ label asgardboom:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_29
 
     jump mvillage
 
@@ -374,7 +374,7 @@ label peshtallow:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_30
 
     jump minin1st_nl
 

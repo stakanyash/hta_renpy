@@ -95,6 +95,64 @@ style atk_button_text:
     idle_color "#b1b1b1"
     insensitive_color "#505050"
 
+transform fadeinout:
+    alpha 0.0
+    linear 1.5 alpha 1.0
+    on hide:
+        linear 1.5 alpha 0.0
+
+screen license_prompt():
+    tag menu
+
+    add Solid("#000000", alpha=0.7) at fadeinout
+
+    frame at fadeinout:
+        xalign 0.5
+        yalign 0.5
+        xsize 900
+        ysize 500
+        padding (30, 30)
+        background Solid("#1a1a1a")
+
+        vbox:
+            spacing 20
+            xfill True
+            yfill True
+
+            null height 20
+
+            text "Перед использованием вы обязаны иметь действующую, юридически приобретённую лицензию на оригинальную игру Hard Truck: Apocalypse / Ex Machina. Нажимая «Принимаю», вы подтверждаете, что владеете такой лицензией и принимаете условия её использования." at fadeinout:
+                size 25
+                color "#ffffff"
+                line_spacing 5
+                text_align 0.5
+                xalign 0.5
+
+            null
+
+            textbutton "Принимаю" action Return(True) at fadeinout:
+                xalign 0.5
+                xminimum 220
+                yminimum 60
+                background Solid("#3a753a")
+                hover_background Solid("#4a954a")
+                text_style "button_text_center"
+
+            textbutton "Отказ от ответственности" action OpenURL("https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md") at fadeinout:
+                xalign 0.5
+                xminimum 220
+                yminimum 50
+                background Solid("#2a2a2a")
+                hover_background Solid("#444444")
+                text_style "button_text_center"
+
+style button_text_center is default:
+    xalign 0.5
+    yalign 0.5
+    text_align 0.5
+    color "#999999"
+    hover_color "#FFF"
+
 screen enemy_ui():
 
     frame:

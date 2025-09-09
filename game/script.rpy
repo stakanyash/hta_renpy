@@ -82,7 +82,6 @@ init python:
         try_buy_weapon(weapon_name)
         store.selected_shop_item = None
         return None
-        
 
 transform stretch_in:
     yzoom 0.95
@@ -664,11 +663,11 @@ label shopmenu:
             $ SelShopPoint = "selling"
 
     if SelShopPoint == "car":
-        call carshop
+        call carshop from _call_carshop
     elif SelShopPoint == "weapon":
-        call weaponshop
+        call weaponshop from _call_weaponshop
     elif SelShopPoint == "selling":
-        call selling
+        call selling from _call_selling
 
     return
 
@@ -739,9 +738,9 @@ label weaponshop:
             $ selweashop = "big"
 
     if selweashop == "small":
-        call smallgunweaponshop
+        call smallgunweaponshop from _call_smallgunweaponshop
     elif selweashop == "big":
-        call biggunweaponshop
+        call biggunweaponshop from _call_biggunweaponshop
 
     return
     

@@ -10,9 +10,8 @@ init python:
     ## When enemy attacks player (Damage += 3% of player max HP if he missed, damage sound, damage effect)
     def apply_enemy_attack():
         global player_hp, turn_count, player_max_hp, enemy_damage_multiplier, consecutive_player_hits
-        if CurrentGun == "Flag" and turn_count > 0 and turn_count % 2 == 0:
-            damagerandom = random.uniform(0.07, 0.15)
-            damage = int(player_max_hp * damagerandom)
+        if turn_count > 0 and turn_count % 5 == 0 and enemy_damage_multiplier > 0:
+            damage = int(player_max_hp * enemy_damage_multiplier)
             player_hp = max(0, player_hp - damage)
 
             renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
@@ -20,22 +19,11 @@ init python:
             renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
             renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
 
+            enemy_damage_multiplier = 0.0
             turn_count = 0
-        else:
-            if turn_count > 0 and turn_count % 5 == 0 and enemy_damage_multiplier > 0:
-                damage = int(player_max_hp * enemy_damage_multiplier)
-                player_hp = max(0, player_hp - damage)
-
-                renpy.sound.play(f"audio/sfx/landing_car_sparkle.wav", channel="damage")
-
-                renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
-                renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
-
-                enemy_damage_multiplier = 0.0
-                turn_count = 0
-            elif turn_count > 0 and turn_count % 5 == 0 and enemy_damage_multiplier <= 0:
-                renpy.sound.play(f"audio/sfx/shoot_miss02.ogg", channel="missshot")
-                turn_count = 0
+        elif turn_count > 0 and turn_count % 5 == 0 and enemy_damage_multiplier <= 0:
+            renpy.sound.play(f"audio/sfx/shoot_miss02.ogg", channel="missshot")
+            turn_count = 0  
 
     ## Player attacks (random damage int (declarate in variable when fight starts), random attack sound, 70% chance to hit, if player hits the target 10 times in a row he gets 7% damage)
     def attack_enemy():
@@ -71,9 +59,9 @@ init python:
             renpy.sound.play(f"audio/sfx/shoot_miss01.ogg", channel="missshot")
             enemy_damage_multiplier += difficulty_base_multiplier
             consecutive_player_hits = 0
-        
+
+        turn_count += 1   
         apply_enemy_attack()
-        turn_count += 1
         renpy.restart_interaction()
 
     ## Player healing (from 2% to 10% of max player HP, heal sound)
