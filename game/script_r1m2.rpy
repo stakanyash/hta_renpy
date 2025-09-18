@@ -132,7 +132,7 @@ label defeateddefender:
 
 label movetovostochnoe:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Восточное", "farmers_union")
 
     play music "music/bar.ogg" fadeout 1.0
     scene bg_vostochnoe with fade
@@ -198,7 +198,7 @@ label movetovostochnoe:
 
 label tolocus:
 
-    $ TownType = "Village"
+    $ UpdateTownInfo("Village", "Локус", "technicians")
 
     scene bg_locus with fade
     play music "music/town2.ogg" fadeout 1.0
@@ -255,7 +255,7 @@ label tolocus:
 
 label tomidgard:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Мидгард", "technicians")
 
     scene bg_midgard with fade
     play music "music/town3.ogg" fadeout 1.0
@@ -421,7 +421,7 @@ label toportoe1:
 
 label portoa:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Порто", "technicians")
 
     play music "music/bar.ogg" fadeout 1.0
 
@@ -458,7 +458,7 @@ label portoa:
 
 label backtomidgard:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Мидгард", "technicians")
 
     scene bg_midgard with fade
 

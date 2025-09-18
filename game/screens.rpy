@@ -1056,20 +1056,6 @@ screen preferences():
 
         vbox:
 
-            hbox:
-                box_wrap True
-
-                if renpy.variant("pc") or renpy.variant("web"):
-
-                    vbox:
-                        style_prefix "radio"
-                        label _("Режим экрана")
-                        textbutton _("Оконный") action Preference("display", "window")
-                        textbutton _("Полный") action Preference("display", "fullscreen")
-
-                ## Дополнительные vbox'ы типа "radio_pref" или "check_pref"
-                ## могут быть добавлены сюда для добавления новых настроек.
-
             null height (4 * gui.pref_spacing)
 
             hbox:
@@ -1120,6 +1106,25 @@ screen preferences():
                         textbutton _("Без звука"):
                             action Preference("all mute", "toggle")
                             style "mute_all_button"
+
+                null height (10 * gui.pref_spacing)
+
+                hbox:
+                    box_wrap True
+
+                    if renpy.variant("pc") or renpy.variant("web"):
+
+                        vbox:
+                            style_prefix "radio"
+                            label _("Режим экрана")
+                            textbutton _("Оконный") action Preference("display", "window")
+                            textbutton _("Полный") action Preference("display", "fullscreen")
+
+                    ## Дополнительные vbox'ы типа "radio_pref" или "check_pref"
+                    ## могут быть добавлены сюда для добавления новых настроек.
+
+                null width (22.4 * gui.pref_spacing)
+                
                 vbox:
                     style_prefix "radio"
                     label _("Сложность боёв")
