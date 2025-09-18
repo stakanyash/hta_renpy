@@ -343,7 +343,7 @@ label secondenemy:
 
 label tozaimka:
 
-    $ TownType = "Village"
+    $ UpdateTownInfo("Village", "Заимка", "farmers_union")
 
     scene bg_zaimka with fade
 
@@ -367,11 +367,15 @@ label tozaimka:
 
     scene bg_gugulino with dissolve
 
+    $ UpdateTownInfo("Village", "Гугулино", "farmers_union")
+
     "Всё тоже самое было в Гугулино..."
 
     scene bg_troitckoe with dissolve
 
     play music "audio/music/intensedialogue02.ogg" fadeout 1.0
+
+    $ UpdateTownInfo("Village", "Троицкое", "farmers_union")
 
     "А вот в Троицком..."
 
@@ -426,10 +430,7 @@ label tozaimka:
     jump sergo
 
 label sergo:
-
-    $ TownType = "City"
-    $ TownName = "Южный"
-    $ GroupLogo = "farmers_union"
+    $ UpdateTownInfo("City", "Южный", "farmers_union")
 
     scene bg_insowth with fade
 
@@ -599,15 +600,9 @@ label felixmeet:
 
     unknown "За скромный вклад в 1000 монет ты можешь продолжать свои грязные делишки и даже рассчитывать на нашу поддержку."
 
-    menu:
-        "Отдать деньги":
-            $ renpy.save("checkpoint-3")
-            "Вы бы с радостью отдали деньги, чтобы от вас отстали, но у вас нет 1000 монет."
-            jump felixbeforefight
-
-        "Отказать":
-            $ renpy.save("checkpoint-3")
-            jump felixbeforefight
+    $ renpy.save("checkpoint-3")
+    $ renpy.notify("Игра сохранена.")
+    jump felixbeforefight
 
 label felixbeforefight:
 
@@ -860,7 +855,7 @@ label dyingfather:
 
 label sowthagain:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Южный", "farmers_union")
 
     stop sfx2
 
@@ -1012,7 +1007,7 @@ label sowthagain:
 
 label KventinZaimka:
 
-    $ TownType = "Village"
+    $ UpdateTownInfo("Village", "Заимка", "farmers_union")
 
     scene bg_zaimka with fade
 
@@ -1041,22 +1036,15 @@ label KventinZaimka:
 
     $ CurrentGun = "Storm"
 
+    python:
+        if try_add_item("Hornet") == True:
+            renpy.notify("В ваш инвентарь добавлен \"Шершень\".")
+        else:
+            renpy.notify("В вашем инвентаре недостаточно места. \"Шершень\" был автоматически продан за 65 монет.")
+
     "Вы ставите новое вооружение на свою машину и едете к Феликсу..."
 
     "У вас есть возможность продать оружие \"Шершень\". Продажа принесёт вам 260 монет."
-
-    menu:
-        "Продать":
-            $ CurrentMoney += 260
-            "Вы решили продать \"Шершень\" и получили 260 монет.\nВаш текущий баланс: [CurrentMoney]."
-
-        "Не продавать":
-            if try_add_item("Hornet"):
-                $ inventory_text = ", ".join(Inventory)
-                "Вы решили не продавать \"Шершень\".\nВаш текущий инвентарь: [inventory_text]."
-            else:
-                $ CurrentMoney += 260
-                "В вашем инвентаре недостаточно места! \"Шершень\" автоматически продан.\nВаш текущий баланс: [CurrentMoney]."
 
     jump felixbase
 
@@ -1262,9 +1250,10 @@ label felixdefeated:
 
 label leaver1m1tovaterland:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Южный", "farmers_union")
+    play music "music/town1.ogg" fadeout 1.0
 
-    scene bg_sowth with Fade
+    scene bg_insowth with fade
 
     "Перед тем, как ехать искать Лису вы решили заехать в Южный, чтобы рассказать Дронну, как всё прошло."
 

@@ -83,6 +83,12 @@ init python:
         store.selected_shop_item = None
         return None
 
+    def UpdateTownInfo(town_type, town_name, group_logo):
+        global TownType, TownName, GroupLogo
+        TownType = town_type
+        TownName = town_name
+        GroupLogo = group_logo
+
 transform stretch_in:
     yzoom 0.95
     linear 0.1 yzoom 1.0
@@ -174,7 +180,7 @@ label start:
     $ gun_stats = {
         "Hornet": (4, 6),
         "Specter": (5, 8),
-        "Storm": (30, 100),
+        "Storm": (30, 80),
         "PKT": (6, 10),
         "Vector": (10, 15),
         "Kord": (8, 12),
@@ -429,7 +435,7 @@ label randomfight:
     $ enemy_image = f"randomenemy{enemyint}"
     $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = random.randint(250, 1000)
+    $ enemy_hp = random.randint(150, 300)
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
@@ -516,19 +522,12 @@ label selling:
     return
 
 label tutorial_check:
-    init python:
-        import os
+    $ flags = load_flags()
 
-        def tutorial_file_exists():
-            return os.path.exists("htafirstrun")
-
-        def create_tutorial_flag():
-            with open("htafirstrun", "w") as f:
-                f.write("V2FybSBsZWdzLg==")
-
-    if not tutorial_file_exists():
+    if not flags["tutorial"]:
         $ need_tutorial = renpy.call_screen("tutorial_prompt_call")
-        $ create_tutorial_flag()
+        $ flags["tutorial"] = True
+        $ save_flags(flags)
 
         if need_tutorial:
             jump tutorial

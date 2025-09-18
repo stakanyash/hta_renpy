@@ -1,17 +1,28 @@
-﻿label splashscreen:
-    init python:
-        import os
+﻿init python:
+    import os, json
 
-        def license_accepted_exists():
-            return os.path.exists("license_accepted.flag")
+    FLAGS_FILE = "hta.json"
 
-        def create_license_flag():
-            with open("license_accepted.flag", "w", encoding="utf-8") as f:
-                f.write("License accepted by user.")
+    def load_flags():
+        if os.path.exists(FLAGS_FILE):
+            try:
+                with open(FLAGS_FILE, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except:
+                pass
+        return {"license": False, "tutorial": False}
 
-    if not license_accepted_exists():
+    def save_flags(flags):
+        with open(FLAGS_FILE, "w", encoding="utf-8") as f:
+            json.dump(flags, f)
+
+label splashscreen:
+    $ flags = load_flags()
+
+    if not flags["license"]:
         $ renpy.call_screen("license_prompt")
-        $ create_license_flag()
+        $ flags["license"] = True
+        $ save_flags(flags)
 
     $ renpy.movie_cutscene("movies/disclaimer.mp4")
 

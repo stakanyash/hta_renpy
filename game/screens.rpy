@@ -4,6 +4,21 @@
 
 init offset = -1
 
+init python:
+    def set_difficulty(mode, multiplier):
+        store.difficulty = mode
+        store.difficulty_base_multiplier = multiplier
+
+        persistent.difficulty = mode
+        persistent.difficulty_multiplier = multiplier
+
+    def load_difficulty():
+        if hasattr(persistent, "difficulty"):
+            store.difficulty = persistent.difficulty
+            store.difficulty_base_multiplier = persistent.difficulty_multiplier
+        else:
+            set_difficulty("normal", 0.03)
+
 ################################################################################
 ## Стили
 ################################################################################
@@ -121,7 +136,7 @@ screen license_prompt():
 
             null height 20
 
-            text "Перед использованием вы обязаны иметь действующую, юридически приобретённую лицензию на оригинальную игру Hard Truck: Apocalypse / Ex Machina. Нажимая «Принимаю», вы подтверждаете, что владеете такой лицензией и принимаете условия её использования." at fadeinout:
+            text "Для использования требуется лицензия на оригинальную игру Hard Truck Apocalypse/Ex Machina. Нажимая «Принимаю», вы подтверждаете, что у вас есть такая лицензия." at fadeinout:
                 size 25
                 color "#ffffff"
                 line_spacing 5
@@ -140,8 +155,8 @@ screen license_prompt():
 
             textbutton "Отказ от ответственности" action OpenURL("https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md") at fadeinout:
                 xalign 0.5
-                xminimum 220
-                yminimum 50
+                xminimum 500
+                yminimum 60
                 background Solid("#2a2a2a")
                 hover_background Solid("#444444")
                 text_style "button_text_center"
@@ -258,7 +273,7 @@ screen tutorial_prompt_call():
             spacing 20
             xalign 0.5
             yalign 0.5
-            text "Кажется, вы в первый раз играете в\nEx Machina RenPy.\n\nХотите пройти обучение?" size 36 textalign 0.5 outlines [(2, "#858585", 0, 0), (1, "#404040", 0, 0)]
+            text "Кажется, вы в первый раз играете в\nEx Machina RenPy.\n\nХотите пройти обучение?" size 36 textalign 0.5
 
             hbox:
                 spacing 200
@@ -571,7 +586,7 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.2.6 (250809b)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    text "Ex Machina RenPy - developer version 0.3 (250918a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -1105,6 +1120,14 @@ screen preferences():
                         textbutton _("Без звука"):
                             action Preference("all mute", "toggle")
                             style "mute_all_button"
+                vbox:
+                    style_prefix "radio"
+                    label _("Сложность боёв")
+
+                    textbutton _("Новичок") action Function(set_difficulty, "easy", 0.015) selected (difficulty == "easy")
+                    textbutton _("Бывалый") action Function(set_difficulty, "normal", 0.03) selected (difficulty == "normal")
+                    textbutton _("Профессионал") action Function(set_difficulty, "hard", 0.04) selected (difficulty == "hard")
+                    textbutton _("Мастер") action Function(set_difficulty, "expert", 0.055) selected (difficulty == "expert")
 
 
 style pref_label is gui_label
