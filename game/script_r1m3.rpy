@@ -76,7 +76,7 @@ label r1m3nolisa:
 
 label asgardboom:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Асгард", "free_traders_alliance")
 
     play music "music/town1.ogg" fadeout 1.0
     scene bg_asgard with fade
@@ -124,7 +124,7 @@ label asgardboom:
 
 label mvillage:
 
-    $ TownType = "Village"
+    $ UpdateTownInfo("Village", "Горные шахты", "free_traders_alliance")
 
     play music "music/bar.ogg" fadeout 1.0
     scene bg_mvillage with fade
@@ -363,7 +363,7 @@ label peshtallow:
 
     "Вам открыли ворота и вы проехали через Пешт."
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Пешт", "free_traders_alliance")
 
     hide pguard
     hide mc5
@@ -380,7 +380,7 @@ label peshtallow:
 
 label minin1st_nl:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
 
     scene bg_minin with fade
     play music "music/town3.ogg" fadeout 1.0
@@ -473,7 +473,7 @@ label aivenhouse:
 
 label minin2nd_nl:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
@@ -524,7 +524,7 @@ label minin2nd_nl:
 
 label hundredcointosharki:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
 
     if FarmEnabled == True:
         $ FarmEnabled = False
@@ -826,7 +826,7 @@ label banditbaseelim:
 
 label minin3rd_nl:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
@@ -857,62 +857,10 @@ label minin3rd_nl:
                 "Установить":
                     $ renpy.save("checkpoint-6")
                     $ CurrentMoney -= 10000
-                    "Вы установили кузов \"Бокс\" и отдали 10000 монет."
-                    $ OldWeaponPrice = oldweapon_price.get(CurrentGun, oldweapon_price["Hornet"])
-                    $ CurrentGun = "None"
-                    $ CurrentCargo = "Box"
-                    if CurrentMoney >= 5520:
-                        $ CurrentMoney += OldWeaponPrice
-                        "Нужно установить новое оружие. Ваше старое оружие автоматически продано за [OldWeaponPrice] монет."
+                    $ CurrentCargo = "Box"  
+                    $ BigGunInstall = "Possible"
 
-                        python:
-                            affordable_weapons = [name for name, price in weapon_prices.items() if price <= CurrentMoney]
-                            weapon_text = ", ".join(affordable_weapons)
-                        "Ваших средств достаточно на: [weapon_text]."
-                        menu:
-                            "Вектор" if CurrentMoney >= 5520:
-                                $ CurrentMoney -= 5520
-                                $ CurrentGun = "Vector" 
-                                $ GunType = "BigGun"
-                                "Вы установили оружие \"Вектор\" и отдали 5520 монет. У вас осталось [CurrentMoney] монет."
-                                $ renpy.save("checkpoint-1")
-
-                            "Вулкан" if CurrentMoney >= 5630:
-                                $ CurrentMoney -= 5630
-                                $ CurrentGun = "Vulcan" 
-                                $ GunType = "BigGun"
-                                "Вы установили оружие \"Вулкан\" и отдали 5630 монет. У вас осталось [CurrentMoney] монет."  
-                                $ renpy.save("checkpoint-1")
-
-                            "КПВТ" if CurrentMoney >= 6400:
-                                $ CurrentMoney -= 6400
-                                $ CurrentGun = "KPVT" 
-                                $ GunType = "BigGun"
-                                "Вы установили оружие \"КПВТ\" и отдали 6400 монет. У вас осталось [CurrentMoney] монет."  
-                                $ renpy.save("checkpoint-1")
-
-                            "Шмель" if CurrentMoney >= 13310:
-                                $ CurrentMoney -= 13310
-                                $ CurrentGun = "Bumblebee" 
-                                $ GunType = "BigGun"
-                                "Вы установили оружие \"Шмель\" и отдали 13310 монет. У вас осталось [CurrentMoney] монет."
-                                $ renpy.save("checkpoint-1")
-
-                            "Ураган" if CurrentMoney >= 14910:
-                                $ CurrentMoney -= 14910
-                                $ CurrentGun = "Hurricane" 
-                                $ GunType = "BigGun"
-                                "Вы установили оружие \"Ураган\" и отдали 14910 монет. У вас осталось [CurrentMoney] монет."
-                                $ renpy.save("checkpoint-1")
-
-                            "Флаг" if CurrentMoney >= 17860:
-                                $ CurrentMoney -= 17860
-                                $ CurrentGun = "Flag" 
-                                $ GunType = "BigGun"
-                                "Вы установили оружие \"Флаг\" и отдали 17860 монет. У вас осталось [CurrentMoney] монет."
-                                $ renpy.save("checkpoint-1")
-                                    
-
+                    "Вы установили кузов \"Бокс\" и отдали 10000 монет."                         
                 "Не устанавливать":
                     $ renpy.save("checkpoint-6")
                     $ CurrentCargo = "Tent"
@@ -1020,7 +968,7 @@ label mayorspy:
 
 label minin4th_nl:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
@@ -1062,7 +1010,7 @@ label minin4th_nl:
 
 label oilmine2nd:
 
-    $ TownType = "Village"
+    $ UpdateTownInfo("Village", "Нефтяная вышка", "north_nath_traders")
     
     play music "music/bar.ogg" fadeout 1.0
     scene bg_oil with fade
@@ -1088,7 +1036,7 @@ label oilmine2nd:
 
 label minin5th_nl:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade

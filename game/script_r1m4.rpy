@@ -6,7 +6,7 @@ label r1m4start:
 
     "Приехав в Хель вы сразу направились в Ольм."
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Ольм", "north_nath_traders")
     
     play music "music/town1.ogg" fadeout 1.0
     scene bg_olm with dissolve
@@ -59,7 +59,7 @@ label homersearch:
     "Вы начали искать Гомера в рыбацких посёлках."
 
     if random.random() <= 0.3:
-        $ randommus = random.randint(1, 2)
+        $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
         call randomfight from _call_randomfight_21
@@ -67,21 +67,27 @@ label homersearch:
     play music "music/driving7.ogg" fadeout 1.0
     scene bg_lauka with fade
 
+    $ UpdateTownInfo("Village", "Лаука", "free_traders_alliance")
+
     "В Лауке его нет."
 
     scene bg_kalis with fade
+
+    $ UpdateTownInfo("Village", "Калис", "free_traders_alliance")
 
     "В Калисе тоже..."
 
     mc "Мне что, придётся весь регион объездить в его поисках?!"
 
     if random.random() <= 0.3:
-        $ randommus = random.randint(1, 2)
+        $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
         call randomfight from _call_randomfight_22
 
     scene bg_kordan with fade
+
+    $ UpdateTownInfo("Village", "Кордан", "free_traders_alliance")
 
     "В Кордане его так-же не оказалось."
 
@@ -113,12 +119,12 @@ label homersearch:
     hide mcsurp
 
     if random.random() <= 0.3:
-        $ randommus = random.randint(1, 2)
+        $ randommus = random.choice([1, 2, 7])   
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
         call randomfight from _call_randomfight_23
 
-    $ TownType = "Village"
+    $ UpdateTownInfo("Village", "Салиниом", "free_traders_alliance")
     
     play music "music/bar.ogg" fadeout 1.0
     scene bg_saliniom with fade
@@ -189,7 +195,7 @@ label homersearch:
     "Вы поехали к месту, указанному Гомером."
 
     if random.random() <= 0.3:
-        $ randommus = random.randint(1, 2)
+        $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
         call randomfight from _call_randomfight_24
@@ -399,7 +405,7 @@ label galdenquest:
             hide mcsurp
 
             if random.random() <= 0.3:
-                $ randommus = random.randint(1, 2)
+                $ randommus = random.choice([1, 2, 7])
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                 "На вас нападают!"
                 call randomfight from _call_randomfight_25
@@ -455,7 +461,7 @@ label r1m4SideQuest_start:
             hide mc6
 
             if random.random() <= 0.3:
-                $ randommus = random.randint(1, 2)
+                $ randommus = random.choice([1, 2, 7])
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                 "На вас нападают!"
                 call randomfight from _call_randomfight_26
@@ -530,7 +536,7 @@ label r1m4SideQuest_warehousefight:
 
 label r1m4SideQuest_whereisleader:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Ольм", "north_nath_traders")
 
     play music "music/town1.ogg" fadeout 1.0
 
@@ -646,7 +652,7 @@ label r1m4SideQuest_leaderisfree:
     mc "И лучше бы им выполнить свою часть сделки!"
 
     if random.random() <= 0.3:
-        $ randommus = random.randint(1, 2)
+        $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
         call randomfight from _call_randomfight_27
@@ -667,7 +673,7 @@ label r1m4SideQuest_leaderisback:
 
     mc "Теперь и вы держите своё. Освобождайте склад."
 
-    $ RandomR1M4SQReward = random.randint(2000, 10000)
+    $ RandomR1M4SQReward = random.randint(2000, 4000)
     $ CurrentMoney += RandomR1M4SQReward
     $ renpy.notify(f"Вы получили {RandomR1M4SQReward} монет.")
 
@@ -682,7 +688,7 @@ label r1m4SideQuest_leaderisback:
     $ r1m4SideQuestLeaderSaved = True
 
     if random.random() <= 0.3:
-        $ randommus = random.randint(1, 2)
+        $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
         call randomfight from _call_randomfight_28
@@ -691,7 +697,7 @@ label r1m4SideQuest_leaderisback:
 
 label r1m4SideQuest_finish:
 
-    $ TownType = "City"
+    $ UpdateTownInfo("City", "Ольм", "north_nath_traders")
 
     play music "music/town1.ogg" fadeout 1.0
 
@@ -708,8 +714,8 @@ label r1m4SideQuest_finish:
 
     mc "Склад чист, работа сделана."
 
-    $ CurrentMoney += 2000
-    $ renpy.notify("Вы получили 2000 монет.")
+    $ CurrentMoney += 1000
+    $ renpy.notify("Вы получили 1000 монет.")
 
     galden "Отлично! Вот тебе награда."
 
