@@ -606,3 +606,253 @@ label firstmeetben:
     jump vaterlandfirst
 
 # With Lisa route
+
+label r1m2withlisa:
+
+    $ CurrentRegion = "r1m2"
+    $ UpdateTownInfo("City", "Мидгард", "technicians")
+    play music "music/town3.ogg" fadeout 1.0
+
+    scene bg_midgard with fade
+
+    "Вы без особых проблем добрались до Мидгарда и подходите к одному из местных."
+
+    show scientist at left with dissolve
+
+    unknown "Что тебе?"
+
+    show mc5 at right with dissolve
+
+    mc "Я ищу женщину, зовут ее Лиса."
+
+    hide scientist
+    show scientist at left, stretch_in
+
+    unknown "Лиса была здесь недавно, а потом уехала в Порто."
+
+    mc "Будем искать дальше."
+
+    "Вы направились в Порто."
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight from _call_randomfight_31
+
+    jump portolisa
+
+label portolisa:
+
+    scene bg_porto with fade
+    play music "music/bar.ogg" fadeout 1.0
+    $ UpdateTownInfo("City", "Порто", "technicians")
+
+    "Вам эти поиски уже кажутся нескончаемыми. Но делать нечего - вы подходите к одному из местных жителей в Порто."
+
+    show kane at left with dissolve
+
+    kane "Если вы ко мне обращаетесь, то я вас внимательно слушаю."
+
+    show mcsurp at right, stretch_in
+
+    mc "Я ищу женщину, зовут её Лиса."
+
+    kane "Лисы здесь не было уже давно."
+    kane "Может быть, ее что-то задержало на полпути? Бандиты буйствуют на наших дорогах... "
+
+    mc "Сейчас проверим."
+
+    "Вы отправляетесь искать Лису по пути Порто - Мидгард."
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight from _call_randomfight_32
+
+    jump lisanearporto
+
+label lisanearporto:
+
+    $ TownType = "NotInCity"
+    play music "music/intensedialogue01.ogg" fadeout 1.0
+
+    scene bg_lisarescue with fade
+
+    "Прямо недалеко от Порто вы заметили что-то странное..."
+
+    if CurrentCar == "Van":
+        scene bg_lisarescue1_van with dissolve
+    elif CurrentCar == "Molokovoz":
+        scene bg_lisarescue1_ml with dissolve
+
+    unknown "Ага... Тебя-то здесь и не хватало..."
+
+    scene bg_lisarescue2 with dissolve
+
+    mc "Ни дня без боя..."
+
+    stop music fadeout 1.0
+
+    scene black with fade
+
+    scene bg_lisarescue_fight with fade
+
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = "lisarescue_fight"
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_max_hp = player_hp
+    $ enemy_hp = 650
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 20 
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Бандиты"
+    $ bgname = "bg_lisarescue_fight"
+    $ EnemyType = "Regular"
+
+    scene bg_lisarescue_fight
+    show lisarescue_fight at center
+
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        hide lisarescue_fight
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+
+        play sound "sfx/explosion04.wav"
+        hide lisarescue_fight with dissolve
+
+        jump lisasavedporto
+
+label lisasavedporto:
+
+    play music "music/intensedialogue02.ogg" fadeout 1.0
+
+    $ renpy.scene()
+    $ renpy.show(f"bg_lr_1_{CurrentCar}_{CurrentGun}")
+
+    lisa "Ты? Что ты здесь делаешь?"
+    lisa "Ты всё испортил..."
+    lisa "Ну, то есть... спасибо за чудесное избавление."
+
+    mc "Я спас тебя, Лиса."
+    mc "Теперь ты ответишь на мои вопросы: мне нужно знать, кто убил моего отца!"
+
+    $ renpy.scene()
+    $ renpy.show(f"bg_lr_2_{CurrentCar}_{CurrentGun}")
+    $ renpy.with_statement(dissolve)
+
+    lisa "Что?"
+    lisa "Кого?"
+    lisa "Я ни при чём. Я никого не убивала!"
+    lisa "И не думай повесить на меня мокрое дело!"
+
+    mc "Да я тебя и не обвиняю."
+    mc "По крайней мере до выяснения всех подробностей."
+
+    play music "music/intensedialogue01.ogg" fadeout 1.0
+
+    $ renpy.scene()
+    $ renpy.show(f"bg_lr_3_{CurrentCar}_{CurrentGun}")
+    $ renpy.with_statement(dissolve)
+
+    lisa "Так что же ты за мной притащился в такую даль?"
+
+    mc "Я здесь задаю вопросы!"
+    mc "Отвечай, кто убил жителей села Глухое?"
+    mc "Кто совершил это злодеяние? Ты отправилась туда, когда мы расстались, и знаешь, что там произошло!"
+
+    lisa "Так ты, значит... То есть..."
+    lisa "Да, я была там, когда это произошло, и видела, кто это сделал."
+
+    $ renpy.scene()
+    $ renpy.show(f"bg_lr_4_{CurrentCar}_{CurrentGun}")
+    $ renpy.with_statement(dissolve)
+
+    mc "Говори же!"
+
+    lisa "Это были борцы за новый мировой порядок."
+    lisa "Алый Рассвет - так они себя называют. Безжалостные убийцы с запада."
+    lisa "Обычно они не выезжают за пределы своей страны, но сейчас они начали экспансию в соседние регионы."
+
+    mc "Откуда ты знаешь столько про них?"
+
+    lisa "Я много путешествую по миру, ищу новые способы... новые технологии."
+    lisa "Куда только меня не заносило."
+
+    mc "Но я всё равно не понимаю, зачем они убили невинных людей?"
+
+    $ renpy.scene()
+    $ renpy.show(f"bg_lr_5_{CurrentCar}_{CurrentGun}")
+    $ renpy.with_statement(dissolve)
+
+    lisa "Это обычная тактика. Они совершат несколько неожиданных рейдов."
+    lisa "А когда среди населения начнётся паника, они заявятся и предложат своё покровительство. Естественно, не бесплатно."
+
+    mc "Какая низость!"
+    mc "Я не позволю им протянуть свои грязные лапы к моей родине! Я убью их всех!"
+
+    lisa "Не горячись, среди этих бандитов есть и те, кто пошёл служить, чтобы спасти свои семьи от голода."
+    lisa "Есть и те, кого вынудили и запугали."
+    lisa "На самом деле по-настоящему виноват только один человек - главарь, Аксель."
+    lisa "На его железной воле держится вся империя зла. Если устранить его - могучая сила рассыпется как карточный домик."
+
+    play music "music/quietdialogue03.ogg" fadeout 1.0
+
+    $ renpy.scene()
+    $ renpy.show(f"bg_lr_6_{CurrentCar}_{CurrentGun}")
+    $ renpy.with_statement(dissolve)
+
+    mc "Ты права, отвечать должен тот, кто отдал приказ. Аксель будет повержен!"
+
+    lisa "Знай же, что добраться до него очень и очень непросто. И придётся действовать не столько грубой силой, сколько хитростью."
+
+    mc "Я справлюсь. Укажи только дорогу на запад."
+
+    lisa "Я знаю только один путь – тоннель, идущий под горой. Спроси о нём в Асгарде. Прощай, герой!"
+
+    mc "Прощай. Спасибо за помощь."
+
+    "После этого вы направились в Асгард."
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight from _call_randomfight_33
+
+    scene black with fade
+    
+    jump asgardtunnel
+
+    # TODO: Make screenshots for scenes 3-6

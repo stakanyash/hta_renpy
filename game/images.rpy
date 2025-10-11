@@ -45,6 +45,34 @@ image bg_ridzin = "images/bgs/r1m2/bg_ridzin.jpg"
 image bg_toporto = "images/bgs/r1m2/bg_toporto.jpg"
 image bg_toportoe1 = "images/bgs/r1m2/bg_toportoe1.jpg"
 image bg_vostochnoe = "images/bgs/r1m2/bg_vostochnoe.jpg"
+image bg_lisarescue = "images/bgs/r1m2/bg_lisarescue.jpg"
+image bg_lisarescue1_van = "images/bgs/r1m2/bg_lisarescue1_van.jpg"
+image bg_lisarescue1_ml = "images/bgs/r1m2/bg_lisarescue1_ml.jpg"
+image bg_lisarescue2 = "images/bgs/r1m2/bg_lisarescue2.jpg"
+image bg_lisarescue_fight = "images/bgs/r1m2/bg_lisarescue_fight.jpg"
+
+# Backgrounds: r1m2 - Lisa Rescued
+
+image bg_lr_1_Molokovoz_Hornet = "images/bgs/r1m2/LisaRescued/bg_lr_1_Molokovoz_Hornet.jpg"
+image bg_lr_1_Molokovoz_Kord = "images/bgs/r1m2/LisaRescued/bg_lr_1_Molokovoz_Kord.jpg"
+image bg_lr_1_Molokovoz_PKT = "images/bgs/r1m2/LisaRescued/bg_lr_1_Molokovoz_PKT.jpg"
+image bg_lr_1_Molokovoz_Specter = "images/bgs/r1m2/LisaRescued/bg_lr_1_Molokovoz_Specter.jpg"
+image bg_lr_1_Molokovoz_Storm = "images/bgs/r1m2/LisaRescued/bg_lr_1_Molokovoz_Storm.jpg"
+image bg_lr_1_Van_Hornet = "images/bgs/r1m2/LisaRescued/bg_lr_1_Van_Hornet.jpg"
+image bg_lr_1_Van_Kord = "images/bgs/r1m2/LisaRescued/bg_lr_1_Van_Kord.jpg"
+image bg_lr_1_Van_PKT = "images/bgs/r1m2/LisaRescued/bg_lr_1_Van_PKT.jpg"
+image bg_lr_1_Van_Specter = "images/bgs/r1m2/LisaRescued/bg_lr_1_Van_Specter.jpg"
+image bg_lr_1_Van_Storm = "images/bgs/r1m2/LisaRescued/bg_lr_1_Van_Storm.jpg"
+image bg_lr_2_Molokovoz_Hornet = "images/bgs/r1m2/LisaRescued/bg_lr_2_Molokovoz_Hornet.jpg"
+image bg_lr_2_Molokovoz_Kord = "images/bgs/r1m2/LisaRescued/bg_lr_2_Molokovoz_Kord.jpg"
+image bg_lr_2_Molokovoz_PKT = "images/bgs/r1m2/LisaRescued/bg_lr_2_Molokovoz_PKT.jpg"
+image bg_lr_2_Molokovoz_Specter = "images/bgs/r1m2/LisaRescued/bg_lr_2_Molokovoz_Specter.jpg"
+image bg_lr_2_Molokovoz_Storm = "images/bgs/r1m2/LisaRescued/bg_lr_2_Molokovoz_Storm.jpg"
+image bg_lr_2_Van_Hornet = "images/bgs/r1m2/LisaRescued/bg_lr_2_Van_Hornet.jpg"
+image bg_lr_2_Van_Kord = "images/bgs/r1m2/LisaRescued/bg_lr_2_Van_Kord.jpg"
+image bg_lr_2_Van_PKT = "images/bgs/r1m2/LisaRescued/bg_lr_2_Van_PKT.jpg"
+image bg_lr_2_Van_Specter = "images/bgs/r1m2/LisaRescued/bg_lr_2_Van_Specter.jpg"
+image bg_lr_2_Van_Storm = "images/bgs/r1m2/LisaRescued/bg_lr_2_Van_Storm.jpg"
 
 # Backgrounds: r1m3
 
@@ -73,6 +101,8 @@ image bg_spymer_3 = "images/bgs/r1m3/bg_spymer_3.jpg"
 image bg_spymer_4 = "images/bgs/r1m3/bg_spymer_4.jpg"
 image bg_spymer_5 = "images/bgs/r1m3/bg_spymer_5.jpg"
 image bg_spymer_6 = "images/bgs/r1m3/bg_spymer_6.jpg"
+image bg_base51 = "images/bgs/r1m3/bg_base51.jpg"
+image bg_base51fight = "images/bgs/r1m3/bg_base51fight.jpg"
 
 # Backgrounds: r1m4
 
@@ -154,6 +184,8 @@ image homer = "images/sprites/chr/homer.png"
 image mc7 = "images/sprites/chr/mc7.png"
 image galden = "images/sprites/chr/galden.png"
 image wsecurity = "images/sprites/chr/wsecurity.png"
+image bobbase51 = "images/sprites/chr/bob.png"
+image kane = "images/sprites/chr/kane.png"
 
 # Sprites: Enemy's
 
@@ -166,6 +198,7 @@ image to_porto_e1 = "images/sprites/enemy/to_porto_e1.png"
 image brigde_defender = "images/sprites/enemy/brigde_defender.png"
 image minerattackers = "images/sprites/enemy/minerattackers.png"
 image oilbandits = "images/sprites/enemy/oilbandits.png"
+image base51fight = "images/sprites/enemy/base51fight.png"
 
 image randomenemy1 = "images/sprites/enemy/randomenemy1.png"
 image randomenemy2 = "images/sprites/enemy/randomenemy2.png"

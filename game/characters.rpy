@@ -24,6 +24,7 @@ define oldwoman = Character('Старуха', color="#FED11B")
 define zavhoz = Character('Завхоз', color="#FED11B")
 define shon = Character('Караванщик Шон', color="#FED11B")
 define ben = Character('Бен Дроссель', color="#FED11B")
+define kane = Character('Гражданин Кейн', color="#FED11B")
 
 # Region 1, part 3
 
@@ -34,6 +35,7 @@ define sharki = Character('Рабочий Шарки', color="#FED11B")
 define mayor = Character('Мэр Минина', color="#FED11B")
 define chris = Character('Нефтяник Крис', color="#FED11B") 
 define rid = Character('Рабочий Рид', color="#FED11B")
+define bob = Character('Пройдоха Боб', color="#FED11B")
 
 # Region 1, part 4
 

@@ -1072,3 +1072,188 @@ label minin5th_nl:
     jump r1m4start
 
 # With Lisa route
+
+label r1m3withlisa:
+
+    play music "music/bar.ogg" fadeout 1.0
+    scene bg_pesht with fade
+
+    $ UpdateTownInfo("City", "Пешт", "free_traders_alliance")
+
+    "Приехав в Пешт вы подходите к одному из местных жителей."
+
+    show pguard at left with dissolve
+
+    "Он начинает разговор первым."
+
+    pguard "Вижу, тебя заботит вопрос?"
+
+    show mc5 at right, stretch_in
+
+    mc "Я ищу девушку, вот такого примерно роста, красивая, на своей машине. Индивидуальный дизайн. Необычная расцветка. Назвалась Лисой."
+
+    hide pguard
+    show pguard at left, stretch_in
+
+    pguard "Твоя подруга?"
+
+    mc "Нет. Просто она знает кое-что, что мне бы очень хотелось услышать."
+
+    pguard "Знаю я эту девицу. Вообще-то я бы не советовал никому с ней связываться."
+
+    hide mc5
+    show mcsurp at right, stretch_in
+
+    mc "А что так?"
+
+    pguard "Большие люди за ней стоят. И опасные."
+
+    mc "Ты меня не пугай! Расскажи лучше, что знаешь."
+
+    pguard "Она часто здесь бывает по своим делам. В основном, проезжает мимо."
+    pguard "Последний раз, совсем недавно,  она направлялась на восток. И опять таки, я бы не советовал ее преследовать в этом направлении."
+
+    mc "Что там ещё?"
+
+    pguard "Там находится база бандитов. Довольно крупная и хорошо укрепленная. А бандиты понимают только язык оружия. Хватит ли у тебя сил потягаться с ними? Не уверен."
+
+    mc "Раз другого пути нет, придется мне ехать. Так что, не поминайте лихом."
+
+    hide mcsurp
+    hide pguard
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight from _call_randomfight_34
+
+    jump base51lisa
+
+label base51lisa:
+
+    play music "music/town4.ogg" fadeout 1.0
+    scene bg_base51 with fade
+
+    $ UpdateTownInfo("Village", "База 51", "brigade")
+
+    "Приехав на бандитскую базу на вас бросаются взгляды едва ли не всех, кто там находится."
+
+    show bobbase51 at right, stretch_in
+
+    bob "Чего тебе?"
+
+    show mc_2 at left, stretch_in
+
+    mc "Мне нужна Лиса!"
+
+    bob "Всем нужна Лиса. Да только она никому не дается. Ха-ха-ха!"
+
+    mc "Я знаю, что она у вас. И не уеду без нее!"
+
+    bob "А кто тебе сказал, что ты отсюда вообще уедешь?"
+    bob "Мы вообще-то страшные бандиты, если ты не заметил!"
+    bob "Ну что, ребята, научим этого наглеца манерам?"
+
+    mc "Да будь ты хоть сам Сатана, мне плевать. Я получу, то за чем пришел!"
+
+    hide bobbase51 with dissolve
+    hide mc_2 with dissolve
+
+    "После этого вы начинаете бой."
+
+    $ TownType = "NotInCity"
+
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = "base51fight"
+    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_max_hp = player_hp
+    $ enemy_hp = 650
+    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ max_heals = 20 
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Бандиты"
+    $ bgname = "bg_base51fight"
+    $ EnemyType = "Regular"
+
+    scene bg_base51fight
+    show base51fight at center
+
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        
+        hide base51fight
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+
+        play sound "sfx/explosion04.wav"
+        hide base51fight with dissolve
+
+        jump base51afterfight
+
+label base51afterfight:
+
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/driving{randommus}.ogg", channel='music')
+
+    scene bg_base51 with dissolve
+
+    show bob at right
+    show mc4 at left
+
+    bob "А ты отчаянный парень, как я погляжу."
+    bob "Не хочешь работать с нами в команде? Нам бы пригодился такой псих, как ты."
+
+    hide mc4
+    show mc6 at left, stretch_in
+
+    mc "Мне не до вас с вашими мерзкими бандитскими делами! Я ищу убийцу моего отца!"
+
+    bob "Лучше у тебя на пути не стоять."
+    bob "Лиса была здесь недавно с посланием от своего шефа. Но она явно торопилась и, как только покончила с делами, сразу же уехала."
+
+    hide mc6
+    show mc_2 at left, stretch_in
+
+    mc "Вы знаете куда?"
+
+    bob "Она не говорила напрямую, но, похоже, ей была нужна какая-то хитрая аппаратура."
+    bob "А достать такую можно только в Мидгарде, как я слышал."
+
+    "Вам ничего не остаётся, кроме как отправиться в Мидгард."
+
+    if random.random() <= 0.3:
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight from _call_randomfight_35
+
+    jump r1m2withlisa

@@ -1044,11 +1044,11 @@ label KventinZaimka:
 
     "Вы ставите новое вооружение на свою машину и едете к Феликсу..."
 
-    "У вас есть возможность продать оружие \"Шершень\". Продажа принесёт вам 260 монет."
-
     jump felixbase
 
 label felixbase:
+
+    $ TownType = "NotInCity"
 
     scene bg_felixbase with fade
 
