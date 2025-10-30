@@ -1190,8 +1190,12 @@ label felixdefeated:
     "Вы неудовлетворены таким ответом..."
 
     hide mc3
+    hide felix
+
+    $ renpy.show("bg", what=Image("images/bgs/r1m1/bg_felixdlg.jpg"), at_list=[Shake(None, 1.0, dist=7)])
 
     show mchar at right, stretch_in
+    show felix at left
 
     mc "ТЫ ЛЖЁШЬ!"
 

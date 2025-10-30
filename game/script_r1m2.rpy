@@ -760,6 +760,7 @@ label lisasavedporto:
 
     $ renpy.scene()
     $ renpy.show(f"bg_lr_1_{CurrentCar}_{CurrentGun}")
+    $ renpy.with_statement(fade)
 
     lisa "Ты? Что ты здесь делаешь?"
     lisa "Ты всё испортил..."
@@ -854,5 +855,3 @@ label lisasavedporto:
     scene black with fade
     
     jump asgardtunnel
-
-    # TODO: Make screenshots for scenes 3-6
