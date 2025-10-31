@@ -6,6 +6,17 @@ image loading_3 = "gui/loading/loading_3.jpg"
 image loading_4 = "gui/loading/loading_4.jpg"
 image loading_5 = "gui/loading/loading_5.jpg"
 image loading_6 = "gui/loading/loading_6.jpg"
+image loadinglvl0 = "gui/loadinglvl/loadinglvl0.png"
+image loadinglvl1 = "gui/loadinglvl/loadinglvl1.png"
+image loadinglvl2 = "gui/loadinglvl/loadinglvl2.png"
+image loadinglvl3 = "gui/loadinglvl/loadinglvl3.png"
+image loadinglvl4 = "gui/loadinglvl/loadinglvl4.png"
+image loadinglvl5 = "gui/loadinglvl/loadinglvl5.png"
+image loadinglvl6 = "gui/loadinglvl/loadinglvl6.png"
+image bg_r1m1load = "gui/loadinglvl/splashes/bg_r1m1load.png"
+image bg_r1m2load = "gui/loadinglvl/splashes/bg_r1m2load.png"
+image bg_r1m3load = "gui/loadinglvl/splashes/bg_r1m3load.png"
+image bg_r1m4load = "gui/loadinglvl/splashes/bg_r1m4load.png"
 
 # Backgrounds: r1m1
 

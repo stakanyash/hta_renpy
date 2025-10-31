@@ -416,9 +416,33 @@ label start:
         },
     }
 
-    call screen name_input_screen
-    call screen difficulty_select
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+
     jump tutorial_check
+
+label show_loading(load_slides):
+    python:
+        import random
+
+        total_time = random.uniform(4.0, 7.0)
+        num_slides = len(load_slides)
+
+        weights = [random.random() for _ in range(num_slides)]
+        weight_sum = sum(weights)
+        pauses = [total_time * w / weight_sum for w in weights]
+
+        for i, slide in enumerate(load_slides):
+            renpy.show(slide, at_list=[truecenter])
+            renpy.pause(pauses[i], hard=True)
+            renpy.hide(slide)
+
+    return
 
 label randomfight:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
@@ -480,21 +504,21 @@ label randomfight:
         if drops:
             python:
                 drop_names_text = []
+                not_added_items = []
                 dropped_something = False
-                no_space_warning_shown = False
 
                 for drop_id, drop_name in drops:
                     if try_add_item(drop_id) == True:
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
-                        if not no_space_warning_shown:
-                            renpy.say(None, "В вашем инвентаре не хватает места!")
-                            no_space_warning_shown = True
+                        not_added_items.append(drop_name)
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
                     renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
+                elif not_added_items:
+                    renpy.say(None, "В вашем инвентаре не хватает места!")
                 
         return
 
@@ -615,6 +639,11 @@ label tutorial_continue:
 
     "Теперь вы готовы. Осталось одно - выжить в этом мире."
     "Удачи. Она вам пригодится."
+
+    hide mc3
+    scene black with dissolve
+
+    pause 0.5
 
     jump main_game
 

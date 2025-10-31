@@ -58,7 +58,7 @@ label homersearch:
 
     "Вы начали искать Гомера в рыбацких посёлках."
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -79,7 +79,7 @@ label homersearch:
 
     mc "Мне что, придётся весь регион объездить в его поисках?!"
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -118,7 +118,7 @@ label homersearch:
 
     hide mcsurp
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.choice([1, 2, 7])   
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -194,7 +194,7 @@ label homersearch:
 
     "Вы поехали к месту, указанному Гомером."
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -404,7 +404,7 @@ label galdenquest:
             $ TownType = "NotInCity"
             hide mcsurp
 
-            if random.random() <= 0.3:
+            if random.random() <= 0.5:
                 $ randommus = random.choice([1, 2, 7])
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                 "На вас нападают!"
@@ -460,7 +460,7 @@ label r1m4SideQuest_start:
             hide wsecurity
             hide mc6
 
-            if random.random() <= 0.3:
+            if random.random() <= 0.5:
                 $ randommus = random.choice([1, 2, 7])
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                 "На вас нападают!"
@@ -651,7 +651,7 @@ label r1m4SideQuest_leaderisfree:
     mc "Я заключил договор с твоими бойцами, что освобожу тебя в обмен на одну нужную мне вещь."
     mc "И лучше бы им выполнить свою часть сделки!"
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -687,7 +687,7 @@ label r1m4SideQuest_leaderisback:
 
     $ r1m4SideQuestLeaderSaved = True
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"

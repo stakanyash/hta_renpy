@@ -3,6 +3,27 @@
 # Without Lisa route
 
 label arrivetor1m2:
+    
+    pause 0.5
+
+    show bg_r1m2load at truecenter
+
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+
+    call show_loading(level_slides)
+
+    scene black
+
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
+
+    play music "music/driving2.ogg" fadeout 1.0
+
+    $ TakeGunFromZaimka = "False"
 
     $ CurrentRegion = "r1m2"
     
@@ -188,7 +209,7 @@ label movetovostochnoe:
 
     $ TownType = "NotInCity"
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -245,7 +266,7 @@ label tolocus:
 
     hide mc6 with dissolve
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -448,7 +469,7 @@ label portoa:
 
     $ TownType = "NotInCity"
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -597,7 +618,7 @@ label firstmeetben:
     hide ben3 with dissolve
     hide mc5 with dissolve
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -608,6 +629,23 @@ label firstmeetben:
 # With Lisa route
 
 label r1m2withlisa:
+
+    pause 0.5
+
+    show bg_r1m2load at truecenter
+
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+
+    call show_loading(level_slides)
+
+    scene black
+
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
 
     $ CurrentRegion = "r1m2"
     $ UpdateTownInfo("City", "Мидгард", "technicians")
@@ -634,7 +672,7 @@ label r1m2withlisa:
 
     "Вы направились в Порто."
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -665,7 +703,7 @@ label portolisa:
 
     "Вы отправляетесь искать Лису по пути Порто - Мидгард."
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -846,7 +884,7 @@ label lisasavedporto:
 
     "После этого вы направились в Асгард."
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"

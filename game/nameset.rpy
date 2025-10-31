@@ -1,5 +1,9 @@
 screen name_input_screen():
-
+    frame:
+        style "name_input_overlay"
+        xfill True
+        yfill True
+    
     frame:
         style "name_input_frame"
         xalign 0.5
@@ -18,8 +22,11 @@ screen name_input_screen():
             textbutton "Подтвердить" activate_sound "audio/sfx/click.wav" action [
                 SetVariable("player_name", temp_name.strip() or "Игрок"),
                 Hide("name_input_screen"),
-                Return()
+                Show("difficulty_select")
             ] style "smaller_button" xalign 0.5
+
+style name_input_overlay is default:
+    background "#0000007e"
 
 style name_input_frame is default:
     background Frame("gui/frame.png", 20, 20)
@@ -31,7 +38,6 @@ style centered_input is input:
     textalign 0.5
     size 28
     color "#404040"
-    background "#0008"
     padding (10, 10)
 
 style smaller_button is button:

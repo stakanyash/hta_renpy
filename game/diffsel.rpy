@@ -1,5 +1,8 @@
 screen difficulty_select():
-    tag menu
+    zorder 100
+    modal True
+    
+    add "#0000007e"
 
     frame:
         style_prefix "menu"
@@ -21,27 +24,26 @@ screen difficulty_select():
             textbutton "Новичок" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button" action [
                 SetVariable("difficulty", "easy"),
                 SetVariable("difficulty_base_multiplier", 0.01),
-                Return()
+                Start()
             ]
             textbutton "Бывалый" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button" action [
                 SetVariable("difficulty", "normal"),
                 SetVariable("difficulty_base_multiplier", 0.025),
-                Return()
+                Start()
             ]
             textbutton "Профессионал" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button" action [
                 SetVariable("difficulty", "hard"),
                 SetVariable("difficulty_base_multiplier", 0.03),
-                Return()
+                Start()
             ]
             textbutton "Мастер" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button" action [
                 SetVariable("difficulty", "expert"),
                 SetVariable("difficulty_base_multiplier", 0.045),
-                Return()
+                Start()
             ]
 
-init -2:
-    style diff_button_text is default:
-        color "#404040"
-        hover_color "#ffcc00"
-        selected_color "#404040"
-        selected_hover_color "#ffcc00"
+style diff_button_text is default:
+    color "#404040"
+    hover_color "#ffcc00"
+    selected_color "#404040"
+    selected_hover_color "#ffcc00"

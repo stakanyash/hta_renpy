@@ -1,6 +1,12 @@
-# TODO: Make a video cutscene when leaving to r1m3
-
 label main_game:
+
+    pause 0.5
+
+    show bg_r1m1load at truecenter
+
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+
+    call show_loading(level_slides)
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True
@@ -8,6 +14,8 @@ label main_game:
     $ config.keymap['load'] = ['load']
     $ config.keymap['game_menu'] = ['game_menu']
     $ persistent._in_battle = False
+
+    hide bg_r1m1load
 
     play music "music/bio07unloop.ogg" fadeout 1.0
 
@@ -165,7 +173,7 @@ label firstenemyfight:
                     drop_names_str = ", ".join(drop_names_text)
                     renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
 
-        if random.randint(1,2) == 1:
+        if random.random() <= 0.5:
             $ randommus = random.randint(1, 2)
             $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
             "На вас нападают!"
@@ -230,7 +238,7 @@ label lisaagree:
 
     "Вы поехали по соседним деревням. Сначала решили заехать в Заимку."
 
-    if random.randint(1,2) == 1:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -359,7 +367,7 @@ label tozaimka:
 
     hide lisa2 with dissolve
 
-    if random.randint(1,2) == 1:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -393,6 +401,13 @@ label tozaimka:
 
     "Лиса явно раздражена этим ответом."
 
+    hide lisa
+    hide mc_2
+
+    $ renpy.show("bg", what=Image("images/bgs/r1m1/bg_troitckoe.jpg"), at_list=[Shake(None, 1.0, dist=7)])
+    show lisa at right
+    show mc_2 at left
+
     lisa "Так что ты мне тут голову морочишь? Как туда проехать?"
 
     mc "Вообще-то, это на север отсюда за горами, совсем недалеко, но напрямик дороги нет. Нам придётся ехать через Южный..."
@@ -419,7 +434,7 @@ label tozaimka:
 
     "Вы направились в Южный."
 
-    if random.randint(1,2) == 1:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -516,7 +531,7 @@ label sergo:
             if LisaAgreed == "False":
                 jump secondenemy
             elif LisaAgreed == "True":
-                if random.randint(1,2) == 1:
+                if random.random() <= 0.5:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                     "На вас нападают!"
@@ -780,7 +795,7 @@ label deadfather:
 
     "Полностью раздосадованный вы уезжаете обратно в Южный."
 
-    if random.randint(1,2) == 1:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -845,7 +860,7 @@ label dyingfather:
 
     mc "Может быть, в Южном слышали о нём?"
 
-    if random.randint(1,2) == 1:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -941,7 +956,7 @@ label sowthagain:
                 $ TakeGunFromZaimka = "True"
                 $ renpy.save("checkpoint-4")
                 $ TownType = "NotInCity"
-                if random.randint(1,2) == 1:
+                if random.random() <= 0.5:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                     "На вас нападают!"
@@ -953,7 +968,7 @@ label sowthagain:
                 $ TakeGunFromZaimka = "False"
                 $ renpy.save("checkpoint-4")
                 $ TownType = "NotInCity"
-                if random.randint(1,2) == 1:
+                if random.random() <= 0.5:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                     "На вас нападают!"
@@ -995,7 +1010,7 @@ label sowthagain:
 
         $ TownType = "NotInCity"
 
-        if random.randint(1,2) == 1:
+        if random.random() <= 0.5:
             $ randommus = random.randint(1, 2)
             $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
             "На вас нападают!"
@@ -1244,7 +1259,7 @@ label felixdefeated:
     hide felix with dissolve
     hide mcsurp with dissolve
 
-    if random.randint(1,2) == 1:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1277,21 +1292,31 @@ label leaver1m1tovaterland:
 
     mc "Прощай, добрый человек. Не знаю, вернусь ли я, но всегда буду помнить родные места."
 
-    hide dronn
-    hide mchar
+    hide dronn with dissolve
+    hide mchar with dissolve
     
     $ TownType = "NotInCity"
+
+    scene black with fade
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
 
     jump vaterlandfirst
 
 label leaver1m1toridzin:
 
-    $ renpy.movie_cutscene("movies/leaver1m1/leaver1m1tom2_hornet.mp4")
-
-    play music "music/driving2.ogg"
-
-    $ TakeGunFromZaimka = "False"
-
-    pause 1.5
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
 
     jump arrivetor1m2

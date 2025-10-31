@@ -1,8 +1,23 @@
-# TODO: Make a video cutscene when leaving to r1m2 (high priority) and r1m1 (middle priority)
-
 # Default start-up
 
 label vaterlandfirst:
+    pause 0.5
+
+    show bg_r1m3load at truecenter
+
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+
+    call show_loading(level_slides)
+
+    scene black
+
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
+
     $ CurrentRegion = "r1m3"
 
     if LisaAgreed == "True":
@@ -114,7 +129,7 @@ label asgardboom:
     hide seller
     hide mcsurp
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -370,7 +385,7 @@ label peshtallow:
 
     $ TownType = "NotInCity"
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -808,7 +823,7 @@ label banditbaseelim:
 
             $ GotElephant = True
 
-            "Вы получили предмет \"Слон\"."
+            $ renpy.notify("Вы получили предмет \"Слон\".")
         else:
             $ GotElephant = False
     else:
@@ -816,7 +831,7 @@ label banditbaseelim:
 
     mc "Пора ехать в Минин."
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -958,7 +973,7 @@ label mayorspy:
 
     "С этой мыслью вы аккуратно покидаете место событий и уезжаете обратно в Минин."
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1000,7 +1015,7 @@ label minin4th_nl:
 
     $ TownType = "NotInCity"
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1026,7 +1041,7 @@ label oilmine2nd:
 
     "Вы грузите бочку нефти в машину и уезжаете в Минин."
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1063,7 +1078,7 @@ label minin5th_nl:
 
     $ TownType = "NotInCity"
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1122,7 +1137,7 @@ label r1m3withlisa:
     hide mcsurp
     hide pguard
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1248,12 +1263,25 @@ label base51afterfight:
     bob "Она не говорила напрямую, но, похоже, ей была нужна какая-то хитрая аппаратура."
     bob "А достать такую можно только в Мидгарде, как я слышал."
 
+    hide bob with dissolve
+    hide mc_2 with dissolve
+
     "Вам ничего не остаётся, кроме как отправиться в Мидгард."
 
-    if random.random() <= 0.3:
+    if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
         call randomfight from _call_randomfight_35
+    
+    scene black with fade
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
 
     jump r1m2withlisa

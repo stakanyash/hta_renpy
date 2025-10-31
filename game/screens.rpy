@@ -2,9 +2,8 @@
 ## Инициализация
 ################################################################################
 
-init offset = -1
-
 init python:
+    # Difficulty
     def set_difficulty(mode, multiplier):
         store.difficulty = mode
         store.difficulty_base_multiplier = multiplier
@@ -18,6 +17,13 @@ init python:
             store.difficulty_base_multiplier = persistent.difficulty_multiplier
         else:
             set_difficulty("normal", 0.03)
+
+    # Support all screen sizes by stretching the view
+
+    def stretch_view_size(w, h):
+        return (w, h)
+
+    config.adjust_view_size = stretch_view_size
 
 ################################################################################
 ## Стили
@@ -260,6 +266,8 @@ screen tutorial_prompt_call():
 
     modal True
     zorder 100
+
+    add "#0006"
 
     frame:
         xalign 0.5
@@ -507,7 +515,7 @@ screen navigation():
 
         if main_menu:
 
-            textbutton _("Новая игра") activate_sound "audio/sfx/click.wav" action [Function(renpy.transition, startfade), Start()]
+            textbutton _("Новая игра") activate_sound "audio/sfx/click.wav" action [Show("name_input_screen")]
 
         else:
 
@@ -586,7 +594,10 @@ screen main_menu():
             text "[config.version]":
                 style "main_menu_version"
 
-    text "Ex Machina RenPy - developer version 0.3.5 (251030a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    if config.developer:
+        text "Ex Machina RenPy - developer version 0.3.5 (251031a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+    else:
+        text "Ex Machina RenPy - demo version 0.3.5 (251031a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -880,7 +891,10 @@ screen about():
             text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл RenPy.\n")
             text _("Посвящен 20-летию оригинальной Ex Machina/Hard Truck Apocalypse.\n")
 
-            text _("GitHub репозиторий проекта доступен {a=https://github.com/stakanyash/hta_renpy}здесь{/a}.\n")
+            text _("Данная версия является демонстрационной, её разработка не завершена!\n")
+
+            text _("GitHub репозиторий проекта доступен {a=https://github.com/stakanyash/hta_renpy}здесь{/a}.")
+            text _("{a=https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md}Отказ от ответственности{/a}\n")
 
             text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
 
