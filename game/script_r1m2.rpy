@@ -14,6 +14,9 @@ label arrivetor1m2:
 
     scene black
 
+    $ renpy.notify("Игра сохранена в слот 1.")
+    $ renpy.save("checkpoint-1")
+
     $ _game_menu_screen = "save_screen"
     $ _menu = True
     $ config.keymap['save'] = ['save']
@@ -44,9 +47,13 @@ label arrivetor1m2:
 
     menu:
         "Атаковать охранника":
+            $ renpy.notify("Игра сохранена в слот 2.")
+            $ renpy.save("checkpoint-2")
             jump attackforloot
 
         "Двигаться дальше в Восточное":
+            $ renpy.notify("Игра сохранена в слот 2.")
+            $ renpy.save("checkpoint-2")
             jump movetovostochnoe
 
 label attackforloot:
@@ -128,9 +135,8 @@ label defeateddefender:
     if try_add_item("Hornet"):
         $ renpy.notify("В ваш инвентарь добавлен \"Шершень\".")
     else:
-        $ renpy.notify("В вашем инвентаре недостаточно места!")
         $ CurrentMoney += 65
-        "\"Шершень\" автоматически продан за 65 монет."
+        $ renpy.notify("В вашем инвентаре недостаточно места! \"Шершень\" автоматически продан за 65 монет.")
 
     if 1 <= randomgun <= 3:
         "Вы нашли оружие \"Корд\"!"
@@ -359,6 +365,9 @@ label toportoe1:
 
     play music "music/alarm1.ogg"
     scene bg_toportoe1 with dissolve
+
+    $ renpy.notify("Игра сохранена в слот 3.")
+    $ renpy.save("checkpoint-3")
 
     "Однако вы замечаете бандитскую машину."
     "Вам ничего не остаётся, кроме как начать с ней бой."
@@ -607,6 +616,9 @@ label firstmeetben:
     show ben3 at left, stretch_in
     ben "Поезжай туда, а я пока пороюсь в книгах. Может быть, придумаю что-нибудь ещё. В добрый путь."
 
+    $ renpy.notify("Игра сохранена в слот 4.")
+    $ renpy.save("checkpoint-4")
+
     mc "Отправляюсь немедленно! Спасибо за помощь."
 
     hide ben3 with dissolve
@@ -721,6 +733,9 @@ label lisanearporto:
     play music "music/intensedialogue01.ogg" fadeout 1.0
 
     scene bg_lisarescue with fade
+
+    $ renpy.notify("Игра сохранена в слот 5.")
+    $ renpy.save("checkpoint-5")
 
     "Прямо недалеко от Порто вы заметили что-то странное..."
 
@@ -886,6 +901,9 @@ label lisasavedporto:
 
     mc "Прощай. Спасибо за помощь."
 
+    $ renpy.notify("Игра сохранена в слот 6.")
+    $ renpy.save("checkpoint-6")
+
     "После этого вы направились в Асгард."
 
     if random.random() <= 0.5:
@@ -895,5 +913,13 @@ label lisasavedporto:
         call randomfight from _call_randomfight_33
 
     scene black with fade
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
     
     jump asgardtunnel

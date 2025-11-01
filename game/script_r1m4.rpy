@@ -16,6 +16,9 @@ label r1m4start:
     $ config.keymap['game_menu'] = ['game_menu']
     $ persistent._in_battle = False
 
+    $ renpy.notify("Игра сохранена в слот 1.")
+    $ renpy.save("checkpoint-1")
+
     $ CurrentRegion = "r1m4"
     play music "music/driving7.ogg" fadeout 1.0
 
@@ -146,6 +149,9 @@ label homersearch:
     play music "music/bar.ogg" fadeout 1.0
     scene bg_saliniom with fade
 
+    $ renpy.notify("Игра сохранена в слот 2.")
+    $ renpy.save("checkpoint-2")
+
     "Приехав в Салиниом вы подходите к человеку, который подходит под описание Гомера."
 
     show homer at left with dissolve
@@ -246,6 +252,8 @@ label tokranfight:
     
     mc "О господи! Это что ещё за...?"
     mc "Зачем только людям древности нужны были такие машины?"
+    $ renpy.notify("Игра сохранена в слот 3.")
+    $ renpy.save("checkpoint-3")
     mc "Этот монстр охраняет проезд к Морским Вратам."
     mc "Мне нужно как-то справиться с ним..."
 
@@ -308,6 +316,9 @@ label tokranfight:
         stop sfx2 fadeout 1.0
 
         scene bg_bosskran_dead
+
+        $ renpy.notify("Игра сохранена в слот 4.")
+        $ renpy.save("checkpoint-4")
 
         mc "Чудище повержено. Пора двигаться дальше."
 
@@ -431,6 +442,8 @@ label galdenquest:
 
     menu:
         "Согласиться":
+            $ renpy.notify("Игра сохранена в слот 5.")
+            $ renpy.save("checkpoint-5")
             $ r1m4SideQuest = "Taken"
             mc "Хорошо, я попробую разобраться."
             hide galden with dissolve
@@ -447,6 +460,8 @@ label galdenquest:
             jump r1m4SideQuest_start
 
         "Отказать":
+            $ renpy.notify("Игра сохранена в слот 5.")
+            $ renpy.save("checkpoint-5")
             $ r1m4SideQuest = "Failed"
             mc "Мне это неинтересно."
             hide galden with dissolve
@@ -488,6 +503,8 @@ label r1m4SideQuest_start:
 
     menu:
         "Освободить лидера":
+            $ renpy.notify("Игра сохранена в слот 6.")
+            $ renpy.save("checkpoint-6")
             mc "Хорошо, я помогу вам. Где ваш лидер?"
             wsec "Знали бы, сами освободили. Это и есть твоя основная задача - узнать, где он."
             mc "Ладно, попробую всё выяснить."
@@ -503,6 +520,8 @@ label r1m4SideQuest_start:
             jump r1m4SideQuest_whereisleader
 
         "Отбить склад силой":
+            $ renpy.notify("Игра сохранена в слот 6.")
+            $ renpy.save("checkpoint-6")
             mc "Слишком это хлопотно, проще убить вас всех."
             hide wsecurity
             hide mc6
@@ -618,6 +637,9 @@ label r1m4SideQuest_freeleader:
 
     extguard "Все к орудиям! Покажем этому наглецу, как связываться со служителями порядка!"
 
+    $ renpy.notify("Игра сохранена в слот 1.")
+    $ renpy.save("checkpoint-1")
+
     mc "Вы сами этого захотели. Главное - не задеть прицеп с пленником. Все остальные пусть горят синим пламенем!"
 
     play music "music/battle7.ogg"
@@ -707,7 +729,7 @@ label r1m4SideQuest_leaderisback:
 
     mc "Теперь и вы держите своё. Освобождайте склад."
 
-    $ RandomR1M4SQReward = random.randint(2000, 4000)
+    $ RandomR1M4SQReward = random.randint(1000, 3000)
     $ CurrentMoney += RandomR1M4SQReward
     $ renpy.notify(f"Вы получили {RandomR1M4SQReward} монет.")
 
@@ -754,6 +776,9 @@ label r1m4SideQuest_finish:
     galden "Отлично! Вот тебе награда."
 
     mc "Супер!"
+
+    $ renpy.notify("Игра сохранена в слот 2.")
+    $ renpy.save("checkpoint-2")
 
     hide galden with dissolve
 

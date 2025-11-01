@@ -158,6 +158,8 @@ label mvillage:
     miner "..."
     hide miner
     show miner at left, stretch_in
+    $ renpy.notify("Игра сохранена в слот 1.")
+    $ renpy.save("checkpoint-1")
     miner "Опять эти бандиты нападают!"
 
     hide mc5
@@ -269,6 +271,8 @@ label brigdedestroy:
     play music "music/alarm2.ogg" fadeout 1.0
 
     "Подъехав к мосту вы заметили бандитские машины."
+    $ renpy.notify("Игра сохранена в слот 2.")
+    $ renpy.save("checkpoint-2")
     mc "Видимо, чтобы осуществить свою задачу нужно их уничтожить, но куда деваться..."
 
     play music "music/battle2.ogg"
@@ -626,6 +630,8 @@ label hundredcointosharki:
 
             jump oilmine1st
         "\"У меня пока нет денег...\"" if R1M3FarmCount <= 5:
+            $ renpy.notify("Игра сохранена в слот 3.")
+            $ renpy.save("checkpoint-3")
             mc "У меня пока нет денег."
 
             hide mworker
@@ -661,6 +667,9 @@ label oilmine1st:
     play music "music/alarm1.ogg"
     
     "Приехав к нефтянной вышке вы действительно видите множество бандитов."
+
+    $ renpy.notify("Игра сохранена в слот 3.")
+    $ renpy.save("checkpoint-3") # Don't change number of checkpoint!!!
 
     "Между вами начинается вполне ожидаемая битва."
 
@@ -752,6 +761,8 @@ label followlastone:
     play music "music/battle2.ogg"
 
     "Приехав на базу вас сразу начали атаковать три машины."
+    $ renpy.notify("Игра сохранена в слот 4.")
+    $ renpy.save("checkpoint-4")
     mc "Всё таки заметил..."
 
     $ _window_hide()
@@ -1030,6 +1041,9 @@ label minin5th_nl:
 
     mc "Прощайте."
 
+    $ renpy.notify("Игра сохранена в слот 5.")
+    $ renpy.save("checkpoint-5")
+
     "Вы направились вслед за караваном в соседний регион."
 
     $ TownType = "NotInCity"
@@ -1141,6 +1155,9 @@ label base51lisa:
     hide bobbase51 with dissolve
     hide mc_2 with dissolve
 
+    $ renpy.notify("Игра сохранена в слот 6.")
+    $ renpy.save("checkpoint-6")
+
     "После этого вы начинаете бой."
 
     $ TownType = "NotInCity"
@@ -1251,3 +1268,27 @@ label base51afterfight:
     $ persistent._in_battle = True
 
     jump r1m2withlisa
+
+label asgardtunnel:
+    pause 0.5
+
+    show bg_r1m3load at truecenter
+
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+
+    call show_loading(level_slides)
+
+    scene black
+
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
+
+    $ CurrentRegion = "r1m3"
+
+    "..."
+
+    return

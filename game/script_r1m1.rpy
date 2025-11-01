@@ -17,6 +17,7 @@ label main_game:
 
     hide bg_r1m1load
 
+    $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
 
     play music "music/bio07unloop.ogg" fadeout 1.0
@@ -101,6 +102,7 @@ label main_game:
 
     scene bg_firstenemy with fade
 
+    $ renpy.notify("Игра сохранена в слот 2.")
     $ renpy.save("checkpoint-2")
 
     "Однако вы замечаете на своём пути явно недружественный автомобиль."
@@ -221,11 +223,13 @@ label afterfirstattack:
 
     menu:
         "Согласиться":
+            $ renpy.notify("Игра сохранена в слот 3.")
             $ renpy.save("checkpoint-3")
             $ LisaAgreed = "True"
             jump lisaagree
 
         "Отказать":
+            $ renpy.notify("Игра сохранена в слот 3.")
             $ renpy.save("checkpoint-3")
             $ LisaAgreed = "False"
             jump lisarefuse
@@ -268,6 +272,7 @@ label secondenemy:
 
     "Однако не успели вы отъехать от Южного как на вас снова нападает бандит. Только в этот раз он уже чутка серьёзнее Клопа."
 
+    $ renpy.notify("Игра сохранена в слот 4.")
     $ renpy.save("checkpoint-4")
 
     "Вам ничего не остаётся, кроме как начать с ним перестрелку."
@@ -522,6 +527,7 @@ label sergo:
 
     menu:
         "Согласиться":
+            $ renpy.notify("Игра сохранена в слот 5.")
             $ renpy.save("checkpoint-5")
             mc "Садись, показывай дорогу…"
             hide farmerdi with dissolve
@@ -541,6 +547,7 @@ label sergo:
                 jump dickzapravka
 
         "Отказать":
+            $ renpy.notify("Игра сохранена в слот 5.")
             $ renpy.save("checkpoint-5")
             mc "Нет, слишком далеко ехать. Меня дома ждут."
             hide farmerdi
@@ -617,7 +624,7 @@ label felixmeet:
     unknown "За скромный вклад в 1000 монет ты можешь продолжать свои грязные делишки и даже рассчитывать на нашу поддержку."
 
     $ renpy.save("checkpoint-6")
-    $ renpy.notify("Игра сохранена.")
+    $ renpy.notify("Игра сохранена в слот 6.")
     jump felixbeforefight
 
 label felixbeforefight:
@@ -792,6 +799,7 @@ label deadfather:
 
     mc "Он бывает в баре Южного. Там я и начну поиски."
 
+    $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
 
     hide mc3 with dissolve
@@ -861,6 +869,7 @@ label dyingfather:
 
     mc "Кто бы это ни был, надеюсь, он поможет мне обрести себя."
 
+    $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
 
     mc "Может быть, в Южном слышали о нём?"
@@ -958,6 +967,7 @@ label sowthagain:
 
         menu:
             "Ехать в Заимку":
+                $ renpy.notify("Игра сохранена в слот 2.")
                 $ renpy.save("checkpoint-2")
                 $ TakeGunFromZaimka = "True"
                 $ TownType = "NotInCity"
@@ -970,6 +980,7 @@ label sowthagain:
                 jump KventinZaimka
 
             "Ехать сразу к Феликсу":
+                $ renpy.notify("Игра сохранена в слот 2.")
                 $ renpy.save("checkpoint-2")
                 $ TakeGunFromZaimka = "False"
                 $ TownType = "NotInCity"
@@ -1074,6 +1085,7 @@ label felixbase:
 
     play music "music/intensedialogue01.ogg" fadeout 1.0
 
+    $ renpy.notify("Игра сохранена в слот 3.")
     $ renpy.save("checkpoint-3")
 
     "Приехав на базу Феликса вы видите множество машин, но вас это нисколько не пугает."
@@ -1119,7 +1131,7 @@ label felixbase:
     felix "Ладно, хочешь сделать что-то хорошо - делай это сам. Посторонись!"
 
     $ renpy.save("checkpoint-4")
-    $ renpy.notify("Игра сохранена.")
+    $ renpy.notify("Игра сохранена в слот 4.")
 
     "Вы снова начинаете бой с Феликсом."
 
@@ -1192,6 +1204,7 @@ label felixdefeated:
 
     show mc3 at right with dissolve
 
+    $ renpy.notify("Игра сохранена в слот 5.")
     $ renpy.save("checkpoint-5")
 
     mc "Теперь ты умрёшь за свои злодеяния!"
@@ -1298,6 +1311,7 @@ label leaver1m1tovaterland:
     dronn "Вот, возьми: эти деньги я как раз собрал, чтобы заплатить очередные бандитские поборы."
     dronn "Я даю их тебе в знак благодарности. Ты также можешь оставить себе моё оружие. Желаю тебе удачи в долгом и опасном путешествии."
 
+    $ renpy.notify("Игра сохранена в слот 6.")
     $ renpy.save("checkpoint-6")
 
     mc "Прощай, добрый человек. Не знаю, вернусь ли я, но всегда буду помнить родные места."
