@@ -44,13 +44,9 @@ label arrivetor1m2:
 
     menu:
         "Атаковать охранника":
-            $ renpy.save("checkpoint-6")
-            $ CurrentGun = "Hornet"
             jump attackforloot
 
         "Двигаться дальше в Восточное":
-            $ renpy.save("checkpoint-6")
-            $ CurrentGun = "Hornet"
             jump movetovostochnoe
 
 label attackforloot:
@@ -365,8 +361,6 @@ label toportoe1:
     scene bg_toportoe1 with dissolve
 
     "Однако вы замечаете бандитскую машину."
-    $ renpy.save("checkpoint-1")
-    $ renpy.notify("Игра сохранена.")
     "Вам ничего не остаётся, кроме как начать с ней бой."
 
     play music "music/battle1.ogg"
@@ -623,6 +617,16 @@ label firstmeetben:
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
         call randomfight from _call_randomfight_14
+
+    scene black with fade
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
 
     jump vaterlandfirst
 

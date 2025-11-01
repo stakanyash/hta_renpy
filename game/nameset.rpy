@@ -1,9 +1,11 @@
 screen name_input_screen():
+    # Затемнение фона
     frame:
         style "name_input_overlay"
         xfill True
         yfill True
     
+    # Окно ввода имени
     frame:
         style "name_input_frame"
         xalign 0.5
@@ -25,8 +27,9 @@ screen name_input_screen():
                 Show("difficulty_select")
             ] style "smaller_button" xalign 0.5
 
+# Стиль для затемнения
 style name_input_overlay is default:
-    background "#0000007e"
+    background "#0000007e"  # Черный с прозрачностью 40%
 
 style name_input_frame is default:
     background Frame("gui/frame.png", 20, 20)

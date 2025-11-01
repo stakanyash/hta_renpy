@@ -2,6 +2,7 @@ screen difficulty_select():
     zorder 100
     modal True
     
+    # Затемнение фона
     add "#0000007e"
 
     frame:

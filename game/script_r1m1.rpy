@@ -17,6 +17,8 @@ label main_game:
 
     hide bg_r1m1load
 
+    $ renpy.save("checkpoint-1")
+
     play music "music/bio07unloop.ogg" fadeout 1.0
 
     scene black with fade
@@ -99,6 +101,8 @@ label main_game:
 
     scene bg_firstenemy with fade
 
+    $ renpy.save("checkpoint-2")
+
     "Однако вы замечаете на своём пути явно недружественный автомобиль."
 
     jump firstenemyfight
@@ -114,7 +118,7 @@ label firstenemyfight:
     $ enemy_image = "firsteverenemy"
     $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = 250
+    $ enemy_hp = 80
     $ bgname = "bg_firsteverenemy"
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 15 
@@ -184,16 +188,15 @@ label firstenemyfight:
 label afterfirstattack:
 
     scene bg_sowth with fade
+    play music "music/passage01unloop.ogg" fadeout 0.5
 
     "По пути вы разделались ещё с парой бандитов, однако у Южного вам повстречалась очень интересная персона..."
-
-    play music "music/passage01unloop.ogg" fadeout 0.5
 
     show lisa2 with dissolve
 
     lisa "Добрый день, юноша. Есть минутка?"
 
-    "Я был немного ошарашен и волнительно спросил..."
+    mc "\"Я был немного ошарашен и волнительно спросил...\""
 
     show lisa2 at right with dissolve
     show mc_2 at left with dissolve
@@ -202,7 +205,7 @@ label afterfirstattack:
 
     lisa "Я смотрю, ты крутой водила, наверное, всю округу исколесил? Мне бы один груз помочь довезти, а я плохо знаю местность. Не съездишь со мной по окрестным деревням?"
 
-    "Я только сел за руль и меня первая встречная девушка называет крутым водилой? Что-то тут не так..."
+    mc "\"Я только сел за руль и меня первая встречная девушка называет крутым водилой? Что-то тут не так...\""
 
     mc "А что, собственно, за груз?"
 
@@ -212,18 +215,18 @@ label afterfirstattack:
 
     lisa "Да какая тебе разница? Дельце плёвое, а заплачу я хорошо."
 
-    "Стоит ли мне в начале моей карьеры связываться с бандитами? Вовек потом не отмоешься!"
+    mc "\"Стоит ли мне в начале моей карьеры связываться с бандитами? Вовек потом не отмоешься!\""
 
     lisa "Чего так крепко задумался? Согласен?"
 
     menu:
         "Согласиться":
-            $ renpy.save("checkpoint-2")
+            $ renpy.save("checkpoint-3")
             $ LisaAgreed = "True"
             jump lisaagree
 
         "Отказать":
-            $ renpy.save("checkpoint-2")
+            $ renpy.save("checkpoint-3")
             $ LisaAgreed = "False"
             jump lisarefuse
 
@@ -238,12 +241,6 @@ label lisaagree:
 
     "Вы поехали по соседним деревням. Сначала решили заехать в Заимку."
 
-    if random.random() <= 0.5:
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
-        call randomfight from _call_randomfight_1
-
     jump secondenemy
 
 label lisarefuse:
@@ -257,7 +254,7 @@ label lisarefuse:
 
     play music "music/driving1.ogg" fadeout 0.5
 
-    "Странно всё это... Не важно. Пойду искать Серго."
+    mc "\"Странно всё это... Не важно. Пойду искать Серго.\""
 
     play music "music/town1.ogg" fadeout 1.0
 
@@ -270,6 +267,8 @@ label secondenemy:
     play music "music/alarm1.ogg" fadeout 0.5
 
     "Однако не успели вы отъехать от Южного как на вас снова нападает бандит. Только в этот раз он уже чутка серьёзнее Клопа."
+
+    $ renpy.save("checkpoint-4")
 
     "Вам ничего не остаётся, кроме как начать с ним перестрелку."
 
@@ -285,7 +284,7 @@ label secondenemy:
     $ enemy_image = "secenemy"
     $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = 500
+    $ enemy_hp = 125
     $ bgname = "bg_secondenemy"
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 15 
@@ -523,6 +522,7 @@ label sergo:
 
     menu:
         "Согласиться":
+            $ renpy.save("checkpoint-5")
             mc "Садись, показывай дорогу…"
             hide farmerdi with dissolve
             hide mcsurp with dissolve
@@ -541,6 +541,7 @@ label sergo:
                 jump dickzapravka
 
         "Отказать":
+            $ renpy.save("checkpoint-5")
             mc "Нет, слишком далеко ехать. Меня дома ждут."
             hide farmerdi
             show farmerdi at left, stretch_in
@@ -551,7 +552,7 @@ label sergo:
             hide mcsurp with dissolve
 
             "Вы спокойно уходите, а Фермер продолжает ругаться на вас в след."
-            "Странный какой-то тип. Не зря я ему отказал."
+            mc "\"Странный какой-то тип. Не зря я ему отказал.\""
             if LisaAgreed == "True":
                 $ TownType = "NotInCity"
                 jump felixmeet
@@ -615,7 +616,7 @@ label felixmeet:
 
     unknown "За скромный вклад в 1000 монет ты можешь продолжать свои грязные делишки и даже рассчитывать на нашу поддержку."
 
-    $ renpy.save("checkpoint-3")
+    $ renpy.save("checkpoint-6")
     $ renpy.notify("Игра сохранена.")
     jump felixbeforefight
 
@@ -660,7 +661,7 @@ label felixbeforefight:
             $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
             $ player_max_hp = player_hp
             $ max_heals = 20
-            $ enemy_hp = player_hp * 0.7
+            $ enemy_hp = 225
             $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
             $ turn_count = 0
             $ enemy_max_hp = enemy_hp
@@ -791,6 +792,8 @@ label deadfather:
 
     mc "Он бывает в баре Южного. Там я и начну поиски."
 
+    $ renpy.save("checkpoint-1")
+
     hide mc3 with dissolve
 
     "Полностью раздосадованный вы уезжаете обратно в Южный."
@@ -857,6 +860,8 @@ label dyingfather:
     mc "Мне больше нечего здесь делать. Я отправлюсь на поиски Бена."
 
     mc "Кто бы это ни был, надеюсь, он поможет мне обрести себя."
+
+    $ renpy.save("checkpoint-1")
 
     mc "Может быть, в Южном слышали о нём?"
 
@@ -953,8 +958,8 @@ label sowthagain:
 
         menu:
             "Ехать в Заимку":
+                $ renpy.save("checkpoint-2")
                 $ TakeGunFromZaimka = "True"
-                $ renpy.save("checkpoint-4")
                 $ TownType = "NotInCity"
                 if random.random() <= 0.5:
                     $ randommus = random.randint(1, 2)
@@ -965,8 +970,8 @@ label sowthagain:
                 jump KventinZaimka
 
             "Ехать сразу к Феликсу":
+                $ renpy.save("checkpoint-2")
                 $ TakeGunFromZaimka = "False"
-                $ renpy.save("checkpoint-4")
                 $ TownType = "NotInCity"
                 if random.random() <= 0.5:
                     $ randommus = random.randint(1, 2)
@@ -1069,6 +1074,8 @@ label felixbase:
 
     play music "music/intensedialogue01.ogg" fadeout 1.0
 
+    $ renpy.save("checkpoint-3")
+
     "Приехав на базу Феликса вы видите множество машин, но вас это нисколько не пугает."
 
     mc "Я отомщу за смерть отца!"
@@ -1111,7 +1118,7 @@ label felixbase:
 
     felix "Ладно, хочешь сделать что-то хорошо - делай это сам. Посторонись!"
 
-    $ renpy.save("checkpoint-5")
+    $ renpy.save("checkpoint-4")
     $ renpy.notify("Игра сохранена.")
 
     "Вы снова начинаете бой с Феликсом."
@@ -1131,12 +1138,11 @@ label felix_battle:
         $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
         $ player_max_hp = player_hp
         $ max_heals = 10
-        $ enemy_hp = player_hp * 2
     elif TakeGunFromZaimka == "False":
         $ player_hp = int(CarHP.get(CurrentCar, CarHP["Van"])) - 350
         $ player_max_hp = 850
         $ max_heals = 20
-        $ enemy_hp = player_hp * 1.5
+    $ enemy_hp = 200
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 15 
     $ turn_count = 0
@@ -1185,6 +1191,8 @@ label felixdefeated:
     scene bg_felixdlg with fade
 
     show mc3 at right with dissolve
+
+    $ renpy.save("checkpoint-5")
 
     mc "Теперь ты умрёшь за свои злодеяния!"
 
@@ -1289,6 +1297,8 @@ label leaver1m1tovaterland:
     $ renpy.notify("Вы получили 250 монет.")
     dronn "Вот, возьми: эти деньги я как раз собрал, чтобы заплатить очередные бандитские поборы."
     dronn "Я даю их тебе в знак благодарности. Ты также можешь оставить себе моё оружие. Желаю тебе удачи в долгом и опасном путешествии."
+
+    $ renpy.save("checkpoint-6")
 
     mc "Прощай, добрый человек. Не знаю, вернусь ли я, но всегда буду помнить родные места."
 

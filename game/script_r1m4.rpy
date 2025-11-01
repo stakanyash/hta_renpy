@@ -1,8 +1,25 @@
 label r1m4start:
+    pause 0.5
+
+    show bg_r1m4load at truecenter
+
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+
+    call show_loading(level_slides)
+
+    scene black
+
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
+
     $ CurrentRegion = "r1m4"
+    play music "music/driving7.ogg" fadeout 1.0
 
     scene bg_helfirst with fade
-    play music "music/driving7.ogg" fadeout 1.0
 
     "Приехав в Хель вы сразу направились в Ольм."
 
@@ -365,6 +382,23 @@ label leaveregion1:
     scene black with fade
 
     "Конец первой главы."
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+
+    pause 1.0
+
+    $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
+    python:
+        for i in range(len(slides)):
+            renpy.show(slides[i])
+            renpy.pause(pauses[i], hard=True)
+            renpy.hide(slides[i])
 
     return
 

@@ -79,9 +79,8 @@ init python:
         return NullAction()
 
     def buy_and_clear(weapon_name):
-        try_buy_weapon(weapon_name)
-        store.selected_shop_item = None
-        return None
+        buy_weapon_with_old_handling(weapon_name)
+        renpy.set_screen_variable("selected_shop_item", None)
 
     def UpdateTownInfo(town_type, town_name, group_logo):
         global TownType, TownName, GroupLogo
@@ -89,17 +88,43 @@ init python:
         TownName = town_name
         GroupLogo = group_logo
 
+    def buy_weapon_with_old_handling(weapon_name):
+        price = smallweapon_prices.get(weapon_name) or bigweapon_prices.get(weapon_name)
+        
+        if CurrentMoney >= price:
+            old_weapon = CurrentGun
+            
+            store.CurrentGun = weapon_name
+            store.CurrentMoney -= price
+            
+            message = f"Куплено: {gun_names.get(weapon_name, weapon_name)}"
+            
+            if old_weapon and old_weapon != "None":
+                if not try_add_item(old_weapon):
+                    if TownType == "City":
+                        sell_price = ItemPricesCity.get(old_weapon, 0)
+                    else:
+                        sell_price = ItemPricesVillage.get(old_weapon, 0)
+                    
+                    store.CurrentMoney += sell_price
+                    message += f"\nИнвентарь полон! Старое оружие продано за {sell_price} монет"
+                else:
+                    message += "\nСтарое оружие добавлено в инвентарь"
+            
+            renpy.notify(message)
+            renpy.restart_interaction()
+        else:
+            renpy.notify("Недостаточно денег!")
+
 transform stretch_in:
     yzoom 0.95
     linear 0.1 yzoom 1.0
 
 label start:
 
-    $ player_name = "Игрок"
-
     $ CurrentGun = "Hornet"
     $ CurrentSecondGun = None
-    $ CurrentMoney = 0
+    $ CurrentMoney = 100
     $ CurrentCar = "Van"
     $ CurrentRegion = "r1m1"
 
@@ -459,7 +484,12 @@ label randomfight:
     $ enemy_image = f"randomenemy{enemyint}"
     $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = random.randint(150, 300)
+    if CurrentRegion == "r1m1":
+        $ enemy_hp = random.randint(80, 150)
+    elif CurrentRegion == "r1m2" or CurrentRegion == "r1m3":
+        $ enemy_hp = random.randint(120, 200)
+    elif CurrentRegion == "r1m4":
+        $ enemy_hp = random.randint(180, 300)
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
@@ -522,132 +552,6 @@ label randomfight:
                 
         return
 
-label selling:
-    if TownType == "City":
-        $ current_prices = ItemPricesCity
-    elif TownType == "Village":
-        $ current_prices = ItemPricesVillage
-
-    $ sale_list = [f"{ItemNames[item]}" for item in Inventory if item in current_prices and item in ItemNames]
-    $ sale_text = ", ".join(sale_list)
-    $ total_value = sum([current_prices[item] for item in Inventory if item in current_prices])
-
-    "В вашем инвентаре есть: [sale_text]."
-    "Хотите продать всё и получить [total_value] монет?"
-
-    menu:
-        "Продать":
-            $ CurrentMoney += total_value
-            $ Inventory.clear()
-            "Вы продали все предметы и получили [total_value] монет.\nВаш баланс: [CurrentMoney] монет."
-        "Оставить":
-            "Вы решили не продавать предметы."
-
-    return
-
-label tutorial_check:
-    $ flags = load_flags()
-
-    if not flags["tutorial"]:
-        $ need_tutorial = renpy.call_screen("tutorial_prompt_call")
-        $ flags["tutorial"] = True
-        $ save_flags(flags)
-
-        if need_tutorial:
-            jump tutorial
-        
-    jump main_game
-
-label tutorial:
-
-    play music "music/bio06.ogg" fadeout 1.0
-
-    scene bg_glukhoe with fade
-
-    show mc3 at center
-
-    "Добро пожаловать в Ex Machina/Hard Truck Apocalypse RenPy."
-    "Данная игра является фанатским переносом сюжета оригинальной Ex Machina/Hard Truck Apocalypse на движок RenPy."
-
-    "Данная игра очень сильно отличается от оригинальной Ex Machina/Hard Truck Apocalypse. Так что есть с чем ознакомиться."
-
-    "Начнём с того, что в данной игре вы не управляете грузовиком, а лишь следуете по сюжету игры."
-    "Текст, который вы сейчас читаете - расположен на диалоговом окне. Все разговоры, мысли и описания происходящего будут появляться именно здесь."
-    mc "Сейчас появилось окно с именем персонажа. Так вы будете знать, с кем говорите."
-    unknown "Незнакомцы будут помечены следующим именем."
-
-    "В данной игре есть выборы, которые могут влиять на события игры."
-    "Выглядеть они будут примерно так:"
-
-    menu:
-        "Вариант 1":
-            jump tutorial_continue
-
-        "Вариант 2":
-            jump tutorial_continue
-
-label tutorial_continue:
-    "Поэтому обдумывайте каждый свой выбор, ведь он может повлиять на доступ к событиям или концовку."
-
-    "Так-же в данной игре реализована система боёв."
-    scene tr_fight with fade
-    pause 2.0
-    "Перед вами пример интерфейса игры в состоянии боя."
-    scene tr_fight_hp with dissolve
-    pause 0.5
-    "В левом верхнем углу отображается ваше здоровье."
-    scene tr_fight_heal with dissolve
-    pause 0.5
-    "В правом верхнем углу количество оставшихся единиц лечения."
-    scene tr_fight_action with dissolve
-    pause 0.5
-    "Кнопки атаки и лечения расположены в левом нижнем углу."
-    scene tr_fight_enemyhp with dissolve
-    pause 0.5
-    "В правом нижнем углу - здоровье противника и его имя."
-    scene tr_fight_attack with dissolve
-    pause 0.5
-    "Для атаки нажмайте кнопку \"Атаковать\"."
-    scene tr_fight_healbtn with dissolve
-    pause 0.5
-    "Для лечения нажимайте кнопку \"Лечиться\"."
-    scene tr_fight with dissolve
-    pause 0.5
-    "Атака имеет 70%% шанс нанесения урона по противнику. Урон варьируется в зависимости от оружия, которое установлено на вашем грузовике. Оружие можно улучшить по сюжету."
-    "Например: стандартное оружие \"Шершень\" имеет случайный урон от 0.5%% до 1.75%% от максимального здоровья противника."
-    "Лечение случайным образом восстанавливает вам от 2%% до 10%% от вашего максимального здоровья."
-
-    scene tr_fight at Shake(None, 1.0, dist=7)
-    $ renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=7)])
-    $ renpy.sound.play(f"audio/sfx/tutorial_damage.ogg", channel="damage")
-
-    "Получение урона отнимает у вас 3%% от вашего максимального здоровья за каждый промах. Урон наносится после 5 попыток атаковать противника при наличии промаха."
-    "Т.е. если вы за 5 атак промажете 2 раза, то урон будет 6%%. Если же вам повезёт не промахнуться 10 раз подряд, то будет нанесён фиксированный урон в 7%% от вашего максимального здоровья."
-    "Поэтому победить противника без лечения - не получится."
-    "На время боя отключена возможность сохранения, загрузки сохранений и выхода в меню. Но об этом далее..."
-
-    scene tr_checkpoints with fade
-
-    "В игре реализована механика \"чекпоинтов\", которые заменяют собой встроенные в движок автосохранения."
-    "Чекпоинты создаются в критически важные моменты игры. Например: после выбора или перед боем."
-    "Для чекпоинтов имеется всего 6 слотов, которые будут перезаписываться, так что не забывайте делать ручные сохранения."
-    "Сделать это можно как в главном меню, так и с помощью нижних кнопок в окне диалога."
-    "Делать ручные сохранения во вкладку \"чекпоинтов\" нельзя."
-
-    scene bg_glukhoe with fade
-    show mc3 at center
-
-    "Теперь вы готовы. Осталось одно - выжить в этом мире."
-    "Удачи. Она вам пригодится."
-
-    hide mc3
-    scene black with dissolve
-
-    pause 0.5
-
-    jump main_game
-
-
 label titles:
 
     $ renpy.movie_cutscene("movies/titles.mp4")
@@ -667,36 +571,6 @@ label fightlost:
     else:
         mc "{cps=7}Прощайте, братцы!{/cps}"
     
-    return
-
-label shopmenu:
-    $ SelShopPoint = None
-
-    python:
-        available_cars = [
-            name for name, price in CarPrices.items()
-            if price <= CurrentMoney
-            and name != CurrentCar
-            and region_allowed(CurrentRegion, CarMinRegion.get(name, "r1m1"))
-        ]
-
-    menu:
-        "Купить автомобиль" if available_cars:
-            $ SelShopPoint = "car"
-        
-        "Купить оружие":
-            $ SelShopPoint = "weapon"
-
-        "Продать предметы из инвентаря" if Inventory:
-            $ SelShopPoint = "selling"
-
-    if SelShopPoint == "car":
-        call carshop from _call_carshop
-    elif SelShopPoint == "weapon":
-        call weaponshop from _call_weaponshop
-    elif SelShopPoint == "selling":
-        call selling from _call_selling
-
     return
 
 label carshop:
@@ -754,71 +628,3 @@ label carshop:
             return
 
     return
-
-label weaponshop:
-    $ selweashop = None
-
-    menu:
-        "Магазин маленького оружия":
-            $ selweashop = "small"
-
-        "Магазин среднего оружия":
-            $ selweashop = "big"
-
-    if selweashop == "small":
-        call smallgunweaponshop from _call_smallgunweaponshop
-    elif selweashop == "big":
-        call biggunweaponshop from _call_biggunweaponshop
-
-    return
-    
-label smallgunweaponshop:
-    python:
-        affordable_weapons = [name for name, price in smallweapon_prices.items() if price <= CurrentMoney]
-        weapon_text = ", ".join(affordable_weapons)
-    
-    "Ваших средств достаточно на: [weapon_text]."
-
-    menu:
-        "Шершень" if CurrentMoney >= 280 and CurrentGun != "Hornet":
-            $ CurrentMoney -= 280
-            $ CurrentGun = "Hornet"
-            "Вы установили оружие \"Шершень\" и отдали 280 монет.\nУ вас осталось [CurrentMoney] монет."
-
-label biggunweaponshop:
-    python:
-        affordable_weapons = [name for name, price in bigweapon_prices.items() if price <= CurrentMoney]
-        weapon_text = ", ".join(affordable_weapons)
-    
-    "Ваших средств достаточно на: [weapon_text]."
-
-    menu:
-        "Вектор" if CurrentMoney >= 5520 and CurrentGun != "Vector":
-            $ CurrentMoney -= 5520
-            $ CurrentGun = "Vector"
-            "Вы установили оружие \"Вектор\" и отдали 5520 монет.\nУ вас осталось [CurrentMoney] монет."
-
-        "Вулкан" if CurrentMoney >= 5630 and CurrentGun != "Vulcan":
-            $ CurrentMoney -= 5630
-            $ CurrentGun = "Vulcan"
-            "Вы установили оружие \"Вулкан\" и отдали 5630 монет.\nУ вас осталось [CurrentMoney] монет."  
-
-        "КПВТ" if CurrentMoney >= 6400 and CurrentGun != "KPVT":
-            $ CurrentMoney -= 6400
-            $ CurrentGun = "KPVT"
-            "Вы установили оружие \"КПВТ\" и отдали 6400 монет.\nУ вас осталось [CurrentMoney] монет."  
-
-        "Шмель" if CurrentMoney >= 13310 and CurrentGun != "Bumbleebee":
-            $ CurrentMoney -= 13310
-            $ CurrentGun = "Bumblebee"
-            "Вы установили оружие \"Шмель\" и отдали 13310 монет.\nУ вас осталось [CurrentMoney] монет."
-
-        "Ураган" if CurrentMoney >= 14910 and CurrentGun != "Hurricane":
-            $ CurrentMoney -= 14910
-            $ CurrentGun = "Hurricane"
-            "Вы установили оружие \"Ураган\" и отдали 14910 монет.\nУ вас осталось [CurrentMoney] монет."
-
-        "Флаг" if CurrentMoney >= 17860 and CurrentGun != "Flag":
-            $ CurrentMoney -= 17860
-            $ CurrentGun = "Flag"
-            "Вы установили оружие \"Флаг\" и отдали 17860 монет.\nУ вас осталось [CurrentMoney] монет."

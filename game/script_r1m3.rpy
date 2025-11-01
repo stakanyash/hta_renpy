@@ -659,9 +659,6 @@ label oilmine1st:
     scene bg_oilenemy with fade
 
     play music "music/alarm1.ogg"
-
-    $ renpy.save("checkpoint-2")
-    $ renpy.notify("Игра сохранена.")
     
     "Приехав к нефтянной вышке вы действительно видите множество бандитов."
 
@@ -731,11 +728,9 @@ label oilisfree:
 
     menu:
         "Проследить":
-            $ renpy.save("checkpoint-3")
             jump followlastone
 
         "Ехать обратно в Минин":
-            $ renpy.save("checkpoint-3")
             jump minin3rd_nl
 
 label followlastone:
@@ -757,8 +752,6 @@ label followlastone:
     play music "music/battle2.ogg"
 
     "Приехав на базу вас сразу начали атаковать три машины."
-    $ renpy.save("checkpoint-4")
-    $ renpy.notify("Игра сохранена.")
     mc "Всё таки заметил..."
 
     $ _window_hide()
@@ -845,43 +838,6 @@ label minin3rd_nl:
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
-
-    $ elprice = random.randint(19000, 28000)
-
-    $ weapon_prices = {
-        "Вектор": 5520,
-        "Вулкан": 5630,
-        "КПВТ": 6400,
-        "Шмель": 13310,
-        "Ураган": 14910,
-        "Флаг": 17860,
-    }
-
-    $ oldweapon_price = {
-        "Hornet": 280,
-        "PKT": 1670,
-        "Storm": 3450,
-        "Kord": 3680
-    }
-
-    if CurrentCar == "Molokovoz":
-        if CurrentMoney >= 19000:
-            "Ваших средств достаточно для обновления кузова и установки нового оружия."
-            "Хотите установить кузов \"Бокс\"? Цена покупки: 10000."
-            menu:
-                "Установить":
-                    $ renpy.save("checkpoint-6")
-                    $ CurrentMoney -= 10000
-                    $ CurrentCargo = "Box"  
-                    $ BigGunInstall = "Possible"
-
-                    "Вы установили кузов \"Бокс\" и отдали 10000 монет."                         
-                "Не устанавливать":
-                    $ renpy.save("checkpoint-6")
-                    $ CurrentCargo = "Tent"
-                    $ GunType = "SmlGun"
-
-                    "Вы решили не устанавливать новый кузов. На вашем балансе: [CurrentMoney] монет."
 
     "Вернувшись в Минин вы сразу идёте к мэру."
 
@@ -1083,6 +1039,16 @@ label minin5th_nl:
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
         call randomfight from _call_randomfight_20
+
+    scene black with fade
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
 
     jump r1m4start
 
