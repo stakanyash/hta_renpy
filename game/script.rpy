@@ -79,8 +79,19 @@ init python:
         return NullAction()
 
     def buy_and_clear(weapon_name):
-        buy_weapon_with_old_handling(weapon_name)
-        renpy.set_screen_variable("selected_shop_item", None)
+        global CurrentMoney, GunType
+        
+        price = smallweapon_prices.get(weapon_name) or bigweapon_prices.get(weapon_name, 0)
+        
+        if CurrentMoney >= price:
+            CurrentMoney -= price
+            
+            if weapon_name in GunDatabase:
+                GunType = GunDatabase[weapon_name]["type"]
+            
+            renpy.notify(f"Вы купили {GunDatabase[weapon_name]['name']}")
+        else:
+            renpy.notify("Недостаточно денег!")
 
     def UpdateTownInfo(town_type, town_name, group_logo):
         global TownType, TownName, GroupLogo
@@ -127,6 +138,7 @@ label start:
     $ CurrentMoney = 100
     $ CurrentCar = "Van"
     $ CurrentRegion = "r1m1"
+    $ GunType = "Firearm"
 
     $ TownType = None
     $ TownName = None
@@ -140,6 +152,11 @@ label start:
     $ R1M3FarmCount = 0
 
     $ r1m4SideQuest = "CanBeGiven"
+
+    $ GunTypeName = {
+        "Firearm": "Огнестрельное",
+        "Shotgun": "Дробовик"
+    }
 
     $ smallweapon_prices = {
         "Hornet": 280,
@@ -203,20 +220,20 @@ label start:
     }
 
     $ gun_stats = {
-        "Hornet": (4, 6),
-        "Specter": (5, 8),
-        "Storm": (30, 80),
-        "PKT": (6, 10),
-        "Vector": (10, 15),
-        "Kord": (8, 12),
-        "Hurricane": (20, 46),
-        "Vulcan": (15, 20),
-        "KPVT": (13, 18),
-        "Bumblebee": (30, 130),
-        "Flag": (50, 180),
-        "Rainmetal": (25, 70),
-        "Rapier": (25, 45),
-        "Omega": (50, 150),
+        "Hornet": (4, 7),
+        "Specter": (6, 11),
+        "PKT": (8, 14),
+        "Kord": (11, 18),
+        "Storm": (20, 55),
+        "Vector": (18, 30),
+        "Vulcan": (12, 20),
+        "KPVT": (16, 26),
+        "Rainmetal": (28, 48),
+        "Bumblebee": (35, 90),
+        "Hurricane": (22, 50),
+        "Flag": (45, 100),
+        "Rapier": (50, 85),
+        "Omega": (55, 130),
     }
 
     $ CarHP = {
@@ -335,71 +352,85 @@ label start:
         "Hornet": {
             "name": "Шершень",
             "desc": "Пулемёт калибра 5,45 - пожалуй, самое слабое автоматическое оружие, которым можно оборудовать грузовик.",
+            "type": "Firearm"
         },
 
         "Specter": {
             "name": "Спектр",
             "desc": "Спаренный пулемёт калибра 5,45. Два ствола и малое время перезарядки позволяют вести почти непрерывный огонь.",
+            "type": "Firearm"
         },
 
         "PKT": {
             "name": "ПКТ",
             "desc": "Пулемёт калибра 7,62 - с ним уже можно не бояться отправляться в недалёкое путешествие.",
+            "type": "Firearm"
         },
 
         "Kord": {
             "name": "Корд",
             "desc": "Пулемёт калибра 12,7 - достойное оружие для борца с бандитами.",
+            "type": "Firearm"
         },
 
         "Storm": {
             "name": "Шторм",
             "desc": "Дробовик наносит значительные повреждения на близком расстоянии.",
+            "type": "Shotgun"
         },
 
         "Vector": {
             "name": "Вектор",
             "desc": "Мелкокалиберная пушка - хороший выбор для начинающего путешественника.",
+            "type": "Firearm"
         },
 
         "Vulcan": {
             "name": "Вулкан",
             "desc": "Многоствольный пулемёт калибра 5,56 посылает во врага море свинца. Правда, мощная отдача может даже перевернуть небольшой автомобиль.",
+            "type": "Firearm"
         },
 
         "KPVT": {
             "name": "КПВТ",
             "desc": "Пулемёт калибра 14,5 - настоящий монстр, прошивающий тонкую броню, как бумагу.",
+            "type": "Firearm"
         },
 
         "Bumblebee": {
             "name": "Шмель",
             "desc": "Поражение значительной площади с большой скоростью - это то, что нужно честному торговцу в борьбе с шайкой бандитов.",
+            "type": "Firearm"
         },
 
         "Hurricane": {
             "name": "Ураган",
             "desc": "Это ракетница выстреливает ракеты с небольшим зарядом, но она выпускает очень много таких ракет.",
+            "type": "Firearm"
         },
 
         "Flag": {
             "name": "Флаг",
             "desc": "Тяжёлый дробовик - это веский аргумент для врагов, чтобы не подходить к вашей машине вплотную.",
+            "type": "Shotgun"
         },
 
         "Rapier": {
             "name": "Рапира",
             "desc": "Дальнобойная пушка калибра 23 мм является серьёзным оружием в умелых руках.",
+            "type": "Firearm"
         },
 
         "Rainmetal": {
             "name": "Рейнметалл",
             "desc": "Скорострельная пушка калибра 20 мм - прекрасный выбор для охоты на двуногого зверя.",
+            "type": "Firearm"
         },
 
         "Omega": {
             "name": "Омега",
             "desc": "Если враг пытается взять вас не умением, а числом, то эта пушка как раз для такого случая.",
+            "type": "Firearm"
         },
     }
 
@@ -534,21 +565,37 @@ label randomfight:
         if drops:
             python:
                 drop_names_text = []
-                not_added_items = []
                 dropped_something = False
+                items_not_added = 0
 
                 for drop_id, drop_name in drops:
-                    if try_add_item(drop_id) == True:
+                    if try_add_item(drop_id):
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
-                        not_added_items.append(drop_name)
+                        items_not_added += 1
+
+                if CurrentRegion == "r1m1":
+                    money_drop = random.randint(50, 150)
+                elif CurrentRegion == "r1m2":
+                    money_drop = random.randint(100, 250)
+                elif CurrentRegion == "r1m3":
+                    money_drop = random.randint(150, 350)
+                elif CurrentRegion == "r1m4":
+                    money_drop = random.randint(300, 600)
+
+                if items_not_added > 0:
+                    compensation = items_not_added * random.randint(100, 200)
+                    money_drop += compensation
+                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
+                
+                CurrentMoney += money_drop
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
-                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
-                elif not_added_items:
-                    renpy.say(None, "В вашем инвентаре не хватает места!")
+                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
+                else:
+                    renpy.say(None, f"Найдено: {money_drop} монет.")
                 
         return
 
@@ -561,15 +608,15 @@ label titles:
 label fightlost:
     scene black with fade
     stop music fadeout 1.0
-    $ randomdeadmsg = random.randint(1, 4)
-    if randomdeadmsg == "1":
-        mc "{cps=7}Я не смог... увернуться...{/cps}"
-    elif randomdeadmsg == "2":
-        mc "{cps=7}Это конец...{/cps}"
-    elif randomdeadmsg == "3":
-        mc "{cps=7}Нееет! Нее...{/cps}"
-    else:
-        mc "{cps=7}Прощайте, братцы!{/cps}"
+
+    $ dead_msgs = [
+        "{cps=7}Я не смог... увернуться...{/cps}",
+        "{cps=7}Это конец...{/cps}",
+        "{cps=7}Нееет! Нее...{/cps}",
+        "{cps=7}Прощайте, братцы!{/cps}"
+    ]
+
+    $ renpy.say(mc, random.choice(dead_msgs))
     
     return
 

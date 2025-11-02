@@ -255,7 +255,10 @@ screen enemy_ui():
                 add healing
 
     if attack_locked:
-        timer .35 action SetVariable("attack_locked", False)
+        if GunType == "Shotgun":
+            timer 1 action SetVariable("attack_locked", False)
+        else:
+            timer .35 action SetVariable("attack_locked", False)
 
     if enemy_hp <= 0 or player_hp <= 0:
         timer 0.1 action Return()
@@ -469,7 +472,6 @@ screen quick_menu():
             textbutton _("Авто") activate_sound "audio/sfx/click.wav" action Preference("auto-forward", "toggle")
             textbutton _("Сохранить") activate_sound "audio/sfx/click.wav" action ShowMenu('save')
             textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu('load')
-            textbutton _("Опции") activate_sound "audio/sfx/click.wav" action ShowMenu('preferences')
             textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
 
             if TownType == "City" or TownType == "Village":
@@ -527,6 +529,13 @@ screen navigation():
 
         textbutton _("Настройки") activate_sound "audio/sfx/click.wav" action ShowMenu("preferences")
 
+        textbutton _("Об игре") activate_sound "audio/sfx/click.wav" action ShowMenu("about")
+
+        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
+
+            ## Помощь не необходима и не относится к мобильным устройствам.
+            textbutton _("Помощь") activate_sound "audio/sfx/click.wav" action ShowMenu("help")
+
         if _in_replay:
 
             textbutton _("Завершить повтор") activate_sound "audio/sfx/click.wav" action EndReplay(confirm=True)
@@ -534,13 +543,6 @@ screen navigation():
         elif not main_menu:
 
             textbutton _("Главное меню") activate_sound "audio/sfx/click.wav" action MainMenu()
-
-        textbutton _("Об игре") activate_sound "audio/sfx/click.wav" action ShowMenu("about")
-
-        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
-
-            ## Помощь не необходима и не относится к мобильным устройствам.
-            textbutton _("Помощь") activate_sound "audio/sfx/click.wav" action ShowMenu("help")
 
         if renpy.variant("pc"):
 
@@ -595,9 +597,9 @@ screen main_menu():
                 style "main_menu_version"
 
     if config.developer:
-        text "Ex Machina RenPy - developer version 0.3.6 (251101a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - developer version 0.3.7 (251103a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
     else:
-        text "Ex Machina RenPy - demo version 0.3.6 (251101a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - demo version 0.3.7 (251103a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -681,9 +683,10 @@ screen statistics_screen():
         vbox:
             spacing 20
             xalign 0.645
-            yalign 0.365
+            yalign 0.385
             text "Имя" size 24 color "#2a2a2a"
             text "Оружие" size 24 color "#2a2a2a"
+            text "Тип оружия" size 24 color "#2a2a2a"
             text "Второе оружие" size 24 color "#2a2a2a"
             text "Машина" size 24 color "#2a2a2a"
             text "Сложность" size 24 color "#2a2a2a"
@@ -693,9 +696,10 @@ screen statistics_screen():
         vbox:
             spacing 20
             xalign 0.85
-            yalign 0.365
+            yalign 0.385
             text "[player_name]" size 24 color "#2a2a2a"
             text "[gun_names.get(CurrentGun, '—')]" size 24 color "#2a2a2a"
+            text "[GunTypeName.get(GunType, '—')]" size 24 color "#2a2a2a"
             text "[gun_names.get(CurrentSecondGun, '—')]" size 24 color "#2a2a2a"
             text "[car_names.get(CurrentCar, '—')]" size 24 color "#2a2a2a"
             text "[DifficultyNames.get(difficulty, '—')]" size 24 color "#2a2a2a"
@@ -1063,91 +1067,242 @@ style slot_button_text:
 ## https://www.renpy.org/doc/html/screen_special.html#preferences
 
 screen preferences():
+    modal True
+    zorder 200
 
-    tag menu
+    default current_tab = "sound"
+    default help_title = ""
+    default help_text = ""
 
-    use game_menu(_("Настройки"), scroll="viewport"):
+    # Затемнение фона
+    button:
+        style "empty"
+        xfill True
+        yfill True
+        action Hide("preferences")
+        background "#000000cc"
+
+    # Само окно настроек
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 1400
+        ysize 900
+        padding (50, 50)
 
         vbox:
+            spacing 20
 
-            null height (4 * gui.pref_spacing)
-
+            # Заголовок (общий для всего окна)
             hbox:
-                style_prefix "slider"
-                box_wrap True
-
-                vbox:
-
-                    label _("Скорость текста")
-
-                    bar value Preference("text speed")
-
-                    label _("Скорость авточтения")
-
-                    bar value Preference("auto-forward time")
-
-                vbox:
-
-                    if config.has_music:
-                        label _("Громкость музыки")
-
-                        hbox:
-                            bar value Preference("music volume")
-
-                    if config.has_sound:
-
-                        label _("Громкость звуков")
-
-                        hbox:
-                            bar value Preference("sound volume")
-
-                            if config.sample_sound:
-                                textbutton _("Тест") action Play("sound", config.sample_sound)
-
-
-                    if config.has_voice:
-                        label _("Громкость голоса")
-
-                        hbox:
-                            bar value Preference("voice volume")
-
-                            if config.sample_voice:
-                                textbutton _("Тест") action Play("voice", config.sample_voice)
-
-                    if config.has_music or config.has_sound or config.has_voice:
-                        null height gui.pref_spacing
-
-                        textbutton _("Без звука"):
-                            action Preference("all mute", "toggle")
-                            style "mute_all_button"
-
-                null height (10 * gui.pref_spacing)
-
-                hbox:
-                    box_wrap True
-
-                    if renpy.variant("pc") or renpy.variant("web"):
-
-                        vbox:
-                            style_prefix "radio"
-                            label _("Режим экрана")
-                            textbutton _("Оконный") action Preference("display", "window")
-                            textbutton _("Полный") action Preference("display", "fullscreen")
-
-                    ## Дополнительные vbox'ы типа "radio_pref" или "check_pref"
-                    ## могут быть добавлены сюда для добавления новых настроек.
-
-                null width (22.4 * gui.pref_spacing)
+                xfill True
+                text "Настройки" size 50 color "#2a2a2a" ypos 15 xpos 5
                 
-                vbox:
-                    style_prefix "radio"
-                    label _("Сложность боёв")
+                # Кнопка закрытия
+                imagebutton:
+                    idle "gui/townmenu/close_e.png"
+                    hover "gui/townmenu/close_h.png"
+                    action Hide("preferences")
+                    xalign 1.0
+                    yalign 0.0
+                    activate_sound "audio/sfx/click.wav"
 
-                    textbutton _("Новичок") action Function(set_difficulty, "easy", 0.015) selected (difficulty == "easy")
-                    textbutton _("Бывалый") action Function(set_difficulty, "normal", 0.03) selected (difficulty == "normal")
-                    textbutton _("Профессионал") action Function(set_difficulty, "hard", 0.04) selected (difficulty == "hard")
-                    textbutton _("Мастер") action Function(set_difficulty, "expert", 0.055) selected (difficulty == "expert")
+            null height 10
 
+            # Вкладки
+            hbox:
+                spacing 20
+
+                textbutton "Звук":
+                    action SetScreenVariable("current_tab", "sound")
+                    text_size 28
+                    text_color ("#2a2a2a" if current_tab == "sound" else "#888888")
+                    background None
+                    activate_sound "audio/sfx/click.wav"
+
+                textbutton "Игра":
+                    action SetScreenVariable("current_tab", "game")
+                    text_size 28
+                    text_color ("#2a2a2a" if current_tab == "game" else "#888888")
+                    background None
+                    activate_sound "audio/sfx/click.wav"
+
+            # Линия под вкладками
+            frame:
+                xsize 1300
+                ysize 2
+                background "#cccccc"
+
+            null height 5
+
+            # === ОСНОВНОЙ КОНТЕНТ (настройки + справка) ===
+            hbox:
+                spacing 0
+
+                # === ЛЕВАЯ ЧАСТЬ (настройки) ===
+                viewport:
+                    scrollbars "vertical"
+                    mousewheel True
+                    xsize 800
+                    ysize 800
+
+                    # === ВКЛАДКА ЗВУК ===
+                    if current_tab == "sound":
+                        vbox:
+                            spacing 40  # расстояние между блоками
+
+                            if config.has_music:
+                                vbox:
+                                    spacing 10
+                                    style_prefix "slider"
+
+                                    label _("Громкость музыки") style "exm_settings_label"
+
+                                    bar:
+                                        value Preference("music volume")
+                                        xsize 750
+                                        hovered [SetScreenVariable("help_title", "Громкость музыки"), SetScreenVariable("help_text", "Регулирует громкость фоновой музыки в игре.")]
+                                        unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+
+                            if config.has_sound:
+                                vbox:
+                                    spacing 10
+                                    style_prefix "slider"
+
+                                    label _("Громкость звуков") style "exm_settings_label"
+
+                                    bar:
+                                        value Preference("sound volume")
+                                        xsize 750
+                                        hovered [SetScreenVariable("help_title", "Громкость звуков"), SetScreenVariable("help_text", "Регулирует громкость звуковых эффектов (выстрелы, взрывы, UI).")]
+                                        unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+
+                            if config.has_voice:
+                                vbox:
+                                    spacing 10
+                                    style_prefix "slider"
+
+                                    label _("Громкость голоса") style "exm_settings_label"
+
+                                    bar:
+                                        value Preference("voice volume")
+                                        xsize 750
+                                        hovered [SetScreenVariable("help_title", "Громкость голоса"), SetScreenVariable("help_text", "Регулирует громкость озвучки персонажей.")]
+                                        unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+
+                            if config.has_music or config.has_sound or config.has_voice:
+                                null height 20
+
+                                textbutton _("Без звука"):
+                                    action Preference("all mute", "toggle")
+                                    style "mute_all_button"
+                                    hovered [SetScreenVariable("help_title", "Без звука"), SetScreenVariable("help_text", "Полностью отключает все звуки в игре.")]
+                                    unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+
+                    # === ВКЛАДКА ИГРА ===
+                    elif current_tab == "game":
+                        vbox:
+                            spacing 40  # расстояние между блоками (между группами настроек)
+
+                            # Скорость текста
+                            vbox:
+                                spacing 10
+                                style_prefix "slider"
+
+                                label _("Скорость текста") style "exm_settings_label"
+
+                                bar:
+                                    value Preference("text speed")
+                                    xsize 750
+                                    hovered [SetScreenVariable("help_title", "Скорость текста"), SetScreenVariable("help_text", "Скорость появления текста на экране. Чем выше — тем быстрее.")]
+                                    unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+
+                            # Скорость авточтения
+                            vbox:
+                                spacing 10
+                                style_prefix "slider"
+
+                                label _("Скорость авточтения") style "exm_settings_label"
+
+                                bar:
+                                    value Preference("auto-forward time")
+                                    xsize 750
+                                    hovered [SetScreenVariable("help_title", "Скорость авточтения"), SetScreenVariable("help_text", "Задержка перед автоматическим переходом к следующей реплике.")]
+                                    unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+
+                            null height 20
+
+                            # Режим экрана и сложность
+                            hbox:
+                                spacing 100
+
+                                if renpy.variant("pc") or renpy.variant("web"):
+                                    vbox:
+                                        style_prefix "radio"
+                                        label _("Режим экрана") style "exm_settings_label"
+                                        textbutton _("Оконный"):
+                                            action Preference("display", "window")
+                                            hovered [SetScreenVariable("help_title", "Оконный режим"), SetScreenVariable("help_text", "Игра запускается в окне.")]
+                                            unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+                                            activate_sound "audio/sfx/click.wav"
+                                        textbutton _("Полный"):
+                                            action Preference("display", "fullscreen")
+                                            hovered [SetScreenVariable("help_title", "Полноэкранный режим"), SetScreenVariable("help_text", "Игра занимает весь экран.")]
+                                            unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+                                            activate_sound "audio/sfx/click.wav"
+
+                                vbox:
+                                    style_prefix "radio"
+                                    label _("Сложность боёв") style "exm_settings_label"
+                                    textbutton _("Новичок"):
+                                        action Function(set_difficulty, "easy", 0.015)
+                                        selected (difficulty == "easy")
+                                        hovered [SetScreenVariable("help_title", "Новичок"), SetScreenVariable("help_text", "Враги наносят минимальный урон. Подходит для новичков.")]
+                                        unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+                                        activate_sound "audio/sfx/click.wav"
+                                    textbutton _("Бывалый"):
+                                        action Function(set_difficulty, "normal", 0.03)
+                                        selected (difficulty == "normal")
+                                        hovered [SetScreenVariable("help_title", "Бывалый"), SetScreenVariable("help_text", "Сбалансированная сложность для обычного прохождения.")]
+                                        unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+                                        activate_sound "audio/sfx/click.wav"
+                                    textbutton _("Профессионал"):
+                                        action Function(set_difficulty, "hard", 0.04)
+                                        selected (difficulty == "hard")
+                                        hovered [SetScreenVariable("help_title", "Профессионал"), SetScreenVariable("help_text", "Враги наносят повышенный урон. Для опытных игроков.")]
+                                        unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+                                        activate_sound "audio/sfx/click.wav"
+                                    textbutton _("Мастер"):
+                                        action Function(set_difficulty, "expert", 0.055)
+                                        selected (difficulty == "expert")
+                                        hovered [SetScreenVariable("help_title", "Мастер"), SetScreenVariable("help_text", "Максимальная сложность. Враги очень опасны!")]
+                                        unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+                                        activate_sound "audio/sfx/click.wav"
+
+                # === ПРАВАЯ ЧАСТЬ (справка) ===
+                frame:
+                    xsize 450
+                    ysize 550
+                    background None
+                    padding (30, 20)
+
+                    vbox:
+                        spacing 20
+                        xfill True
+
+                        # Заголовок элемента
+                        if help_title:
+                            text help_title size 30 color "#505050" bold True
+                        else:
+                            text "Справка" size 30 color "#666666"
+
+                        null height 20
+
+                        # Описание
+                        if help_text:
+                            text help_text size 22 color "#505050"
+                        else:
+                            text "Наведите курсор на элемент, чтобы увидеть подсказку." size 22 color "#666666"
 
 style pref_label is gui_label
 style pref_label_text is gui_label_text
@@ -1174,6 +1329,10 @@ style slider_pref_vbox is pref_vbox
 
 style mute_all_button is check_button
 style mute_all_button_text is check_button_text
+
+style exm_settings_label_text is default:
+    color "#505050"
+    size 35
 
 style pref_label:
     top_margin gui.pref_spacing

@@ -6,7 +6,7 @@ label main_game:
 
     $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-    call show_loading(level_slides)
+    call show_loading(level_slides) from _call_show_loading
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True
@@ -167,17 +167,36 @@ label firstenemyfight:
             python:
                 drop_names_text = []
                 dropped_something = False
+                items_not_added = 0
 
                 for drop_id, drop_name in drops:
                     if try_add_item(drop_id):
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
-                        renpy.say(None, "В вашем инвентаре не хватает места!")
+                        items_not_added += 1
+
+                if CurrentRegion == "r1m1":
+                    money_drop = random.randint(50, 150)
+                elif CurrentRegion == "r1m2":
+                    money_drop = random.randint(100, 250)
+                elif CurrentRegion == "r1m3":
+                    money_drop = random.randint(150, 350)
+                elif CurrentRegion == "r1m4":
+                    money_drop = random.randint(300, 600)
+
+                if items_not_added > 0:
+                    compensation = items_not_added * random.randint(100, 200)
+                    money_drop += compensation
+                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
+                
+                CurrentMoney += money_drop
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
-                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
+                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
+                else:
+                    renpy.say(None, f"Найдено: {money_drop} монет.")
 
         if random.random() <= 0.5:
             $ randommus = random.randint(1, 2)
@@ -336,17 +355,36 @@ label secondenemy:
             python:
                 drop_names_text = []
                 dropped_something = False
+                items_not_added = 0
 
                 for drop_id, drop_name in drops:
                     if try_add_item(drop_id):
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
-                        renpy.say(None, "В вашем инвентаре не хватает места!")
+                        items_not_added += 1
+
+                if CurrentRegion == "r1m1":
+                    money_drop = random.randint(50, 150)
+                elif CurrentRegion == "r1m2":
+                    money_drop = random.randint(100, 250)
+                elif CurrentRegion == "r1m3":
+                    money_drop = random.randint(150, 350)
+                elif CurrentRegion == "r1m4":
+                    money_drop = random.randint(300, 600)
+
+                if items_not_added > 0:
+                    compensation = items_not_added * random.randint(100, 200)
+                    money_drop += compensation
+                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
+                
+                CurrentMoney += money_drop
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
-                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}")
+                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
+                else:
+                    renpy.say(None, f"Найдено: {money_drop} монет.")
 
         if LisaAgreed == "True":
             jump tozaimka

@@ -5,7 +5,7 @@ label r1m4start:
 
     $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-    call show_loading(level_slides)
+    call show_loading(level_slides) from _call_show_loading_5
 
     scene black
 
@@ -275,7 +275,7 @@ label tokranfight:
     $ enemy_image = "kranboss"
     $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = 1600
+    $ enemy_hp = 2500
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
@@ -543,7 +543,7 @@ label r1m4SideQuest_warehousefight:
     $ enemy_image = "warehouseguard"
     $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = 4250
+    $ enemy_hp = 2975 # 75% of 5 van hp
     $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0

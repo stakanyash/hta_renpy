@@ -32,15 +32,16 @@ label splashscreen:
         $ flags["license"] = True
         $ save_flags(flags)
 
-    $ renpy.movie_cutscene("movies/disclaimer.mp4")
+    if not config.developer:
+        $ renpy.movie_cutscene("movies/disclaimer.mp4")
 
-    pause 0.5
+        pause 0.5
 
-    $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
-    python:
-        for i in range(len(slides)):
-            renpy.show(slides[i])
-            renpy.pause(pauses[i], hard=True)
-            renpy.hide(slides[i])
+        $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
+        python:
+            for i in range(len(slides)):
+                renpy.show(slides[i])
+                renpy.pause(pauses[i], hard=True)
+                renpy.hide(slides[i])
 
     return
