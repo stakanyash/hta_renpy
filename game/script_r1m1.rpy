@@ -1,21 +1,22 @@
 label main_game:
 
-    pause 0.5
+    if not config.developer:
+        pause 0.5
 
-    show bg_r1m1load at truecenter
+        show bg_r1m1load at truecenter
 
-    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-    call show_loading(level_slides) from _call_show_loading
+        call show_loading(level_slides) from _call_show_loading
 
-    $ _game_menu_screen = "save_screen"
-    $ _menu = True
-    $ config.keymap['save'] = ['save']
-    $ config.keymap['load'] = ['load']
-    $ config.keymap['game_menu'] = ['game_menu']
-    $ persistent._in_battle = False
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
 
-    hide bg_r1m1load
+        hide bg_r1m1load
 
     $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
@@ -118,11 +119,11 @@ label firstenemyfight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "firsteverenemy"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 80
     $ bgname = "bg_firsteverenemy"
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -144,6 +145,7 @@ label firstenemyfight:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide firsteverenemy
         play sound "sfx/explosion04.wav"
@@ -155,13 +157,14 @@ label firstenemyfight:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide firsteverenemy with dissolve
 
         play music "music/driving1.ogg" fadeout 1.0
 
-        $ drops = get_random_drops()
+        $ drops = player_config.get_random_drops()
 
         if drops:
             python:
@@ -170,19 +173,19 @@ label firstenemyfight:
                 items_not_added = 0
 
                 for drop_id, drop_name in drops:
-                    if try_add_item(drop_id):
+                    if player_config.try_add_item(drop_id):
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
                         items_not_added += 1
 
-                if CurrentRegion == "r1m1":
+                if player_config.current_region == "r1m1":
                     money_drop = random.randint(50, 150)
-                elif CurrentRegion == "r1m2":
+                elif player_config.current_region == "r1m2":
                     money_drop = random.randint(100, 250)
-                elif CurrentRegion == "r1m3":
+                elif player_config.current_region == "r1m3":
                     money_drop = random.randint(150, 350)
-                elif CurrentRegion == "r1m4":
+                elif player_config.current_region == "r1m4":
                     money_drop = random.randint(300, 600)
 
                 if items_not_added > 0:
@@ -190,7 +193,7 @@ label firstenemyfight:
                     money_drop += compensation
                     renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
                 
-                CurrentMoney += money_drop
+                player_config.add_money(money_drop)
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
@@ -306,11 +309,11 @@ label secondenemy:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "secenemy"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 125
     $ bgname = "bg_secondenemy"
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -332,6 +335,7 @@ label secondenemy:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide secenemy
         play sound "sfx/explosion04.wav"
@@ -343,13 +347,14 @@ label secondenemy:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide secenemy with dissolve
 
         play music "music/driving2.ogg" fadeout 1.0
 
-        $ drops = get_random_drops()
+        $ drops = player_config.get_random_drops()
 
         if drops:
             python:
@@ -358,19 +363,19 @@ label secondenemy:
                 items_not_added = 0
 
                 for drop_id, drop_name in drops:
-                    if try_add_item(drop_id):
+                    if player_config.try_add_item(drop_id):
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
                         items_not_added += 1
 
-                if CurrentRegion == "r1m1":
+                if player_config.current_region == "r1m1":
                     money_drop = random.randint(50, 150)
-                elif CurrentRegion == "r1m2":
+                elif player_config.current_region == "r1m2":
                     money_drop = random.randint(100, 250)
-                elif CurrentRegion == "r1m3":
+                elif player_config.current_region == "r1m3":
                     money_drop = random.randint(150, 350)
-                elif CurrentRegion == "r1m4":
+                elif player_config.current_region == "r1m4":
                     money_drop = random.randint(300, 600)
 
                 if items_not_added > 0:
@@ -378,7 +383,7 @@ label secondenemy:
                     money_drop += compensation
                     renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
                 
-                CurrentMoney += money_drop
+                player_config.add_money(money_drop)
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
@@ -393,7 +398,7 @@ label secondenemy:
 
 label tozaimka:
 
-    $ UpdateTownInfo("Village", "Заимка", "farmers_union")
+    $ player_config.update_town_info("Village", "Заимка", "farmers_union")
 
     scene bg_zaimka with fade
 
@@ -417,7 +422,7 @@ label tozaimka:
 
     scene bg_gugulino with dissolve
 
-    $ UpdateTownInfo("Village", "Гугулино", "farmers_union")
+    $ player_config.update_town_info("Village", "Гугулино", "farmers_union")
 
     "Всё тоже самое было в Гугулино..."
 
@@ -425,7 +430,7 @@ label tozaimka:
 
     play music "audio/music/intensedialogue02.ogg" fadeout 1.0
 
-    $ UpdateTownInfo("Village", "Троицкое", "farmers_union")
+    $ player_config.update_town_info("Village", "Троицкое", "farmers_union")
 
     "А вот в Троицком..."
 
@@ -456,7 +461,7 @@ label tozaimka:
 
     lisa "Здесь наши пути расходятся: надоело мне тащиться следом за твоей развалюхой. К тому же там, где для тебя нет дороги, моя машина пройдёт с лёгкостью."
 
-    $ CurrentMoney += 500
+    $ player_config.add_money(500)
 
     lisa "Ты выполнил свою часть сделки. Держи свои деньги."
 
@@ -487,7 +492,7 @@ label tozaimka:
     jump sergo
 
 label sergo:
-    $ UpdateTownInfo("City", "Южный", "farmers_union")
+    $ player_config.update_town_info("City", "Южный", "farmers_union")
 
     scene bg_insowth with fade
 
@@ -528,7 +533,7 @@ label sergo:
 
     show sergo3 at left, stretch_in
 
-    $ CurrentMoney += 200
+    $ player_config.add_money(200)
     $ renpy.notify("Вы получили 200 монет.")
 
     sergo "Товар, как всегда, отличный. Держи, это твоя награда за доставку."
@@ -581,7 +586,7 @@ label sergo:
                     "На вас нападают!"
                     call randomfight from _call_randomfight_4
                 
-                $ TownType = "NotInCity"
+                $ player_config.town_type = "NotInCity"
                 jump dickzapravka
 
         "Отказать":
@@ -599,10 +604,10 @@ label sergo:
             "Вы спокойно уходите, а Фермер продолжает ругаться на вас в след."
             mc "\"Странный какой-то тип. Не зря я ему отказал.\""
             if LisaAgreed == "True":
-                $ TownType = "NotInCity"
+                $ player_config.town_type = "NotInCity"
                 jump felixmeet
             elif LisaAgreed == "False":
-                $ TownType = "NotInCity"
+                $ player_config.town_type = "NotInCity"
                 jump glukhoeburn
 
 label dickzapravka:
@@ -703,11 +708,11 @@ label felixbeforefight:
             $ persistent._in_battle = True
             $ RunFromFelix = "False"
             $ enemy_image = "felixteam"
-            $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+            $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
             $ player_max_hp = player_hp
             $ max_heals = 20
             $ enemy_hp = 225
-            $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+            $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
             $ turn_count = 0
             $ enemy_max_hp = enemy_hp
             $ heal_count = 0
@@ -729,6 +734,7 @@ label felixbeforefight:
                 $ config.keymap['load'] = ['load']
                 $ config.keymap['game_menu'] = ['game_menu']
                 $ persistent._in_battle = False
+                $ renpy.sound.stop(channel="shoot")
                 
                 hide felixteam
                 play sound "sfx/explosion04.wav"
@@ -740,6 +746,7 @@ label felixbeforefight:
                 $ config.keymap['load'] = ['load']
                 $ config.keymap['game_menu'] = ['game_menu']
                 $ persistent._in_battle = False
+                $ renpy.sound.stop(channel="shoot")
 
                 hide felixteam with dissolve
 
@@ -922,7 +929,7 @@ label dyingfather:
 
 label sowthagain:
 
-    $ UpdateTownInfo("City", "Южный", "farmers_union")
+    $ player_config.update_town_info("City", "Южный", "farmers_union")
 
     stop sfx2
 
@@ -1008,7 +1015,7 @@ label sowthagain:
                 $ renpy.notify("Игра сохранена в слот 2.")
                 $ renpy.save("checkpoint-2")
                 $ TakeGunFromZaimka = "True"
-                $ TownType = "NotInCity"
+                $ player_config.town_type = "NotInCity"
                 if random.random() <= 0.5:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
@@ -1021,7 +1028,7 @@ label sowthagain:
                 $ renpy.notify("Игра сохранена в слот 2.")
                 $ renpy.save("checkpoint-2")
                 $ TakeGunFromZaimka = "False"
-                $ TownType = "NotInCity"
+                $ player_config.town_type = "NotInCity"
                 if random.random() <= 0.5:
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
@@ -1062,7 +1069,7 @@ label sowthagain:
         hide dronn with dissolve
         hide mc3 with dissolve
 
-        $ TownType = "NotInCity"
+        $ player_config.town_type = "NotInCity"
 
         if random.random() <= 0.5:
             $ randommus = random.randint(1, 2)
@@ -1076,7 +1083,7 @@ label sowthagain:
 
 label KventinZaimka:
 
-    $ UpdateTownInfo("Village", "Заимка", "farmers_union")
+    $ player_config.update_town_info("Village", "Заимка", "farmers_union")
 
     scene bg_zaimka with fade
 
@@ -1103,13 +1110,18 @@ label KventinZaimka:
     hide mc3 with dissolve
     hide kventin with dissolve
 
-    $ CurrentGun = "Storm"
-
     python:
-        if try_add_item("Hornet") == True:
-            renpy.notify("В ваш инвентарь добавлен \"Шершень\".")
+        weapon_name = player_config.current_gun
+        display_name = gun_names.get(weapon_name, weapon_name)
+
+        if player_config.try_add_item(weapon_name):
+            renpy.notify(f'В ваш инвентарь добавлен "{display_name}".')
         else:
-            renpy.notify("В вашем инвентаре недостаточно места. \"Шершень\" был автоматически продан за 65 монет.")
+            price = ItemPricesCity.get(weapon_name, 65)
+            player_config.add_money(price)
+            renpy.notify(f'В вашем инвентаре недостаточно места. "{display_name}" был автоматически продан за {price} монет.')
+
+    $ player_config.current_gun = "Storm"
 
     "Вы ставите новое вооружение на свою машину и едете к Феликсу..."
 
@@ -1117,7 +1129,7 @@ label KventinZaimka:
 
 label felixbase:
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     scene bg_felixbase with fade
 
@@ -1185,7 +1197,7 @@ label felixbase:
 
 label felix_battle:
     if TakeGunFromZaimka == "True":
-        $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+        $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
         $ player_max_hp = player_hp
         $ max_heals = 10
     elif TakeGunFromZaimka == "False":
@@ -1193,7 +1205,7 @@ label felix_battle:
         $ player_max_hp = 850
         $ max_heals = 20
     $ enemy_hp = 200
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -1219,6 +1231,7 @@ label felix_battle:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide felixcar
         play sound "sfx/explosion04.wav"
@@ -1230,6 +1243,7 @@ label felix_battle:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         hide felixcar with dissolve
 
@@ -1328,7 +1342,7 @@ label felixdefeated:
 
 label leaver1m1tovaterland:
 
-    $ UpdateTownInfo("City", "Южный", "farmers_union")
+    $ player_config.update_town_info("City", "Южный", "farmers_union")
     play music "music/town1.ogg" fadeout 1.0
 
     scene bg_insowth with fade
@@ -1344,7 +1358,7 @@ label leaver1m1tovaterland:
     mc "Больше Феликс вас не побеспокоит. Я прогнал его."
 
     dronn "За это прими наше большое человеческое спасибо."
-    $ CurrentMoney += 250
+    $ player_config.add_money(250)
     $ renpy.notify("Вы получили 250 монет.")
     dronn "Вот, возьми: эти деньги я как раз собрал, чтобы заплатить очередные бандитские поборы."
     dronn "Я даю их тебе в знак благодарности. Ты также можешь оставить себе моё оружие. Желаю тебе удачи в долгом и опасном путешествии."
@@ -1357,7 +1371,7 @@ label leaver1m1tovaterland:
     hide dronn with dissolve
     hide mchar with dissolve
     
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     scene black with fade
 

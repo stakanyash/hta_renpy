@@ -176,6 +176,7 @@ style button_text_center is default:
 
 screen enemy_ui():
 
+    # Панель действий игрока
     frame:
         align (0.05, 0.98)
         padding (20, 40)
@@ -187,27 +188,34 @@ screen enemy_ui():
             xalign 0.5
             text _("Выберите действие:") xalign 0.5
 
+            # Кнопка "Атаковать"
             if not attack_locked:
                 textbutton _("Атаковать") style "atk_button" action Function(attack_enemy) xalign 0.5
             else:
                 textbutton _("Атаковать") style "atk_button" xalign 0.5 sensitive False
 
+            # Кнопка "Лечиться"
             if heal_count < max_heals:
                 textbutton _("Лечиться") style "atk_button" action Function(heal) xalign 0.5 sensitive player_hp < player_max_hp
             else:
                 textbutton _("Лечиться") style "atk_button" xalign 0.5 sensitive False
+
+    # Кнопка для разработчика
     if config.developer:
         textbutton _("Убить") action SetVariable("enemy_hp", 0) xalign 0.5 yalign 0.9 background "#0000005b"
 
+    # Фон и иконка врага
     if EnemyType == "Boss":
         add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
         add "gui/bossbar/icons/" + BossIcon xalign 0.957 yalign 0.865
     else:
         add "gui/bossbar/background_noboss.png" yalign 1.0 xalign 0.95
 
+    # Имя врага
     text "[enemy_name]":
         style "centered_text"
 
+    # Полоса здоровья врага
     fixed:
         xalign 1.0215
         yalign 0.9385
@@ -216,17 +224,20 @@ screen enemy_ui():
 
         add get_enemy_bar_image()
 
+    # Панель здоровья игрока
     fixed:
         xalign 0.98
         yalign 0.1
         add "gui/digits/HP.png"
 
+        # Цифры HP игрока
         hbox:
             xalign 0.0134
             yalign 0.0136
             for digit_img in get_hp_digit_images(player_hp):
                 add digit_img
 
+        # Красная подсветка HP
         hbox:
             xalign 0.037
             yalign 0.03
@@ -237,6 +248,7 @@ screen enemy_ui():
             else:
                 add get_lowheal()
 
+        # Красная подсветка оставшихся лечений
         hbox:
             xalign 0.965
             yalign 0.03
@@ -247,19 +259,23 @@ screen enemy_ui():
             else:
                 add get_lowhealamount()
 
+        # Цифры оставшихся лечений
         hbox:
             xalign 0.9861
             yalign 0.015
-
             for healing in get_heal_digit_images(get_remain_heals()):
                 add healing
 
+    # Таймер разблокировки атаки
     if attack_locked:
-        if GunType == "Shotgun":
-            timer 1 action SetVariable("attack_locked", False)
+        if player_config.gun_type == "Shotgun":
+            timer 2 action SetVariable("attack_locked", False)
+        elif player_config.gun_type == "Plasma":
+            timer 3.5 action SetVariable("attack_locked", False)
         else:
-            timer .35 action SetVariable("attack_locked", False)
+            timer 0.75 action SetVariable("attack_locked", False)
 
+    # Завершение боя
     if enemy_hp <= 0 or player_hp <= 0:
         timer 0.1 action Return()
 
@@ -474,7 +490,7 @@ screen quick_menu():
             textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu('load')
             textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
 
-            if TownType == "City" or TownType == "Village":
+            if player_config.town_type == "City" or player_config.town_type == "Village":
                 textbutton _("Меню города") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
 
 
@@ -597,9 +613,9 @@ screen main_menu():
                 style "main_menu_version"
 
     if config.developer:
-        text "Ex Machina RenPy - developer version 0.3.7 (251103a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - developer version 0.3.8 (251103b)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
     else:
-        text "Ex Machina RenPy - demo version 0.3.7 (251103a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - demo version 0.3.8 (251103b)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -648,27 +664,27 @@ screen statistics_screen():
         xsize 1920
         ysize 1080
 
-        if 0 <= CurrentMoney <= 9:
+        if 0 <= player_config.money <= 9:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[CurrentMoney] монет" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
-        elif 10 <= CurrentMoney <= 99:
+            text "[player_config.money] монет" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+        elif 10 <= player_config.money <= 99:
             text "Деньги:" size 19 xpos 65 ypos 20 textalign 0.5 color "#404040"
-            text "[CurrentMoney] монет" size 19 xpos 135 ypos 20 textalign 0.5 color "#404040"
-        elif 100 <= CurrentMoney <= 999:
+            text "[player_config.money] монет" size 19 xpos 135 ypos 20 textalign 0.5 color "#404040"
+        elif 100 <= player_config.money <= 999:
             text "Деньги:" size 19 xpos 60 ypos 20 textalign 0.5 color "#404040"
-            text "[CurrentMoney] монет" size 19 xpos 130 ypos 20 textalign 0.5 color "#404040"
-        elif 1000 <= CurrentMoney <= 9999:
+            text "[player_config.money] монет" size 19 xpos 130 ypos 20 textalign 0.5 color "#404040"
+        elif 1000 <= player_config.money <= 9999:
             text "Деньги:" size 19 xpos 55 ypos 20 textalign 0.5 color "#404040"
-            text "[CurrentMoney] монет" size 19 xpos 125 ypos 20 textalign 0.5 color "#404040"
-        elif 10000 <= CurrentMoney <= 99999:
+            text "[player_config.money] монет" size 19 xpos 125 ypos 20 textalign 0.5 color "#404040"
+        elif 10000 <= player_config.money <= 99999:
             text "Деньги:" size 19 xpos 50 ypos 20 textalign 0.5 color "#404040"
-            text "[CurrentMoney] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
-        elif 100000 <= CurrentMoney <= 999999:
+            text "[player_config.money] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
+        elif 100000 <= player_config.money <= 999999:
             text "Деньги:" size 19 xpos 45 ypos 20 textalign 0.5 color "#404040"
-            text "[CurrentMoney] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
-        elif CurrentMoney >= 1000000:
+            text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
+        elif player_config.money >= 1000000:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[format_money(CurrentMoney)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
@@ -698,12 +714,12 @@ screen statistics_screen():
             xalign 0.85
             yalign 0.385
             text "[player_name]" size 24 color "#2a2a2a"
-            text "[gun_names.get(CurrentGun, '—')]" size 24 color "#2a2a2a"
-            text "[GunTypeName.get(GunType, '—')]" size 24 color "#2a2a2a"
-            text "[gun_names.get(CurrentSecondGun, '—')]" size 24 color "#2a2a2a"
-            text "[car_names.get(CurrentCar, '—')]" size 24 color "#2a2a2a"
+            text "[gun_names.get(player_config.current_gun, '—')]" size 24 color "#2a2a2a"
+            text "[GunTypeName.get(player_config.gun_type, '—')]" size 24 color "#2a2a2a"
+            text "[gun_names.get(player_config.second_gun, '—')]" size 24 color "#2a2a2a"
+            text "[car_names.get(player_config.car, '—')]" size 24 color "#2a2a2a"
             text "[DifficultyNames.get(difficulty, '—')]" size 24 color "#2a2a2a"
-            text "[region_names.get(CurrentRegion, '—')]" size 24 color "#2a2a2a"
+            text "[region_names.get(player_config.current_region, '—')]" size 24 color "#2a2a2a"
             text "[format_time(renpy.get_game_runtime())]" size 24 color "#2a2a2a"
 
         imagebutton:
@@ -720,7 +736,7 @@ screen statistics_screen():
             xpos 1630
             focus_mask True 
 
-        if TownType == "City" or TownType == "Village":
+        if player_config.town_type == "City" or player_config.town_type == "Village":
             imagebutton activate_sound "audio/sfx/click.wav":
                 idle "gui/townmenu/buttons/tab_weapon_e.png" 
                 hover "gui/townmenu/buttons/tab_weapon_s.png"
@@ -1079,8 +1095,10 @@ screen preferences():
         style "empty"
         xfill True
         yfill True
-        action Hide("preferences")
+        action NullAction()
         background "#000000cc"
+
+    add "gui/settings_menu.png"
 
     # Само окно настроек
     frame:
@@ -1089,6 +1107,7 @@ screen preferences():
         xsize 1400
         ysize 900
         padding (50, 50)
+        background None
 
         vbox:
             spacing 20
@@ -1096,7 +1115,7 @@ screen preferences():
             # Заголовок (общий для всего окна)
             hbox:
                 xfill True
-                text "Настройки" size 50 color "#2a2a2a" ypos 15 xpos 5
+                text "Настройки" size 50 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
                 
                 # Кнопка закрытия
                 imagebutton:
@@ -1107,33 +1126,41 @@ screen preferences():
                     yalign 0.0
                     activate_sound "audio/sfx/click.wav"
 
-            null height 10
+            null height 1
 
             # Вкладки
             hbox:
-                spacing 20
+                spacing 25
+                yoffset -8
 
-                textbutton "Звук":
-                    action SetScreenVariable("current_tab", "sound")
-                    text_size 28
-                    text_color ("#2a2a2a" if current_tab == "sound" else "#888888")
-                    background None
-                    activate_sound "audio/sfx/click.wav"
+                hbox:
+                    spacing 25
+                    
+                    fixed:
+                        xysize (180, 90)
+                        imagebutton auto "gui/test/b_opts_%s.png":
+                            selected (current_tab == "sound")
+                            action SetScreenVariable("current_tab", "sound")
+                            activate_sound "audio/sfx/click.wav"
+                        
+                        text "Звук" xalign 0.5 yalign 0.38 size 28 color "#fed11b"
 
-                textbutton "Игра":
-                    action SetScreenVariable("current_tab", "game")
-                    text_size 28
-                    text_color ("#2a2a2a" if current_tab == "game" else "#888888")
-                    background None
-                    activate_sound "audio/sfx/click.wav"
-
-            # Линия под вкладками
-            frame:
-                xsize 1300
-                ysize 2
-                background "#cccccc"
-
-            null height 5
+                    fixed:
+                        xysize (180, 90)
+                        imagebutton auto "gui/test/b_opts_%s.png":
+                            selected (current_tab == "game")
+                            action SetScreenVariable("current_tab", "game")
+                            activate_sound "audio/sfx/click.wav"
+                        
+                        text "Игра" xalign 0.5 yalign 0.38 size 28 color "#fed11b"
+                
+                #imagebutton:
+                #    idle "gui/test/b_opts_s.png"
+                #    hover "gui/test/b_opts_hp.png"
+                #    selected_idle "gui/test/b_opts_p.png"
+                #    selected (current_tab == "game")
+                #    action SetScreenVariable("current_tab", "game")
+                #    activate_sound "audio/sfx/click.wav"
 
             # === ОСНОВНОЙ КОНТЕНТ (настройки + справка) ===
             hbox:
@@ -1195,7 +1222,7 @@ screen preferences():
 
                                 textbutton _("Без звука"):
                                     action Preference("all mute", "toggle")
-                                    style "mute_all_button"
+                                    style "settings_text_button"
                                     hovered [SetScreenVariable("help_title", "Без звука"), SetScreenVariable("help_text", "Полностью отключает все звуки в игре.")]
                                     unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
 
@@ -1242,11 +1269,13 @@ screen preferences():
                                         label _("Режим экрана") style "exm_settings_label"
                                         textbutton _("Оконный"):
                                             action Preference("display", "window")
+                                            style "settings_text_button"
                                             hovered [SetScreenVariable("help_title", "Оконный режим"), SetScreenVariable("help_text", "Игра запускается в окне.")]
                                             unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                             activate_sound "audio/sfx/click.wav"
                                         textbutton _("Полный"):
                                             action Preference("display", "fullscreen")
+                                            style "settings_text_button"
                                             hovered [SetScreenVariable("help_title", "Полноэкранный режим"), SetScreenVariable("help_text", "Игра занимает весь экран.")]
                                             unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                             activate_sound "audio/sfx/click.wav"
@@ -1257,24 +1286,28 @@ screen preferences():
                                     textbutton _("Новичок"):
                                         action Function(set_difficulty, "easy", 0.015)
                                         selected (difficulty == "easy")
+                                        style "settings_text_button"
                                         hovered [SetScreenVariable("help_title", "Новичок"), SetScreenVariable("help_text", "Враги наносят минимальный урон. Подходит для новичков.")]
                                         unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                         activate_sound "audio/sfx/click.wav"
                                     textbutton _("Бывалый"):
                                         action Function(set_difficulty, "normal", 0.03)
                                         selected (difficulty == "normal")
+                                        style "settings_text_button"
                                         hovered [SetScreenVariable("help_title", "Бывалый"), SetScreenVariable("help_text", "Сбалансированная сложность для обычного прохождения.")]
                                         unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                         activate_sound "audio/sfx/click.wav"
                                     textbutton _("Профессионал"):
                                         action Function(set_difficulty, "hard", 0.04)
                                         selected (difficulty == "hard")
+                                        style "settings_text_button"
                                         hovered [SetScreenVariable("help_title", "Профессионал"), SetScreenVariable("help_text", "Враги наносят повышенный урон. Для опытных игроков.")]
                                         unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                         activate_sound "audio/sfx/click.wav"
                                     textbutton _("Мастер"):
                                         action Function(set_difficulty, "expert", 0.055)
                                         selected (difficulty == "expert")
+                                        style "settings_text_button"
                                         hovered [SetScreenVariable("help_title", "Мастер"), SetScreenVariable("help_text", "Максимальная сложность. Враги очень опасны!")]
                                         unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                         activate_sound "audio/sfx/click.wav"
@@ -1292,17 +1325,17 @@ screen preferences():
 
                         # Заголовок элемента
                         if help_title:
-                            text help_title size 30 color "#505050" bold True
+                            text help_title size 33 color "#404040" font "fonts/ARIALBD.ttf"
                         else:
-                            text "Справка" size 30 color "#666666"
+                            text "Справка" size 33 color "#555555" font "fonts/ARIALBD.ttf"
 
                         null height 20
 
                         # Описание
                         if help_text:
-                            text help_text size 22 color "#505050"
+                            text help_text size 25 color "#404040"
                         else:
-                            text "Наведите курсор на элемент, чтобы увидеть подсказку." size 22 color "#666666"
+                            text "Наведите курсор на элемент, чтобы увидеть подсказку." size 25 color "#555555"
 
 style pref_label is gui_label
 style pref_label_text is gui_label_text
@@ -1327,11 +1360,16 @@ style slider_button is gui_button
 style slider_button_text is gui_button_text
 style slider_pref_vbox is pref_vbox
 
+style settings_text_button is check_button
+style settings_text_button_text is default:
+    color "#505050"
+    hover_color "#303030"
+
 style mute_all_button is check_button
-style mute_all_button_text is check_button_text
+style mute_all_button_text is default
 
 style exm_settings_label_text is default:
-    color "#505050"
+    color "#383838"
     size 35
 
 style pref_label:

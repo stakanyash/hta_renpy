@@ -1,24 +1,25 @@
 # Default start-up
 
 label vaterlandfirst:
-    pause 0.5
+    if not config.developer:
+        pause 0.5
 
-    show bg_r1m3load at truecenter
+        show bg_r1m3load at truecenter
 
-    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-    call show_loading(level_slides) from _call_show_loading_3
+        call show_loading(level_slides) from _call_show_loading_3
 
-    scene black
+        scene black
 
-    $ _game_menu_screen = "save_screen"
-    $ _menu = True
-    $ config.keymap['save'] = ['save']
-    $ config.keymap['load'] = ['load']
-    $ config.keymap['game_menu'] = ['game_menu']
-    $ persistent._in_battle = False
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
 
-    $ CurrentRegion = "r1m3"
+    $ player_config.current_region = "r1m3"
 
     if LisaAgreed == "True":
         jump r1m3withlisa
@@ -91,7 +92,7 @@ label r1m3nolisa:
 
 label asgardboom:
 
-    $ UpdateTownInfo("City", "Асгард", "free_traders_alliance")
+    $ player_config.update_town_info("City", "Асгард", "free_traders_alliance")
 
     play music "music/town1.ogg" fadeout 1.0
     scene bg_asgard with fade
@@ -124,7 +125,7 @@ label asgardboom:
 
     mc "Спасибо!"
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     hide seller
     hide mcsurp
@@ -139,7 +140,7 @@ label asgardboom:
 
 label mvillage:
 
-    $ UpdateTownInfo("Village", "Горные шахты", "free_traders_alliance")
+    $ player_config.update_town_info("Village", "Горные шахты", "free_traders_alliance")
 
     play music "music/bar.ogg" fadeout 1.0
     scene bg_mvillage with fade
@@ -185,10 +186,10 @@ label mvillage:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "minerattackers"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 2000
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -211,6 +212,7 @@ label mvillage:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide minerattackers
         play sound "sfx/explosion04.wav"
@@ -222,11 +224,12 @@ label mvillage:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide minerattackers with dissolve
 
-        $ drops = get_random_drops()
+        $ drops = player_config.get_random_drops()
 
         if drops:
             python:
@@ -235,19 +238,19 @@ label mvillage:
                 items_not_added = 0
 
                 for drop_id, drop_name in drops:
-                    if try_add_item(drop_id):
+                    if player_config.try_add_item(drop_id):
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
                         items_not_added += 1
 
-                if CurrentRegion == "r1m1":
+                if player_config.current_region == "r1m1":
                     money_drop = random.randint(50, 150)
-                elif CurrentRegion == "r1m2":
+                elif player_config.current_region == "r1m2":
                     money_drop = random.randint(100, 250)
-                elif CurrentRegion == "r1m3":
+                elif player_config.current_region == "r1m3":
                     money_drop = random.randint(150, 350)
-                elif CurrentRegion == "r1m4":
+                elif player_config.current_region == "r1m4":
                     money_drop = random.randint(300, 600)
 
                 if items_not_added > 0:
@@ -255,7 +258,7 @@ label mvillage:
                     money_drop += compensation
                     renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
                 
-                CurrentMoney += money_drop
+                player_config.add_money(money_drop)
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
@@ -304,10 +307,10 @@ label brigdedestroy:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "brigde_defender"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 1200
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -331,6 +334,7 @@ label brigdedestroy:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide brigde_defender
         play sound "sfx/explosion04.wav"
@@ -342,11 +346,12 @@ label brigdedestroy:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide brigde_defender with dissolve
 
-        $ drops = get_random_drops()
+        $ drops = player_config.get_random_drops()
 
         if drops:
             python:
@@ -355,19 +360,19 @@ label brigdedestroy:
                 items_not_added = 0
 
                 for drop_id, drop_name in drops:
-                    if try_add_item(drop_id):
+                    if player_config.try_add_item(drop_id):
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
                         items_not_added += 1
 
-                if CurrentRegion == "r1m1":
+                if player_config.current_region == "r1m1":
                     money_drop = random.randint(50, 150)
-                elif CurrentRegion == "r1m2":
+                elif player_config.current_region == "r1m2":
                     money_drop = random.randint(100, 250)
-                elif CurrentRegion == "r1m3":
+                elif player_config.current_region == "r1m3":
                     money_drop = random.randint(150, 350)
-                elif CurrentRegion == "r1m4":
+                elif player_config.current_region == "r1m4":
                     money_drop = random.randint(300, 600)
 
                 if items_not_added > 0:
@@ -375,7 +380,7 @@ label brigdedestroy:
                     money_drop += compensation
                     renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
                 
-                CurrentMoney += money_drop
+                player_config.add_money(money_drop)
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
@@ -420,12 +425,12 @@ label peshtallow:
 
     "Вам открыли ворота и вы проехали через Пешт."
 
-    $ UpdateTownInfo("City", "Пешт", "free_traders_alliance")
+    $ player_config.update_town_info("City", "Пешт", "free_traders_alliance")
 
     hide pguard
     hide mc5
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
@@ -437,7 +442,7 @@ label peshtallow:
 
 label minin1st_nl:
 
-    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
+    $ player_config.update_town_info("City", "Минин", "north_nath_traders")
 
     scene bg_minin with fade
     play music "music/town3.ogg" fadeout 1.0
@@ -461,7 +466,7 @@ label minin1st_nl:
     hide mc_2
     hide mworker
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     jump aivenhouse
 
@@ -530,7 +535,7 @@ label aivenhouse:
 
 label minin2nd_nl:
 
-    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
+    $ player_config.update_town_info("City", "Минин", "north_nath_traders")
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
@@ -581,7 +586,7 @@ label minin2nd_nl:
 
 label hundredcointosharki:
 
-    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
+    $ player_config.update_town_info("City", "Минин", "north_nath_traders")
 
     if FarmEnabled == True:
         $ FarmEnabled = False
@@ -593,7 +598,7 @@ label hundredcointosharki:
 
     menu:
         "Дать 100 монет" if CurrentMoney >= 100:
-            $ CurrentMoney -= 100
+            $ player_config.spend_money(100)
             $ renpy.notify("Вы отдали 100 монет.")
 
             mc "Вот тебе 100 монет..."
@@ -662,7 +667,7 @@ label hundredcointosharki:
 
             "Вы уходите из кабинета мэра и направляетесь в сторону нефтянной вышки."
 
-            $ TownType = "NotInCity"
+            $ player_config.town_type = "NotInCity"
 
             stop music fadeout 1.0
 
@@ -677,7 +682,7 @@ label hundredcointosharki:
 
             "Вы отправились искать врагов, чтобы заработать денег..."
 
-            $ TownType = "NotInCity"
+            $ player_config.town_type = "NotInCity"
             $ FarmEnabled = True
 
             jump fightformoney
@@ -721,10 +726,10 @@ label oilmine1st:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "oilbandits"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 500
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -748,10 +753,12 @@ label oilmine1st:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide oilbandits
         play sound "sfx/explosion04.wav"
-        jump fightlost
+        
+        $ renpy.sound.stop(channel="shoot")
     else:
         $ _game_menu_screen = "save_screen"
         $ _menu = True
@@ -759,6 +766,7 @@ label oilmine1st:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide oilbandits with dissolve
@@ -811,10 +819,10 @@ label followlastone:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "banditsonbase"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 500
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -838,6 +846,7 @@ label followlastone:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide banditsonbase
         play sound "sfx/explosion04.wav"
@@ -849,6 +858,7 @@ label followlastone:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide banditsonbase with dissolve
@@ -883,7 +893,7 @@ label banditbaseelim:
 
 label minin3rd_nl:
 
-    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
+    $ player_config.update_town_info("City", "Минин", "north_nath_traders")
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
@@ -935,7 +945,7 @@ label minin3rd_nl:
     hide mc6 with dissolve
     hide mworker with dissolve
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     jump mayorspy
 
@@ -988,7 +998,7 @@ label mayorspy:
 
 label minin4th_nl:
 
-    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
+    $ player_config.update_town_info("City", "Минин", "north_nath_traders")
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
@@ -1018,7 +1028,7 @@ label minin4th_nl:
 
     "Шарки и рабочие залезают в ваш грузовик и вы направляетесь на нефтяную вышку."
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
@@ -1030,7 +1040,7 @@ label minin4th_nl:
 
 label oilmine2nd:
 
-    $ UpdateTownInfo("Village", "Нефтяная вышка", "north_nath_traders")
+    $ player_config.update_town_info("Village", "Нефтяная вышка", "north_nath_traders")
     
     play music "music/bar.ogg" fadeout 1.0
     scene bg_oil with fade
@@ -1056,7 +1066,7 @@ label oilmine2nd:
 
 label minin5th_nl:
 
-    $ UpdateTownInfo("City", "Минин", "north_nath_traders")
+    $ player_config.update_town_info("City", "Минин", "north_nath_traders")
 
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
@@ -1084,7 +1094,7 @@ label minin5th_nl:
 
     "Вы направились вслед за караваном в соседний регион."
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
@@ -1111,7 +1121,7 @@ label r1m3withlisa:
     play music "music/bar.ogg" fadeout 1.0
     scene bg_pesht with fade
 
-    $ UpdateTownInfo("City", "Пешт", "free_traders_alliance")
+    $ player_config.update_town_info("City", "Пешт", "free_traders_alliance")
 
     "Приехав в Пешт вы подходите к одному из местных жителей."
 
@@ -1168,7 +1178,7 @@ label base51lisa:
     play music "music/town4.ogg" fadeout 1.0
     scene bg_base51 with fade
 
-    $ UpdateTownInfo("Village", "База 51", "brigade")
+    $ player_config.update_town_info("Village", "База 51", "brigade")
 
     "Приехав на бандитскую базу на вас бросаются взгляды едва ли не всех, кто там находится."
 
@@ -1198,7 +1208,7 @@ label base51lisa:
 
     "После этого вы начинаете бой."
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
@@ -1211,10 +1221,10 @@ label base51lisa:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "base51fight"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 650
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -1238,6 +1248,7 @@ label base51lisa:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide base51fight
         play sound "sfx/explosion04.wav"
@@ -1249,6 +1260,7 @@ label base51lisa:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide base51fight with dissolve
@@ -1308,24 +1320,25 @@ label base51afterfight:
     jump r1m2withlisa
 
 label asgardtunnel:
-    pause 0.5
+    if not config.developer:
+        pause 0.5
 
-    show bg_r1m3load at truecenter
+        show bg_r1m3load at truecenter
 
-    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-    call show_loading(level_slides) from _call_show_loading_4
+        call show_loading(level_slides) from _call_show_loading_4
 
-    scene black
+        scene black
 
-    $ _game_menu_screen = "save_screen"
-    $ _menu = True
-    $ config.keymap['save'] = ['save']
-    $ config.keymap['load'] = ['load']
-    $ config.keymap['game_menu'] = ['game_menu']
-    $ persistent._in_battle = False
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
 
-    $ CurrentRegion = "r1m3"
+    $ player_config.current_region = "r1m3"
 
     "..."
 

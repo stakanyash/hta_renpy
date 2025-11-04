@@ -1,37 +1,38 @@
 label r1m4start:
-    pause 0.5
+    if not config.developer: 
+        pause 0.5
 
-    show bg_r1m4load at truecenter
+        show bg_r1m4load at truecenter
 
-    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-    call show_loading(level_slides) from _call_show_loading_5
+        call show_loading(level_slides) from _call_show_loading_5
 
-    scene black
+        scene black
 
-    $ _game_menu_screen = "save_screen"
-    $ _menu = True
-    $ config.keymap['save'] = ['save']
-    $ config.keymap['load'] = ['load']
-    $ config.keymap['game_menu'] = ['game_menu']
-    $ persistent._in_battle = False
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
 
     $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
 
-    $ CurrentRegion = "r1m4"
+    $ player_config.current_region = "r1m4"
     play music "music/driving7.ogg" fadeout 1.0
 
     scene bg_helfirst with fade
 
     "Приехав в Хель вы сразу направились в Ольм."
 
-    $ UpdateTownInfo("City", "Ольм", "north_nath_traders")
+    $ player_config.update_town_info("City", "Ольм", "north_nath_traders")
     
     play music "music/town1.ogg" fadeout 1.0
     scene bg_olm with dissolve
 
-    if r1m4SideQuest == "CanBeGiven":
+    if player_config.r1m4_side_quest == "CanBeGiven":
         jump galdenquest
     elif LisaAgreed == "False":
         jump homersearch
@@ -74,7 +75,7 @@ label homersearch:
 
     mc "Интересно получается. Все значит тут рыбаки, а они - нет? Странно."
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     "Вы начали искать Гомера в рыбацких посёлках."
 
@@ -87,13 +88,13 @@ label homersearch:
     play music "music/driving7.ogg" fadeout 1.0
     scene bg_lauka with fade
 
-    $ UpdateTownInfo("Village", "Лаука", "free_traders_alliance")
+    $ player_config.update_town_info("Village", "Лаука", "free_traders_alliance")
 
     "В Лауке его нет."
 
     scene bg_kalis with fade
 
-    $ UpdateTownInfo("Village", "Калис", "free_traders_alliance")
+    $ player_config.update_town_info("Village", "Калис", "free_traders_alliance")
 
     "В Калисе тоже..."
 
@@ -107,7 +108,7 @@ label homersearch:
 
     scene bg_kordan with fade
 
-    $ UpdateTownInfo("Village", "Кордан", "free_traders_alliance")
+    $ player_config.update_town_info("Village", "Кордан", "free_traders_alliance")
 
     "В Кордане его так-же не оказалось."
 
@@ -144,7 +145,7 @@ label homersearch:
         "На вас нападают!"
         call randomfight from _call_randomfight_23
 
-    $ UpdateTownInfo("Village", "Салиниом", "free_traders_alliance")
+    $ player_config.update_town_info("Village", "Салиниом", "free_traders_alliance")
     
     play music "music/bar.ogg" fadeout 1.0
     scene bg_saliniom with fade
@@ -273,10 +274,10 @@ label tokranfight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "kranboss"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 2500
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -299,6 +300,7 @@ label tokranfight:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide kranboss
         play sound "sfx/explosion04.wav"
@@ -310,6 +312,7 @@ label tokranfight:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide kranboss with dissolve
@@ -448,7 +451,7 @@ label galdenquest:
             mc "Хорошо, я попробую разобраться."
             hide galden with dissolve
             "Вы уезжаете на склад."
-            $ TownType = "NotInCity"
+            $ player_config.town_type = "NotInCity"
             hide mcsurp
 
             if random.random() <= 0.5:
@@ -541,10 +544,10 @@ label r1m4SideQuest_warehousefight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "warehouseguard"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
-    $ enemy_hp = 2975 # 75% of 5 van hp
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ enemy_hp = 4250 # 75% of 5 van hp
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -567,6 +570,7 @@ label r1m4SideQuest_warehousefight:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide warehouseguard
         play sound "sfx/explosion04.wav"
@@ -578,6 +582,7 @@ label r1m4SideQuest_warehousefight:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide warehouseguard with dissolve
@@ -589,7 +594,7 @@ label r1m4SideQuest_warehousefight:
 
 label r1m4SideQuest_whereisleader:
 
-    $ UpdateTownInfo("City", "Ольм", "north_nath_traders")
+    $ player_config.update_town_info("City", "Ольм", "north_nath_traders")
 
     play music "music/town1.ogg" fadeout 1.0
 
@@ -612,7 +617,7 @@ label r1m4SideQuest_whereisleader:
 
     mc "Спасибо. Я найду его."
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     jump r1m4SideQuest_freeleader
 
@@ -652,10 +657,10 @@ label r1m4SideQuest_freeleader:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "leadertakers"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 2025 # 50% HP of 3 Vans and 1 Lorry
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -678,6 +683,7 @@ label r1m4SideQuest_freeleader:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide leadertakers
         play sound "sfx/explosion04.wav"
@@ -689,6 +695,7 @@ label r1m4SideQuest_freeleader:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide leadertakers with dissolve
@@ -730,7 +737,7 @@ label r1m4SideQuest_leaderisback:
     mc "Теперь и вы держите своё. Освобождайте склад."
 
     $ RandomR1M4SQReward = random.randint(1000, 3000)
-    $ CurrentMoney += RandomR1M4SQReward
+    $ player_config.add_money(RandomR1M4SQReward)
     $ renpy.notify(f"Вы получили {RandomR1M4SQReward} монет.")
 
     wsec "Конечно, товарищ! Бери столько добра, сколько сможешь увезти, и возвращайся ещё."
@@ -753,7 +760,7 @@ label r1m4SideQuest_leaderisback:
 
 label r1m4SideQuest_finish:
 
-    $ UpdateTownInfo("City", "Ольм", "north_nath_traders")
+    $ player_config.update_town_info("City", "Ольм", "north_nath_traders")
 
     play music "music/town1.ogg" fadeout 1.0
 
@@ -770,7 +777,7 @@ label r1m4SideQuest_finish:
 
     mc "Склад чист, работа сделана."
 
-    $ CurrentMoney += 1000
+    $ player_config.add_money(1000)
     $ renpy.notify("Вы получили 1000 монет.")
 
     galden "Отлично! Вот тебе награда."

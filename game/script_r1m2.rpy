@@ -4,31 +4,32 @@
 
 label arrivetor1m2:
     
-    pause 0.5
+    if not config.developer:
+        pause 0.5
 
-    show bg_r1m2load at truecenter
+        show bg_r1m2load at truecenter
 
-    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-    call show_loading(level_slides) from _call_show_loading_1
+        call show_loading(level_slides) from _call_show_loading_1
 
-    scene black
+        scene black
+
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
 
     $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
-
-    $ _game_menu_screen = "save_screen"
-    $ _menu = True
-    $ config.keymap['save'] = ['save']
-    $ config.keymap['load'] = ['load']
-    $ config.keymap['game_menu'] = ['game_menu']
-    $ persistent._in_battle = False
 
     play music "music/driving2.ogg" fadeout 1.0
 
     $ TakeGunFromZaimka = "False"
 
-    $ CurrentRegion = "r1m2"
+    $ player_config.current_region = "r1m2"
     
     scene bg_ridzin with fade
 
@@ -66,10 +67,10 @@ label attackforloot:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "lootdefender"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 200
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -92,6 +93,7 @@ label attackforloot:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide lootdefender
         play sound "sfx/explosion04.wav"
@@ -103,11 +105,12 @@ label attackforloot:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide lootdefender with dissolve
 
-        $ drops = get_random_drops()
+        $ drops = player_config.get_random_drops()
 
         if drops:
             python:
@@ -116,19 +119,19 @@ label attackforloot:
                 items_not_added = 0
 
                 for drop_id, drop_name in drops:
-                    if try_add_item(drop_id):
+                    if player_config.try_add_item(drop_id):
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
                         items_not_added += 1
 
-                if CurrentRegion == "r1m1":
+                if player_config.current_region == "r1m1":
                     money_drop = random.randint(50, 150)
-                elif CurrentRegion == "r1m2":
+                elif player_config.current_region == "r1m2":
                     money_drop = random.randint(100, 250)
-                elif CurrentRegion == "r1m3":
+                elif player_config.current_region == "r1m3":
                     money_drop = random.randint(150, 350)
-                elif CurrentRegion == "r1m4":
+                elif player_config.current_region == "r1m4":
                     money_drop = random.randint(300, 600)
 
                 if items_not_added > 0:
@@ -136,7 +139,7 @@ label attackforloot:
                     money_drop += compensation
                     renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
                 
-                CurrentMoney += money_drop
+                player_config.add_money(money_drop)
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
@@ -151,21 +154,21 @@ label defeateddefender:
     mc "Посмотрим, что в этом ящике..."
     $ randomgun = random.randint(1, 9)
 
-    if try_add_item("Hornet"):
+    if player_config.try_add_item("Hornet"):
         $ renpy.notify("В ваш инвентарь добавлен \"Шершень\".")
     else:
-        $ CurrentMoney += 65
+        $ player_config.add_money(65)
         $ renpy.notify("В вашем инвентаре недостаточно места! \"Шершень\" автоматически продан за 65 монет.")
 
     if 1 <= randomgun <= 3:
         "Вы нашли оружие \"Корд\"!"
-        $ CurrentGun = "Kord"
+        $ player_config.current_gun = "Kord"
     elif 4 <= randomgun <= 6:
         "Вы нашли оружие \"ПКТ\"!"
-        $ CurrentGun = "PKT"
+        $ player_config.current_gun = "PKT"
     else:
         "Вы нашли оружие \"Шторм\"!"
-        $ CurrentGun = "Storm"
+        $ player_config.current_gun = "Storm"
 
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."
@@ -174,7 +177,7 @@ label defeateddefender:
 
 label movetovostochnoe:
 
-    $ UpdateTownInfo("City", "Восточное", "farmers_union")
+    $ player_config.update_town_info("City", "Восточное", "farmers_union")
 
     play music "music/bar.ogg" fadeout 1.0
     scene bg_vostochnoe with fade
@@ -228,7 +231,7 @@ label movetovostochnoe:
     hide hose with dissolve
     hide mcsurp with dissolve
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
@@ -240,7 +243,7 @@ label movetovostochnoe:
 
 label tolocus:
 
-    $ UpdateTownInfo("Village", "Локус", "technicians")
+    $ player_config.update_town_info("Village", "Локус", "technicians")
 
     scene bg_locus with fade
     play music "music/town2.ogg" fadeout 1.0
@@ -297,7 +300,7 @@ label tolocus:
 
 label tomidgard:
 
-    $ UpdateTownInfo("City", "Мидгард", "technicians")
+    $ player_config.update_town_info("City", "Мидгард", "technicians")
 
     scene bg_midgard with fade
     play music "music/town3.ogg" fadeout 1.0
@@ -368,7 +371,7 @@ label tomidgard:
     hide mchar with dissolve
     hide zavhoz with dissolve
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     "Вы выдвигаетесь в сторону Порто."
 
@@ -401,11 +404,11 @@ label toportoe1:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "to_porto_e1"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 850
     $ bgname = "bg_toporto"
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 15 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -427,6 +430,7 @@ label toportoe1:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide to_porto_e1
         play sound "sfx/explosion04.wav"
@@ -438,11 +442,12 @@ label toportoe1:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide to_porto_e1 with dissolve
 
-        $ drops = get_random_drops()
+        $ drops = player_config.get_random_drops()
 
         if drops:
             python:
@@ -451,19 +456,19 @@ label toportoe1:
                 items_not_added = 0
 
                 for drop_id, drop_name in drops:
-                    if try_add_item(drop_id):
+                    if player_config.try_add_item(drop_id):
                         drop_names_text.append(drop_name)
                         dropped_something = True
                     else:
                         items_not_added += 1
 
-                if CurrentRegion == "r1m1":
+                if player_config.current_region == "r1m1":
                     money_drop = random.randint(50, 150)
-                elif CurrentRegion == "r1m2":
+                elif player_config.current_region == "r1m2":
                     money_drop = random.randint(100, 250)
-                elif CurrentRegion == "r1m3":
+                elif player_config.current_region == "r1m3":
                     money_drop = random.randint(150, 350)
-                elif CurrentRegion == "r1m4":
+                elif player_config.current_region == "r1m4":
                     money_drop = random.randint(300, 600)
 
                 if items_not_added > 0:
@@ -471,7 +476,7 @@ label toportoe1:
                     money_drop += compensation
                     renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
                 
-                CurrentMoney += money_drop
+                player_config.add_money(money_drop)
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
@@ -483,7 +488,7 @@ label toportoe1:
 
 label portoa:
 
-    $ UpdateTownInfo("City", "Порто", "technicians")
+    $ player_config.update_town_info("City", "Порто", "technicians")
 
     play music "music/bar.ogg" fadeout 1.0
 
@@ -508,7 +513,7 @@ label portoa:
     hide mc4 with dissolve
     hide shon with dissolve
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
         $ randommus = random.randint(1, 2)
@@ -520,7 +525,7 @@ label portoa:
 
 label backtomidgard:
 
-    $ UpdateTownInfo("City", "Мидгард", "technicians")
+    $ player_config.update_town_info("City", "Мидгард", "technicians")
 
     scene bg_midgard with fade
 
@@ -530,7 +535,7 @@ label backtomidgard:
 
     show scientist at left with dissolve
 
-    $ CurrentMoney += 1000
+    $ player_config.add_money(1000)
     $ renpy.notify("Вы получили 1000 монет.")
 
     unknown "Кто помогает городу жить, тому и мы поможем. Что тебе было нужно?"
@@ -548,7 +553,7 @@ label backtomidgard:
 
     mc "Спасибо. Наконец-то я узнаю, кто я такой."
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
 
     hide scientist with dissolve
     hide mchar with dissolve
@@ -684,25 +689,26 @@ label firstmeetben:
 
 label r1m2withlisa:
 
-    pause 0.5
+    if not config.developer:
+        pause 0.5
 
-    show bg_r1m2load at truecenter
+        show bg_r1m2load at truecenter
 
-    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-    call show_loading(level_slides) from _call_show_loading_2
+        call show_loading(level_slides) from _call_show_loading_2
 
-    scene black
+        scene black
 
-    $ _game_menu_screen = "save_screen"
-    $ _menu = True
-    $ config.keymap['save'] = ['save']
-    $ config.keymap['load'] = ['load']
-    $ config.keymap['game_menu'] = ['game_menu']
-    $ persistent._in_battle = False
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
 
-    $ CurrentRegion = "r1m2"
-    $ UpdateTownInfo("City", "Мидгард", "technicians")
+    $ player_config.current_region = "r1m2"
+    $ player_config.update_town_info("City", "Мидгард", "technicians")
     play music "music/town3.ogg" fadeout 1.0
 
     scene bg_midgard with fade
@@ -738,7 +744,7 @@ label portolisa:
 
     scene bg_porto with fade
     play music "music/bar.ogg" fadeout 1.0
-    $ UpdateTownInfo("City", "Порто", "technicians")
+    $ player_config.update_town_info("City", "Порто", "technicians")
 
     "Вам эти поиски уже кажутся нескончаемыми. Но делать нечего - вы подходите к одному из местных жителей в Порто."
 
@@ -767,7 +773,7 @@ label portolisa:
 
 label lisanearporto:
 
-    $ TownType = "NotInCity"
+    $ player_config.town_type = "NotInCity"
     play music "music/intensedialogue01.ogg" fadeout 1.0
 
     scene bg_lisarescue with fade
@@ -777,9 +783,9 @@ label lisanearporto:
 
     "Прямо недалеко от Порто вы заметили что-то странное..."
 
-    if CurrentCar == "Van":
+    if player_config.car == "Van":
         scene bg_lisarescue1_van with dissolve
-    elif CurrentCar == "Molokovoz":
+    elif player_config.car == "Molokovoz":
         scene bg_lisarescue1_ml with dissolve
 
     unknown "Ага... Тебя-то здесь и не хватало..."
@@ -805,10 +811,10 @@ label lisanearporto:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "lisarescue_fight"
-    $ player_hp = CarHP.get(CurrentCar, CarHP["Van"])
+    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
     $ player_max_hp = player_hp
     $ enemy_hp = 650
-    $ damage_range = gun_stats.get(CurrentGun, gun_stats["Hornet"])
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
@@ -832,6 +838,7 @@ label lisanearporto:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
         
         hide lisarescue_fight
         play sound "sfx/explosion04.wav"
@@ -843,6 +850,7 @@ label lisanearporto:
         $ config.keymap['load'] = ['load']
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
 
         play sound "sfx/explosion04.wav"
         hide lisarescue_fight with dissolve
@@ -854,7 +862,7 @@ label lisasavedporto:
     play music "music/intensedialogue02.ogg" fadeout 1.0
 
     $ renpy.scene()
-    $ renpy.show(f"bg_lr_1_{CurrentCar}_{CurrentGun}")
+    $ renpy.show(f"bg_lr_1_{player_config.car}_{player_config.current_gun}")
     $ renpy.with_statement(fade)
 
     lisa "Ты? Что ты здесь делаешь?"
@@ -865,7 +873,7 @@ label lisasavedporto:
     mc "Теперь ты ответишь на мои вопросы: мне нужно знать, кто убил моего отца!"
 
     $ renpy.scene()
-    $ renpy.show(f"bg_lr_2_{CurrentCar}_{CurrentGun}")
+    $ renpy.show(f"bg_lr_2_{player_config.car}_{player_config.current_gun}")
     $ renpy.with_statement(dissolve)
 
     lisa "Что?"
@@ -879,7 +887,7 @@ label lisasavedporto:
     play music "music/intensedialogue01.ogg" fadeout 1.0
 
     $ renpy.scene()
-    $ renpy.show(f"bg_lr_3_{CurrentCar}_{CurrentGun}")
+    $ renpy.show(f"bg_lr_3_{player_config.car}_{player_config.current_gun}")
     $ renpy.with_statement(dissolve)
 
     lisa "Так что же ты за мной притащился в такую даль?"
@@ -892,7 +900,7 @@ label lisasavedporto:
     lisa "Да, я была там, когда это произошло, и видела, кто это сделал."
 
     $ renpy.scene()
-    $ renpy.show(f"bg_lr_4_{CurrentCar}_{CurrentGun}")
+    $ renpy.show(f"bg_lr_4_{player_config.car}_{player_config.current_gun}")
     $ renpy.with_statement(dissolve)
 
     mc "Говори же!"
@@ -909,7 +917,7 @@ label lisasavedporto:
     mc "Но я всё равно не понимаю, зачем они убили невинных людей?"
 
     $ renpy.scene()
-    $ renpy.show(f"bg_lr_5_{CurrentCar}_{CurrentGun}")
+    $ renpy.show(f"bg_lr_5_{player_config.car}_{player_config.current_gun}")
     $ renpy.with_statement(dissolve)
 
     lisa "Это обычная тактика. Они совершат несколько неожиданных рейдов."
@@ -926,7 +934,7 @@ label lisasavedporto:
     play music "music/quietdialogue03.ogg" fadeout 1.0
 
     $ renpy.scene()
-    $ renpy.show(f"bg_lr_6_{CurrentCar}_{CurrentGun}")
+    $ renpy.show(f"bg_lr_6_{player_config.car}_{player_config.current_gun}")
     $ renpy.with_statement(dissolve)
 
     mc "Ты права, отвечать должен тот, кто отдал приказ. Аксель будет повержен!"
