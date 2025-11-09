@@ -10,12 +10,12 @@ label r1m4start:
 
         scene black
 
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
 
     $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
@@ -331,12 +331,9 @@ label leaveregion1:
 
     play music "music/bio02.ogg" fadeout 1.0
 
-    if CurrentCar == "Molokovoz":
-        if CurrentCargo == "Box":
-            scene bg_leaver1_cargo3_1 with dissolve
-        else:
-            scene bg_leaver1_cargo1_1 with dissolve
-    elif CurrentCar == "Ural":
+    if player_config.car == "Molokovoz":
+        scene bg_leaver1_cargo1_1 with dissolve
+    elif player_config.car == "Ural":
         scene bg_leaver1_ural_1 with dissolve
     else:
         scene bg_leaver1_van_1 with dissolve
@@ -346,12 +343,9 @@ label leaveregion1:
 
     pause 0.5
 
-    if CurrentCar == "Molokovoz":
-        if CurrentCargo == "Box":
-            scene bg_leaver1_cargo3_2 with dissolve
-        else:
-            scene bg_leaver1_cargo1_2 with dissolve
-    elif CurrentCar == "Ural":
+    if player_config.car == "Molokovoz":
+        scene bg_leaver1_cargo1_2 with dissolve
+    elif player_config.car == "Ural":
         scene bg_leaver1_ural_2 with dissolve
     else:
         scene bg_leaver1_van_2 with dissolve
@@ -365,12 +359,9 @@ label leaveregion1:
 
     pause 0.5
 
-    if CurrentCar == "Molokovoz":
-        if CurrentCargo == "Box":
-            scene bg_leaver1_cargo3_3 with dissolve
-        else:
-            scene bg_leaver1_cargo1_3 with dissolve
-    elif CurrentCar == "Ural":
+    if player_config.car == "Molokovoz":
+        scene bg_leaver1_cargo1_3 with dissolve
+    elif player_config.car == "Ural":
         scene bg_leaver1_ural_3 with dissolve
     else:
         scene bg_leaver1_van_3 with dissolve
@@ -380,12 +371,9 @@ label leaveregion1:
 
     pause 0.5
 
-    if CurrentCar == "Molokovoz":
-        if CurrentCargo == "Box":
-            scene bg_leaver1_cargo3_4 with dissolve
-        else:
-            scene bg_leaver1_cargo1_4 with dissolve
-    elif CurrentCar == "Ural":
+    if player_config.car == "Molokovoz":
+        scene bg_leaver1_cargo1_4 with dissolve
+    elif player_config.car == "Ural":
         scene bg_leaver1_ural_4 with dissolve
     else:
         scene bg_leaver1_van_4 with dissolve
@@ -397,22 +385,23 @@ label leaveregion1:
 
     "Конец первой главы."
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
+    if not config.developer:
+        $ _window_hide()
+        $ _game_menu_screen = None
+        $ _menu = False
+        $ config.keymap['save'] = []
+        $ config.keymap['load'] = []
+        $ config.keymap['game_menu'] = []
+        $ persistent._in_battle = True
 
-    pause 1.0
+        pause 1.0
 
-    $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
-    python:
-        for i in range(len(slides)):
-            renpy.show(slides[i])
-            renpy.pause(pauses[i], hard=True)
-            renpy.hide(slides[i])
+        $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
+        python:
+            for i in range(len(slides)):
+                renpy.show(slides[i])
+                renpy.pause(pauses[i], hard=True)
+                renpy.hide(slides[i])
 
     return
 

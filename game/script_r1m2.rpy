@@ -15,12 +15,12 @@ label arrivetor1m2:
 
         scene black
 
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
 
     $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
@@ -154,11 +154,12 @@ label defeateddefender:
     mc "Посмотрим, что в этом ящике..."
     $ randomgun = random.randint(1, 9)
 
-    if player_config.try_add_item("Hornet"):
-        $ renpy.notify("В ваш инвентарь добавлен \"Шершень\".")
+    if player_config.try_add_item(player_config.current_gun):
+        $ renpy.notify(f"В ваш инвентарь добавлен {gun_names.get(player_config.current_gun, player_config.current_gun)}.")
     else:
-        $ player_config.add_money(65)
-        $ renpy.notify("В вашем инвентаре недостаточно места! \"Шершень\" автоматически продан за 65 монет.")
+        $ price = ItemPricesCity.get(player_config.current_gun)
+        $ player_config.add_money(price)
+        $ renpy.notify(f"В вашем инвентаре недостаточно места! {gun_names.get(player_config.current_gun, player_config.current_gun)} автоматически продан за {price} монет.")
 
     if 1 <= randomgun <= 3:
         "Вы нашли оружие \"Корд\"!"
@@ -700,12 +701,12 @@ label r1m2withlisa:
 
         scene black
 
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
 
     $ player_config.current_region = "r1m2"
     $ player_config.update_town_info("City", "Мидгард", "technicians")

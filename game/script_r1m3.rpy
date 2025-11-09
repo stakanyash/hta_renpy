@@ -12,12 +12,12 @@ label vaterlandfirst:
 
         scene black
 
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
 
     $ player_config.current_region = "r1m3"
 
@@ -588,8 +588,8 @@ label hundredcointosharki:
 
     $ player_config.update_town_info("City", "Минин", "north_nath_traders")
 
-    if FarmEnabled == True:
-        $ FarmEnabled = False
+    if player_config.farm_enabled == True:
+        $ player_config.farm_enabled = False
 
     hide mworker
     hide mc_2
@@ -597,7 +597,7 @@ label hundredcointosharki:
     show mc_2 at left
 
     menu:
-        "Дать 100 монет" if CurrentMoney >= 100:
+        "Дать 100 монет" if player_config.money >= 100:
             $ player_config.spend_money(100)
             $ renpy.notify("Вы отдали 100 монет.")
 
@@ -672,7 +672,7 @@ label hundredcointosharki:
             stop music fadeout 1.0
 
             jump oilmine1st
-        "\"У меня пока нет денег...\"" if R1M3FarmCount <= 5:
+        "\"У меня пока нет денег...\"" if player_config.r1m3_farm_count <= 5:
             $ renpy.notify("Игра сохранена в слот 3.")
             $ renpy.save("checkpoint-3")
             mc "У меня пока нет денег."
@@ -683,15 +683,15 @@ label hundredcointosharki:
             "Вы отправились искать врагов, чтобы заработать денег..."
 
             $ player_config.town_type = "NotInCity"
-            $ FarmEnabled = True
+            $ player_config.farm_enabled = True
 
             jump fightformoney
 
 label fightformoney:
 
-    if FarmEnabled == True and R1M3FarmCount <= 5:
+    if player_config.farm_enabled == True and player_config.r1m3_farm_count <= 5:
 
-        $ R1M3FarmCount += 1
+        $ player_config.r1m3_farm_count += 1
 
         call randomfight from _call_randomfight_15
 
@@ -868,18 +868,12 @@ label followlastone:
 label banditbaseelim:
 
     if random.random() <= 0.4:
-        if try_add_item("Elephant") == True:
+        if player_config.try_add_item("Elephant") == True:
             "Расправившись с бандитами вы заметили, что у одного из них стоит неплохое оружие."
 
             mc "Надо бы забрать себе."
 
-            $ GotElephant = True
-
             $ renpy.notify("Вы получили предмет \"Слон\".")
-        else:
-            $ GotElephant = False
-    else:
-        $ GotElephant = False
 
     mc "Пора ехать в Минин."
 
@@ -1331,12 +1325,12 @@ label asgardtunnel:
 
         scene black
 
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
 
     $ player_config.current_region = "r1m3"
 

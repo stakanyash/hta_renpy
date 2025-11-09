@@ -9,29 +9,27 @@ screen InGameMenu():
         xsize 1920
         ysize 1080
 
-        # Отображение денег
-        $ money = player_config.money
-        if 0 <= money <= 9:
+        if 0 <= player_config.money <= 9:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[money] монет" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
-        elif 10 <= money <= 99:
+            text "[player_config.money] монет" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+        elif 10 <= player_config.money <= 99:
             text "Деньги:" size 19 xpos 65 ypos 20 textalign 0.5 color "#404040"
-            text "[money] монет" size 19 xpos 135 ypos 20 textalign 0.5 color "#404040"
-        elif 100 <= money <= 999:
+            text "[player_config.money] монет" size 19 xpos 135 ypos 20 textalign 0.5 color "#404040"
+        elif 100 <= player_config.money <= 999:
             text "Деньги:" size 19 xpos 60 ypos 20 textalign 0.5 color "#404040"
-            text "[money] монет" size 19 xpos 130 ypos 20 textalign 0.5 color "#404040"
-        elif 1000 <= money <= 9999:
+            text "[player_config.money] монет" size 19 xpos 130 ypos 20 textalign 0.5 color "#404040"
+        elif 1000 <= player_config.money <= 9999:
             text "Деньги:" size 19 xpos 55 ypos 20 textalign 0.5 color "#404040"
-            text "[money] монет" size 19 xpos 125 ypos 20 textalign 0.5 color "#404040"
-        elif 10000 <= money <= 99999:
+            text "[player_config.money] монет" size 19 xpos 125 ypos 20 textalign 0.5 color "#404040"
+        elif 10000 <= player_config.money <= 99999:
             text "Деньги:" size 19 xpos 50 ypos 20 textalign 0.5 color "#404040"
-            text "[money] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
-        elif 100000 <= money <= 999999:
+            text "[player_config.money] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
+        elif 100000 <= player_config.money <= 999999:
             text "Деньги:" size 19 xpos 45 ypos 20 textalign 0.5 color "#404040"
-            text "[money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
-        elif money >= 1_000_000:
+            text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
+        elif player_config.money >= 1000000:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[player_config.format_money()]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         frame:
             background None
@@ -122,22 +120,64 @@ screen Selling_Menu():
         def delete_item(item_key):
             if item_key in player_config.inventory:
                 player_config.inventory.remove(item_key)
+        
+        def install_weapon(weapon_key):
+            """Устанавливает оружие из инвентаря, старое возвращает в инвентарь"""
+            if weapon_key is None or weapon_key not in player_config.inventory:
+                return
+            
+            # Проверяем, что это действительно оружие
+            if weapon_key not in GunDatabase:
+                return
+            
+            # Сохраняем старое оружие
+            old_gun = player_config.current_gun
+            
+            # Удаляем новое оружие из инвентаря
+            player_config.inventory.remove(weapon_key)
+            
+            # Устанавливаем новое оружие
+            player_config.current_gun = weapon_key
+            player_config.gun_type = GunDatabase[weapon_key]["type"]
+            
+            # Добавляем старое оружие в инвентарь
+            player_config.inventory.append(old_gun)
+            
+            # Звук установки
+            renpy.sound.play("audio/sfx/click.wav")
+        
+        def is_weapon(item_key):
+            """Проверяет, является ли предмет оружием"""
+            return item_key in GunDatabase
 
 
     frame:
         style "menu_frame"
-        background "gui/townmenu/backinv.png"
+        background ("gui/townmenu/backinv_gunsel.png" if (selected_item and is_weapon(selected_item)) else "gui/townmenu/backinv.png")
         xsize 1920
         ysize 1080
 
-        # Отображение денег
-        $ money = player_config.money
-        if money < 1_000_000:
-            text "Деньги:" size 19 xpos 50 ypos 20 textalign 0.5 color "#404040"
-            text "[money] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
-        else:
+        if 0 <= player_config.money <= 9:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[player_config.format_money()]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+        elif 10 <= player_config.money <= 99:
+            text "Деньги:" size 19 xpos 65 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 135 ypos 20 textalign 0.5 color "#404040"
+        elif 100 <= player_config.money <= 999:
+            text "Деньги:" size 19 xpos 60 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 130 ypos 20 textalign 0.5 color "#404040"
+        elif 1000 <= player_config.money <= 9999:
+            text "Деньги:" size 19 xpos 55 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 125 ypos 20 textalign 0.5 color "#404040"
+        elif 10000 <= player_config.money <= 99999:
+            text "Деньги:" size 19 xpos 50 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
+        elif 100000 <= player_config.money <= 999999:
+            text "Деньги:" size 19 xpos 45 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
+        elif player_config.money >= 1000000:
+            text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
+            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         # Кнопка закрытия
         imagebutton activate_sound "audio/sfx/click.wav":
@@ -187,6 +227,10 @@ screen Selling_Menu():
             
             text "[len(player_config.inventory)]/[CarInventoryLimits.get(player_config.car, 0)]" xalign 0.5 yalign 0.5 color "#404040"
 
+        # Кнопка установки оружия (появляется только для оружия)
+        if selected_item and is_weapon(selected_item):
+            textbutton _("Установить") activate_sound "audio/sfx/click.wav" action [Function(install_weapon, selected_item), SetScreenVariable("selected_item", None)] xpos 1500 yalign 0.702 sensitive selected_item != player_config.current_gun
+
         # Продать и удалить
         textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
         textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action [Confirm("Вы действительно хотите удалить этот предмет?\nВНИМАНИЕ: Действие необратимо!", yes=Function(delete_item, selected_item), no=None), SetScreenVariable("selected_item", None)] xpos 1193 yalign 0.859 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
@@ -194,7 +238,12 @@ screen Selling_Menu():
         # Подробности выбранного предмета
         if selected_item:
             $ item_data = ItemDatabase[selected_item]
-            $ price = ItemPricesVillage[selected_item] if player_config.town_type == "Village" else ItemPricesCity[selected_item]
+            
+            # Показываем цену только если предмет можно продать
+            if player_config.town_type in ["City", "Village"]:
+                $ price = ItemPricesVillage.get(selected_item, 0) if player_config.town_type == "Village" else ItemPricesCity.get(selected_item, 0)
+            else:
+                $ price = 0
         
             frame:
                 xpos 1170
@@ -214,8 +263,17 @@ screen Selling_Menu():
                 background None
                 padding (20, 20)
 
-                text item_data["desc"] size 25 color "#353535"
+                if is_weapon(selected_item):
+                    $ min_dmg, max_dmg = gun_stats.get(selected_item, (0, 0))
+                    
+                    if selected_item == player_config.current_gun:
+                        text "[item_data['desc']]\n\nНаносимый урон: от [min_dmg] до [max_dmg] единиц\n\n{color=#247724}Данное оружие является текущим установленным.{/color}" size 25 color "#353535"
+                    else:
+                        text "[item_data['desc']]\n\nНаносимый урон: от [min_dmg] до [max_dmg] единиц" size 25 color "#353535"
+                else:
+                    text "[item_data['desc']]" size 25 color "#353535"
 
+            # Показываем цену
             frame:
                 xpos 800
                 ypos 702
@@ -224,7 +282,8 @@ screen Selling_Menu():
                 background None
                 padding (20, 20)
 
-                text "Цена: [price] монет" size 30 color "#353535"
+                if price > 0:
+                    text "Цена: [price] монет" size 30 color "#353535"
 
     # Вкладки меню
     imagebutton activate_sound "audio/sfx/click.wav":
@@ -243,7 +302,7 @@ screen Selling_Menu():
         ypos 6
         focus_mask True 
 
-    if player_config.town_type in ["City", "Village"]:
+    if player_config.town_type in ["City"]:
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/buttons/tab_weapon_e.png" 
             hover "gui/townmenu/buttons/tab_weapon_s.png"
@@ -258,7 +317,7 @@ screen Selling_Menu():
             action [Hide("Selling_Menu"), Show("Car_Shop")]
             xpos 1276
             ypos 7
-            focus_mask True 
+            focus_mask True
 
 # Gun Shop
 
@@ -273,13 +332,27 @@ screen Gun_Shop_Menu():
         xsize 1920
         ysize 1080
 
-        $ money = player_config.money
-        if money < 1_000_000:
-            text "Деньги:" size 19 xpos 50 ypos 20 textalign 0.5 color "#404040"
-            text "[money] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
-        else:
+        if 0 <= player_config.money <= 9:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[player_config.format_money()]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+        elif 10 <= player_config.money <= 99:
+            text "Деньги:" size 19 xpos 65 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 135 ypos 20 textalign 0.5 color "#404040"
+        elif 100 <= player_config.money <= 999:
+            text "Деньги:" size 19 xpos 60 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 130 ypos 20 textalign 0.5 color "#404040"
+        elif 1000 <= player_config.money <= 9999:
+            text "Деньги:" size 19 xpos 55 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 125 ypos 20 textalign 0.5 color "#404040"
+        elif 10000 <= player_config.money <= 99999:
+            text "Деньги:" size 19 xpos 50 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
+        elif 100000 <= player_config.money <= 999999:
+            text "Деньги:" size 19 xpos 45 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
+        elif player_config.money >= 1000000:
+            text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
+            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
@@ -418,13 +491,27 @@ screen Car_Shop():
         xsize 1920
         ysize 1080
 
-        $ money = player_config.money
-        if money < 1_000_000:
-            text "Деньги:" size 19 xpos 50 ypos 20 textalign 0.5 color "#404040"
-            text "[money] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
-        else:
+        if 0 <= player_config.money <= 9:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[player_config.format_money()]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+        elif 10 <= player_config.money <= 99:
+            text "Деньги:" size 19 xpos 65 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 135 ypos 20 textalign 0.5 color "#404040"
+        elif 100 <= player_config.money <= 999:
+            text "Деньги:" size 19 xpos 60 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 130 ypos 20 textalign 0.5 color "#404040"
+        elif 1000 <= player_config.money <= 9999:
+            text "Деньги:" size 19 xpos 55 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 125 ypos 20 textalign 0.5 color "#404040"
+        elif 10000 <= player_config.money <= 99999:
+            text "Деньги:" size 19 xpos 50 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 120 ypos 20 textalign 0.5 color "#404040"
+        elif 100000 <= player_config.money <= 999999:
+            text "Деньги:" size 19 xpos 45 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
+        elif player_config.money >= 1000000:
+            text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
+            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 

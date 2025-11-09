@@ -736,7 +736,7 @@ screen statistics_screen():
             xpos 1630
             focus_mask True 
 
-        if player_config.town_type == "City" or player_config.town_type == "Village":
+        if player_config.town_type == "City":
             imagebutton activate_sound "audio/sfx/click.wav":
                 idle "gui/townmenu/buttons/tab_weapon_e.png" 
                 hover "gui/townmenu/buttons/tab_weapon_s.png"

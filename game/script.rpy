@@ -4,14 +4,12 @@ default difficulty = "normal"
 default difficulty_base_multiplier = 0.03
 default selected_shop_item = None
 
-# --- PlayerConfig класс ---
 init python:
     from dataclasses import dataclass, field
     import random
 
     @dataclass
     class PlayerConfig:
-        # Основное состояние
         current_gun: str = "Hornet"
         second_gun: str = None
         money: int = 100
@@ -19,19 +17,16 @@ init python:
         current_region: str = "r1m1"
         gun_type: str = "Firearm"
 
-        # Город
         town_type: str = None
         town_name: str = None
         group_logo: str = None
 
-        # Инвентарь и квесты
         inventory: list = field(default_factory=list)
         farm_enabled: bool = False
         big_gun_install: str = None
         r1m3_farm_count: int = 0
         r1m4_side_quest: str = "CanBeGiven"
 
-        # --- Методы для работы с состоянием ---
         def update_town_info(self, town_type, town_name, group_logo):
             self.town_type = town_type
             self.town_name = town_name
@@ -87,11 +82,6 @@ init python:
             drop_ids = random.sample(keys, drop_count)
             return [(item_id, drop_dict[item_id]) for item_id in drop_ids]
 
-# --- Создаем глобальный объект игрока ---
-default player_config = PlayerConfig()
-
-# --- Настройка каналов звука ---
-init python:
     renpy.music.register_channel("sfx2", mixer="sfx", loop=True, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("shoot", mixer="sfx", loop=False, stop_on_mute=True, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("damage", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
@@ -99,9 +89,6 @@ init python:
     renpy.music.register_channel("bossattack", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("sellitem", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
 
-# --- Константы и базы данных ---
-init python:
-    # --- Цены оружия ---
     smallweapon_prices = {
         "Hornet": 280, "Specter": 590, "PKT": 1670, "Kord": 3680, "Storm": 3450,
     }
@@ -112,12 +99,10 @@ init python:
         "Omega": 42000, "Elephant": 50500,
     }
 
-    # --- Ограничения и инвентарь ---
     CarInventoryLimits = {
         "Van": 4, "Molokovoz": 8, "Ural": 12, "Belaz": 18, "Mirotvorec": 12,
     }
 
-    # --- Имена и отображение ---
     car_names = {
         "Van": "Вэн",
         "Molokovoz": "Молоковоз",
@@ -154,13 +139,11 @@ init python:
         "Flag": (45, 100), "Rapier": (50, 85), "Omega": (55, 130), "Elephant": (700, 800),
     }
 
-    # --- Дропы ---
     R1M1DropNames = {"Hornet": "Шершень", "Potato": "Картофель", "Wood": "Дрова"}
     R1DropNames = {"Hornet": "Шершень", "Potato": "Картофель", "ScrapMetal": "Металлолом", "Wood": "Дрова"}
     R1M4DropNames = {"ScrapMetal": "Металлолом", "Oil": "Нефть", "Fuel": "Топливо"}
     DropNames = {"Hornet": "Шершень", "Potato": "Картофель", "ScrapMetal": "Металлолом", "Wood": "Дрова"}
 
-    # --- Базы данных ---
     GunDatabase = {
         "Hornet": {"name": "Шершень", "desc": "Пулемёт калибра 5,45 - пожалуй, самое слабое автоматическое оружие, которым можно оборудовать грузовик.", "type": "Firearm"},
         "Specter": {"name": "Спектр", "desc": "Спаренный пулемёт калибра 5,45. Два ствола и малое время перезарядки позволяют вести почти непрерывный огонь.", "type": "Firearm"},
@@ -351,7 +334,6 @@ init python:
     }
 
     def buy_weapon_with_old_handling(weapon_name):
-        # Проверяем цену
         if weapon_name in smallweapon_prices:
             price = smallweapon_prices[weapon_name]
         elif weapon_name in bigweapon_prices:
@@ -363,11 +345,9 @@ init python:
         if player_config.money >= price:
             player_config.money -= price
 
-            # Старое оружие добавляем в инвентарь
             if player_config.current_gun not in player_config.inventory:
                 player_config.inventory.append(player_config.current_gun)
 
-            # Ставим новое оружие текущим
             player_config.current_gun = weapon_name
 
             weapon_data = GunDatabase.get(weapon_name)
@@ -381,7 +361,8 @@ init python:
         else:
             renpy.notify("Недостаточно денег!")
 
-# --- Трансформа для анимации ---
+default player_config = PlayerConfig()
+
 transform stretch_in:
     yzoom 0.95
     linear 0.1 yzoom 1.0
