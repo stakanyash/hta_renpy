@@ -36,7 +36,6 @@ screen InGameMenu():
             xalign 0.5
             yalign 0.5
 
-        # Кнопки меню
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
             hover "gui/townmenu/close_h.png"
@@ -76,7 +75,6 @@ screen InGameMenu():
                 ypos 1
                 focus_mask True 
 
-        # Название города и логотип
         hbox:
             xsize 527
             ysize 63
@@ -122,32 +120,30 @@ screen Selling_Menu():
                 player_config.inventory.remove(item_key)
         
         def install_weapon(weapon_key):
-            """Устанавливает оружие из инвентаря, старое возвращает в инвентарь"""
             if weapon_key is None or weapon_key not in player_config.inventory:
                 return
             
-            # Проверяем, что это действительно оружие
             if weapon_key not in GunDatabase:
                 return
+
+            gun_data = GunDatabase[weapon_key]
+            gun_type = gun_data.get("type", "")
+            gun_size = gun_data.get("size", "Small")
+
+            if gun_size == "Big" and player_config.big_gun_install != "Possible":
+                renpy.notify("Невозможно установить это оружие в данный слот.")
+                return
             
-            # Сохраняем старое оружие
             old_gun = player_config.current_gun
             
-            # Удаляем новое оружие из инвентаря
             player_config.inventory.remove(weapon_key)
             
-            # Устанавливаем новое оружие
             player_config.current_gun = weapon_key
             player_config.gun_type = GunDatabase[weapon_key]["type"]
             
-            # Добавляем старое оружие в инвентарь
             player_config.inventory.append(old_gun)
-            
-            # Звук установки
-            renpy.sound.play("audio/sfx/click.wav")
         
         def is_weapon(item_key):
-            """Проверяет, является ли предмет оружием"""
             return item_key in GunDatabase
 
 
@@ -179,7 +175,6 @@ screen Selling_Menu():
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
             text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
-        # Кнопка закрытия
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
             hover "gui/townmenu/close_h.png"
@@ -188,7 +183,6 @@ screen Selling_Menu():
             yalign 0.0
             focus_mask True 
 
-        # Список предметов
         viewport:
             xpos 230
             ypos 290
@@ -217,7 +211,6 @@ screen Selling_Menu():
                                 action SetScreenVariable("selected_item", item_id)
                                 focus_mask True
 
-        # Счётчик предметов
         frame:
             xalign 0.9
             yalign 0.145
@@ -227,19 +220,15 @@ screen Selling_Menu():
             
             text "[len(player_config.inventory)]/[CarInventoryLimits.get(player_config.car, 0)]" xalign 0.5 yalign 0.5 color "#404040"
 
-        # Кнопка установки оружия (появляется только для оружия)
         if selected_item and is_weapon(selected_item):
             textbutton _("Установить") activate_sound "audio/sfx/click.wav" action [Function(install_weapon, selected_item), SetScreenVariable("selected_item", None)] xpos 1500 yalign 0.702 sensitive selected_item != player_config.current_gun
 
-        # Продать и удалить
         textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
         textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action [Confirm("Вы действительно хотите удалить этот предмет?\nВНИМАНИЕ: Действие необратимо!", yes=Function(delete_item, selected_item), no=None), SetScreenVariable("selected_item", None)] xpos 1193 yalign 0.859 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
 
-        # Подробности выбранного предмета
         if selected_item:
             $ item_data = ItemDatabase[selected_item]
-            
-            # Показываем цену только если предмет можно продать
+
             if player_config.town_type in ["City", "Village"]:
                 $ price = ItemPricesVillage.get(selected_item, 0) if player_config.town_type == "Village" else ItemPricesCity.get(selected_item, 0)
             else:
@@ -273,7 +262,6 @@ screen Selling_Menu():
                 else:
                     text "[item_data['desc']]" size 25 color "#353535"
 
-            # Показываем цену
             frame:
                 xpos 800
                 ypos 702
@@ -285,7 +273,6 @@ screen Selling_Menu():
                 if price > 0:
                     text "Цена: [price] монет" size 30 color "#353535"
 
-    # Вкладки меню
     imagebutton activate_sound "audio/sfx/click.wav":
         idle "gui/townmenu/buttons/tab_stats_e.png" 
         hover "gui/townmenu/buttons/tab_stats_s.png"
@@ -362,7 +349,6 @@ screen Gun_Shop_Menu():
             yalign 0.0
             focus_mask True 
 
-        # Список оружия
         viewport:
             xpos 245
             ypos 280
@@ -446,7 +432,6 @@ screen Gun_Shop_Menu():
 
         textbutton _("Купить как второе оружие") activate_sound "audio/sfx/click.wav" action NullAction() xpos 1045 yalign 0.86 sensitive selected_shop_item in bigweapon_prices
 
-    # Вкладки
     imagebutton activate_sound "audio/sfx/click.wav":
         idle "gui/townmenu/buttons/tab_stats_e.png" 
         hover "gui/townmenu/buttons/tab_stats_s.png"
@@ -523,7 +508,6 @@ screen Car_Shop():
 
         text "Work in progress..." size 60 xalign 0.5 yalign 0.5 color "#FFF"
 
-    # Вкладки
     imagebutton activate_sound "audio/sfx/click.wav":
         idle "gui/townmenu/buttons/tab_stats_e.png" 
         hover "gui/townmenu/buttons/tab_stats_s.png"
