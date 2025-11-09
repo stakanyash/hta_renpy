@@ -202,6 +202,7 @@ label firstenemyfight:
                     renpy.say(None, f"Найдено: {money_drop} монет.")
 
         if random.random() <= 0.5:
+            $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
             $ randommus = random.randint(1, 2)
             $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
             "На вас нападают!"
@@ -415,6 +416,7 @@ label tozaimka:
     hide lisa2 with dissolve
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -482,6 +484,7 @@ label tozaimka:
     "Вы направились в Южный."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -581,6 +584,7 @@ label sergo:
                 jump secondenemy
             elif LisaAgreed == "True":
                 if random.random() <= 0.5:
+                    $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                     "На вас нападают!"
@@ -852,6 +856,7 @@ label deadfather:
     "Полностью раздосадованный вы уезжаете обратно в Южный."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -920,6 +925,7 @@ label dyingfather:
     mc "Может быть, в Южном слышали о нём?"
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1017,6 +1023,7 @@ label sowthagain:
                 $ TakeGunFromZaimka = "True"
                 $ player_config.town_type = "NotInCity"
                 if random.random() <= 0.5:
+                    $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                     "На вас нападают!"
@@ -1030,6 +1037,7 @@ label sowthagain:
                 $ TakeGunFromZaimka = "False"
                 $ player_config.town_type = "NotInCity"
                 if random.random() <= 0.5:
+                    $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                     "На вас нападают!"
@@ -1072,6 +1080,7 @@ label sowthagain:
         $ player_config.town_type = "NotInCity"
 
         if random.random() <= 0.5:
+            $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
             $ randommus = random.randint(1, 2)
             $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
             "На вас нападают!"
@@ -1333,6 +1342,7 @@ label felixdefeated:
     hide mcsurp with dissolve
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"

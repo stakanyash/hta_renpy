@@ -235,6 +235,7 @@ label movetovostochnoe:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -292,6 +293,7 @@ label tolocus:
     hide mc6 with dissolve
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -517,6 +519,7 @@ label portoa:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -669,6 +672,7 @@ label firstmeetben:
     hide mc5 with dissolve
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -734,6 +738,7 @@ label r1m2withlisa:
     "Вы направились в Порто."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -765,6 +770,7 @@ label portolisa:
     "Вы отправляетесь искать Лису по пути Порто - Мидгард."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -954,6 +960,7 @@ label lisasavedporto:
     "После этого вы направились в Асгард."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"

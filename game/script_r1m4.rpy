@@ -80,6 +80,7 @@ label homersearch:
     "Вы начали искать Гомера в рыбацких посёлках."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -101,6 +102,7 @@ label homersearch:
     mc "Мне что, придётся весь регион объездить в его поисках?!"
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -140,6 +142,7 @@ label homersearch:
     hide mcsurp
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.choice([1, 2, 7])   
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -219,6 +222,7 @@ label homersearch:
     "Вы поехали к месту, указанному Гомером."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -444,6 +448,7 @@ label galdenquest:
             hide mcsurp
 
             if random.random() <= 0.5:
+                $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
                 $ randommus = random.choice([1, 2, 7])
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                 "На вас нападают!"
@@ -504,6 +509,7 @@ label r1m4SideQuest_start:
             hide mc6
 
             if random.random() <= 0.5:
+                $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
                 $ randommus = random.choice([1, 2, 7])
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
                 "На вас нападают!"
@@ -704,6 +710,7 @@ label r1m4SideQuest_leaderisfree:
     mc "И лучше бы им выполнить свою часть сделки!"
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -740,6 +747,7 @@ label r1m4SideQuest_leaderisback:
     $ r1m4SideQuestLeaderSaved = True
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"

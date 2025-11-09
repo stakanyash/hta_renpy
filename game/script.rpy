@@ -497,6 +497,9 @@ label randomfight:
                     renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
                 else:
                     renpy.say(None, f"Найдено: {money_drop} монет.")
+
+            if persistent._prebattle_music:
+                $ renpy.music.play(persistent._prebattle_music, channel='music', fadeout=1.0)
                 
         return
 

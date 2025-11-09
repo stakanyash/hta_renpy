@@ -131,6 +131,7 @@ label asgardboom:
     hide mcsurp
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -433,6 +434,7 @@ label peshtallow:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -878,6 +880,7 @@ label banditbaseelim:
     mc "Пора ехать в Минин."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -983,6 +986,7 @@ label mayorspy:
     "С этой мыслью вы аккуратно покидаете место событий и уезжаете обратно в Минин."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1025,6 +1029,7 @@ label minin4th_nl:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1051,6 +1056,7 @@ label oilmine2nd:
     "Вы грузите бочку нефти в машину и уезжаете в Минин."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1091,6 +1097,7 @@ label minin5th_nl:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1160,6 +1167,7 @@ label r1m3withlisa:
     hide pguard
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1296,6 +1304,7 @@ label base51afterfight:
     "Вам ничего не остаётся, кроме как отправиться в Мидгард."
 
     if random.random() <= 0.5:
+        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
