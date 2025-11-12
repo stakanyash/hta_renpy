@@ -33,7 +33,7 @@ define gui.show_name = False
 
 ## Версия игры.
 
-define config.version = "0.3.7"
+define config.version = "0.3.95"
 
 
 ## Текст, помещённый в экран "Об игре". Поместите текст между тройными скобками.
@@ -52,7 +52,7 @@ define config.has_autosave = False
 ## постройке дистрибутивов. Оно должно содержать текст формата ASCII и не должно
 ## содержать пробелы, двоеточия и точки с запятой.
 
-define build.name = "HTA_RenPy"
+define build.name = "HTARenPy"
 
 
 ## Звуки и музыка ##############################################################
@@ -69,7 +69,7 @@ define config.has_voice = False
 ## Чтобы разрешить игроку тестировать громкость на звуковом или голосовом
 ## каналах, раскомментируйте строчку и настройте пример звука для прослушивания.
 
-# define config.sample_sound = "sample-sound.ogg"
+define config.sample_sound = "sfx/shoot/hornet_shoot.wav"
 # define config.sample_voice = "sample-voice.ogg"
 
 

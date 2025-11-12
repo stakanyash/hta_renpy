@@ -613,9 +613,9 @@ screen main_menu():
                 style "main_menu_version"
 
     if config.developer:
-        text "Ex Machina RenPy - developer version 0.3.8 (251103b)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - developer version 0.3.95 (251113a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
     else:
-        text "Ex Machina RenPy - demo version 0.3.8 (251103b)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - demo version 0.3.95 (251113a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -699,7 +699,7 @@ screen statistics_screen():
         vbox:
             spacing 20
             xalign 0.645
-            yalign 0.385
+            yalign 0.43
             text "Имя" size 24 color "#2a2a2a"
             text "Оружие" size 24 color "#2a2a2a"
             text "Тип оружия" size 24 color "#2a2a2a"
@@ -708,11 +708,12 @@ screen statistics_screen():
             text "Сложность" size 24 color "#2a2a2a"
             text "Регион" size 24 color "#2a2a2a"
             text "Текущее время игры (ч : мин)" size 24 color "#2a2a2a"
+            text "Текущее HP" size 24 color "#2a2a2a"
 
         vbox:
             spacing 20
             xalign 0.85
-            yalign 0.385
+            yalign 0.43
             text "[player_name]" size 24 color "#2a2a2a"
             text "[gun_names.get(player_config.current_gun, '—')]" size 24 color "#2a2a2a"
             text "[GunTypeName.get(player_config.gun_type, '—')]" size 24 color "#2a2a2a"
@@ -721,6 +722,7 @@ screen statistics_screen():
             text "[DifficultyNames.get(difficulty, '—')]" size 24 color "#2a2a2a"
             text "[region_names.get(player_config.current_region, '—')]" size 24 color "#2a2a2a"
             text "[format_time(renpy.get_game_runtime())]" size 24 color "#2a2a2a"
+            text "[persistent.player_hp]" size 24 color "#2a2a2a"
 
         imagebutton:
             idle "gui/townmenu/buttons/tab_stats_s.png" 
@@ -1224,6 +1226,13 @@ screen preferences():
                                     action Preference("all mute", "toggle")
                                     style "settings_text_button"
                                     hovered [SetScreenVariable("help_title", "Без звука"), SetScreenVariable("help_text", "Полностью отключает все звуки в игре.")]
+                                    unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
+
+                                textbutton _("Тест звука"):
+                                    xpos 0 
+                                    action Function(lambda: renpy.sound.play(config.sample_sound) if config.sample_sound else None)
+                                    style "settings_text_button"
+                                    hovered [SetScreenVariable("help_title", "Тест звука"), SetScreenVariable("help_text", "Проигрывает тестовый звук для проверки громкости.")]
                                     unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
 
                     # === ВКЛАДКА ИГРА ===

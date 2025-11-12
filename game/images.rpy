@@ -292,3 +292,5 @@ image tr_checkpoints = "images/tutorial/tr_checkpoints.jpg"
 # Effects
 
 image damage = "images/effects/damage.png"
+
+image vanshop = Animation("images/vanshop.png")

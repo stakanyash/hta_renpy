@@ -3,6 +3,8 @@ default player_name = "Игрок"
 default difficulty = "normal"
 default difficulty_base_multiplier = 0.03
 default selected_shop_item = None
+default persistent.player_hp = None
+default persistent.player_max_hp = None
 
 init python:
     from dataclasses import dataclass, field
@@ -333,6 +335,22 @@ init python:
         "Fuel": 900,
     }
 
+    CarPrices = {
+        "Van": 1401,
+        "Molokovoz": 6501,
+        "Ural": 31001,
+        "Belaz": 170001,
+        "Mirotvorec": 360001,
+    }
+
+    CarSellPrices = {
+        "Van": 701,
+        "Molokovoz": 3251,
+        "Ural": 15501,
+        "Belaz": 47405,
+        "Mirotvorec": 180001,
+    }
+
     def buy_weapon_with_old_handling(weapon_name):
         if weapon_name in smallweapon_prices:
             price = smallweapon_prices[weapon_name]
@@ -360,6 +378,77 @@ init python:
             renpy.notify(f"Вы купили {gun_names.get(weapon_name, weapon_name)} за {price} монет.")
         else:
             renpy.notify("Недостаточно денег!")
+
+    if not hasattr(persistent, "player_hp"):
+        persistent.player_hp = None
+    if not hasattr(persistent, "player_max_hp"):
+        persistent.player_max_hp = None
+    if not hasattr(persistent, "last_car"):
+        persistent.last_car = None
+
+    def buy_car_with_exchange(car_name):
+        car_price = CarPrices.get(car_name, 0)
+        sell_price = CarSellPrices.get(player_config.car, 0) if player_config.car else 0
+        actual_cost = car_price - sell_price  # может быть отрицательным, если старая дороже новой
+
+        if actual_cost > 0:
+            # тратим деньги через player_config.spend_money
+            if not player_config.spend_money(actual_cost):
+                renpy.notify("Недостаточно денег!")
+                return
+        elif actual_cost < 0:
+            # получаем деньги за разницу через player_config.add_money
+            player_config.add_money(-actual_cost)  # actual_cost отрицательное => -actual_cost положительное
+
+        # Меняем машину
+        player_config.car = car_name
+
+        # Обновляем HP
+        new_max_hp = CarHP.get(car_name, 850)
+        persistent.player_max_hp = new_max_hp
+        persistent.player_hp = new_max_hp
+
+        # Уведомление
+        if actual_cost > 0:
+            renpy.notify(
+                f"Куплена машина: {car_names.get(car_name, car_name)} "
+                f"за {actual_cost} монет. HP: {new_max_hp}"
+            )
+        else:
+            renpy.notify(
+                f"Куплена машина: {car_names.get(car_name, car_name)} "
+                f"(получено {-actual_cost} монет сверху). HP: {new_max_hp}"
+            )
+
+    def repair_car():
+        if persistent.player_hp < persistent.player_max_hp:
+            hp_to_repair = persistent.player_max_hp - persistent.player_hp
+            repair_cost = int(hp_to_repair * 0.75)
+
+            if player_config.money >= repair_cost:
+                player_config.spend_money(repair_cost)
+                persistent.player_hp = persistent.player_max_hp
+                renpy.notify(f"Машина отремонтирована! Восстановлено {hp_to_repair} HP")
+            else:
+                renpy.notify("Недостаточно денег для ремонта!")
+        else:
+            renpy.notify("Машина не нуждается в ремонте")
+
+    def repair_car_partial(amount):
+        cost = int(amount * 0.75)
+        if amount <= 0:
+            renpy.notify("Вы не выбрали HP для восстановления!")
+            return
+
+        if player_config.money >= cost:
+            player_config.spend_money(cost)
+            persistent.player_hp += amount
+            if persistent.player_hp > persistent.player_max_hp:
+                persistent.player_hp = persistent.player_max_hp
+            renpy.notify(f"Машина отремонтирована! Восстановлено {amount} HP, потрачено {cost} монет.")
+        else:
+            renpy.notify("Недостаточно денег для ремонта!")
+
 
 default player_config = PlayerConfig()
 
@@ -402,6 +491,11 @@ label randomfight:
 
     $ enemyint = random.randint(1, 4)
 
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
+
     $ _window_hide()
     $ _game_menu_screen = None
     $ _menu = False
@@ -410,8 +504,9 @@ label randomfight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = f"randomenemy{enemyint}"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
+    $ enemy_damage_multiplier = 1.0
 
     if player_config.current_region == "r1m1":
         $ enemy_hp = random.randint(80, 150)
@@ -430,6 +525,8 @@ label randomfight:
     $ enemy_name = "Бандит"
     $ bgname = f"bg_{player_config.current_region}_randomfight"
     $ EnemyType = "Regular"
+
+    $ renpy.scene()
     $ renpy.show(bgname, at_list=[center], what=None)
     $ renpy.show(enemy_image, at_list=[center], what=None)
 
@@ -456,6 +553,7 @@ label randomfight:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         $ renpy.hide(enemy_image) 
@@ -476,26 +574,29 @@ label randomfight:
                     else:
                         items_not_added += 1
 
-                if player_config.current_region == "r1m1":
-                    money_drop = random.randint(50, 150)
-                elif player_config.current_region == "r1m2":
-                    money_drop = random.randint(100, 250)
-                elif player_config.current_region == "r1m3":
-                    money_drop = random.randint(150, 350)
-                elif player_config.current_region == "r1m4":
-                    money_drop = random.randint(300, 600)
-
                 if items_not_added > 0:
                     compensation = items_not_added * random.randint(100, 200)
-                    money_drop += compensation
-                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
-                
-                player_config.add_money(money_drop)
+                    player_config.add_money(compensation)
+                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет.")
+                else:
+                    if player_config.current_region == "r1m1":
+                        money_drop = random.randint(50, 150)
+                    elif player_config.current_region == "r1m2":
+                        money_drop = random.randint(100, 250)
+                    elif player_config.current_region == "r1m3":
+                        money_drop = random.randint(150, 350)
+                    elif player_config.current_region == "r1m4":
+                        money_drop = random.randint(300, 600)
+                    
+                    player_config.add_money(money_drop)
 
                 if dropped_something:
                     drop_names_str = ", ".join(drop_names_text)
-                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
-                else:
+                    if items_not_added > 0:
+                        renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.")
+                    else:
+                        renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
+                elif items_not_added == 0:
                     renpy.say(None, f"Найдено: {money_drop} монет.")
 
             if persistent._prebattle_music:

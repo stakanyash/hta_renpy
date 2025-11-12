@@ -270,6 +270,11 @@ label tokranfight:
 
     pause 0.5
 
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
+
     $ _window_hide()
     $ _game_menu_screen = None
     $ _menu = False
@@ -278,8 +283,8 @@ label tokranfight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "kranboss"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 2500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
@@ -292,6 +297,7 @@ label tokranfight:
     $ bgname = "bg_kranfight"
     $ EnemyType = "Boss"
     $ BossIcon = "boss1.png"
+    $ enemy_damage_multiplier = 1.0
     show kranboss at center
 
     while enemy_hp > 0 and player_hp > 0:
@@ -317,6 +323,7 @@ label tokranfight:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide kranboss with dissolve
@@ -529,7 +536,13 @@ label r1m4SideQuest_start:
 
 label r1m4SideQuest_warehousefight:
 
-    play music "music/battle7.ogg"
+    $ randommus = random.choice([1, 2, 7])
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -539,9 +552,9 @@ label r1m4SideQuest_warehousefight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "warehouseguard"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
-    $ enemy_hp = 4250 # 75% of 5 van hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
+    $ enemy_hp = 2125 # 50% of 5 van hp
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
     $ turn_count = 0
@@ -552,6 +565,8 @@ label r1m4SideQuest_warehousefight:
     $ enemy_name = "Захватчики склада"
     $ bgname = "bg_warehouse"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.5
+
     scene bg_warehouse
     show warehouseguard at center
 
@@ -578,6 +593,7 @@ label r1m4SideQuest_warehousefight:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide warehouseguard with dissolve
@@ -642,7 +658,13 @@ label r1m4SideQuest_freeleader:
 
     mc "Вы сами этого захотели. Главное - не задеть прицеп с пленником. Все остальные пусть горят синим пламенем!"
 
-    play music "music/battle7.ogg"
+    $ randommus = random.choice([1, 2, 7])
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -652,8 +674,8 @@ label r1m4SideQuest_freeleader:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "leadertakers"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 2025 # 50% HP of 3 Vans and 1 Lorry
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
@@ -665,6 +687,8 @@ label r1m4SideQuest_freeleader:
     $ enemy_name = "Захватчики лидера рыбаков"
     $ bgname = "bg_freeleaderfight"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.35
+
     scene bg_freeleaderfight
     show leadertakers at center
 
@@ -691,6 +715,7 @@ label r1m4SideQuest_freeleader:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide leadertakers with dissolve

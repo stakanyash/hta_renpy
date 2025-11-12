@@ -177,7 +177,13 @@ label mvillage:
 
     hide mcsurp
 
-    play music "music/battle1.ogg"
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -187,8 +193,8 @@ label mvillage:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "minerattackers"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 2000
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
@@ -200,6 +206,8 @@ label mvillage:
     $ enemy_name = "Бандиты"
     $ bgname = "bg_mvillage_fight"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.2
+
     scene bg_mvillage_fight
     show minerattackers at center
 
@@ -226,6 +234,7 @@ label mvillage:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide minerattackers with dissolve
@@ -291,14 +300,20 @@ label mvillageafterfight:
 label brigdedestroy:
 
     scene bg_nearbridgeenemy with fade
-    play music "music/alarm2.ogg" fadeout 1.0
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
 
     "Подъехав к мосту вы заметили бандитские машины."
     $ renpy.notify("Игра сохранена в слот 2.")
     $ renpy.save("checkpoint-2")
     mc "Видимо, чтобы осуществить свою задачу нужно их уничтожить, но куда деваться..."
 
-    play music "music/battle2.ogg"
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -308,8 +323,8 @@ label brigdedestroy:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "brigde_defender"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 1200
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
@@ -321,6 +336,7 @@ label brigdedestroy:
     $ enemy_name = "Бандиты"
     $ bgname = "bg_nearbridge"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.1
 
     scene bg_nearbridge
     show brigde_defender at center
@@ -348,6 +364,7 @@ label brigdedestroy:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide brigde_defender with dissolve
@@ -709,7 +726,8 @@ label oilmine1st:
 
     scene bg_oilenemy with fade
 
-    play music "music/alarm1.ogg"
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
     
     "Приехав к нефтянной вышке вы действительно видите множество бандитов."
 
@@ -718,7 +736,12 @@ label oilmine1st:
 
     "Между вами начинается вполне ожидаемая битва."
 
-    play music "music/battle1.ogg"
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -728,8 +751,8 @@ label oilmine1st:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "oilbandits"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 15 
@@ -741,6 +764,7 @@ label oilmine1st:
     $ enemy_name = "Захватчики вышки"
     $ bgname = "bg_oil"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.2
 
     scene bg_oil
     show oilbandits at center
@@ -769,6 +793,7 @@ label oilmine1st:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide oilbandits with dissolve
@@ -806,12 +831,18 @@ label followlastone:
     mc "Интересно, заметил ли он меня?"
 
     scene bg_oilspy_3 with fade
-    play music "music/battle2.ogg"
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     "Приехав на базу вас сразу начали атаковать три машины."
     $ renpy.notify("Игра сохранена в слот 4.")
     $ renpy.save("checkpoint-4")
     mc "Всё таки заметил..."
+
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -821,8 +852,8 @@ label followlastone:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "banditsonbase"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 15 
@@ -834,6 +865,7 @@ label followlastone:
     $ enemy_name = "Бандиты"
     $ bgname = "bg_oilspy_fight"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.2
 
     scene bg_oilspy_fight
     show banditsonbase at center
@@ -861,6 +893,7 @@ label followlastone:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide banditsonbase with dissolve
@@ -1215,6 +1248,11 @@ label base51lisa:
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
+
     $ _window_hide()
     $ _game_menu_screen = None
     $ _menu = False
@@ -1223,8 +1261,8 @@ label base51lisa:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "base51fight"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 650
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20 
@@ -1236,6 +1274,7 @@ label base51lisa:
     $ enemy_name = "Бандиты"
     $ bgname = "bg_base51fight"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.1
 
     scene bg_base51fight
     show base51fight at center
@@ -1263,6 +1302,7 @@ label base51lisa:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide base51fight with dissolve

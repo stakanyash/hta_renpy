@@ -3,27 +3,29 @@ init python:
     import math
     from renpy.display.im import MatrixColor
 
-    # Глобальные переменные боя
-    enemy_damage_multiplier = 0.0
+    enemy_damage_multiplier = 1.0
     consecutive_player_hits = 0
     turn_count = 0
     attack_locked = False
 
-    ## Функция атаки врага
     def apply_enemy_attack():
         global player_hp, player_max_hp
 
-        if random.random() <= 0.3:
-            # Урон как процент max HP
-            damage_percent = difficulty_base_multiplier
+        randomDamage = random.random()
+
+        if config.developer:
+            renpy.notify(f"Damage Random is: {randomDamage}")
+
+        if randomDamage <= 0.40:
+            damage_percent = difficulty_base_multiplier * enemy_damage_multiplier
             damage = int(player_max_hp * damage_percent)
+
             player_hp = max(0, player_hp - damage)
 
             renpy.sound.play("audio/sfx/landing_car_sparkle.wav", channel="damage")
             renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
             renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
 
-    ## Функция атаки игрока
     def attack_enemy():
         global enemy_hp, enemy_max_hp, turn_count
         global attack_locked, enemy_damage_multiplier, consecutive_player_hits
@@ -33,45 +35,38 @@ init python:
             return
         attack_locked = True
 
-        # Определяем количество выстрелов
         hits_count = random.randint(2, 3) if player_config.gun_type == "Firearm" else 1
 
-        # Цикл по каждому выстрелу
         for _ in range(hits_count):
             if random.random() <= 0.7:
                 damage = random.randint(*damage_range)
                 enemy_hp = max(0, enemy_hp - damage)
                 renpy.sound.play(f"audio/sfx/shoot/{player_config.current_gun}_shoot.wav", channel="shoot")
-                # Показать анимацию выстрела
                 renpy.show(enemy_image, at_list=[center, stretch_in], what=None)
             else:
                 renpy.sound.play("audio/sfx/shoot_miss01.ogg", channel="missshot")
 
-            # Отправляем таймер события, чтобы визуально сделать задержку
             renpy.timeout(0.3)
 
-        # Атака врага с шансом 50%
-        if random.random() <= 0.5:
-            damage_percent = difficulty_base_multiplier
-            damage = int(player_max_hp * damage_percent)
-            player_hp = max(0, player_hp - damage)
-
-            renpy.sound.play("audio/sfx/landing_car_sparkle.wav", channel="damage")
-            renpy.show(bgname, at_list=[Shake(None, 0.5, dist=7)], what=None)
-            renpy.show("damage", at_list=[fadeout_damage, Shake(None, 1.0, dist=5)])
+        apply_enemy_attack()
 
         renpy.restart_interaction()
 
-    ## Функция лечения игрока
     def heal():
         global player_hp, heal_count, max_heals, player_max_hp
+
         if heal_count < max_heals:
             heal_per = random.uniform(0.02, 0.1)
+
             heal_amount = int(player_max_hp * heal_per)
+
             player_hp = min(player_hp + heal_amount, player_max_hp)
+
             heal_count += 1
+
             renpy.notify(f"Восстановлено {heal_amount} здоровья.")
             renpy.sound.play("audio/sfx/life.wav", channel="sound")
+
         renpy.restart_interaction()
 
     ## Получение изображения полоски здоровья врага

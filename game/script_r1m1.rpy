@@ -17,6 +17,8 @@ label main_game:
     $ config.keymap['load'] = ['load']
     $ config.keymap['game_menu'] = ['game_menu']
     $ persistent._in_battle = False
+    $ persistent.player_max_hp = CarHP.get(player_config.car, 850)
+    $ persistent.player_hp = persistent.player_max_hp
 
     $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
@@ -111,6 +113,11 @@ label main_game:
     jump firstenemyfight
 
 label firstenemyfight:
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
+
     $ _window_hide()
     $ _game_menu_screen = None
     $ _menu = False
@@ -119,8 +126,8 @@ label firstenemyfight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "firsteverenemy"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 80
     $ bgname = "bg_firsteverenemy"
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
@@ -132,6 +139,8 @@ label firstenemyfight:
     $ attack_locked = False
     $ enemy_name = "Бандит"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.0
+
     scene bg_firsteverenemy
     show firsteverenemy at center
 
@@ -158,6 +167,7 @@ label firstenemyfight:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide firsteverenemy with dissolve
@@ -291,7 +301,8 @@ label secondenemy:
 
     scene bg_secenemy with fade
 
-    play music "music/alarm1.ogg" fadeout 0.5
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
 
     "Однако не успели вы отъехать от Южного как на вас снова нападает бандит. Только в этот раз он уже чутка серьёзнее Клопа."
 
@@ -300,7 +311,12 @@ label secondenemy:
 
     "Вам ничего не остаётся, кроме как начать с ним перестрелку."
 
-    play music "music/battle1.ogg"
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -310,8 +326,8 @@ label secondenemy:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "secenemy"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 125
     $ bgname = "bg_secondenemy"
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
@@ -323,6 +339,8 @@ label secondenemy:
     $ attack_locked = False
     $ enemy_name = "Бандит"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.0
+
     scene bg_secondenemy
     show secenemy at center
 
@@ -349,6 +367,7 @@ label secondenemy:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide secenemy with dissolve
@@ -697,12 +716,18 @@ label felixbeforefight:
 
     scene bg_felixfight
 
-    play music "audio/music/battle1.ogg"
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     "Начинается перестрелка. Но кого-же атаковать сперва? Их ведь трое. А может вообще дать дёру?"
 
     menu:
         "Атаковать":
+            $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+            if persistent.player_hp is None:
+                $ persistent.player_hp = persistent.player_max_hp
+            
             $ _window_hide()
             $ _game_menu_screen = None
             $ _menu = False
@@ -712,8 +737,8 @@ label felixbeforefight:
             $ persistent._in_battle = True
             $ RunFromFelix = "False"
             $ enemy_image = "felixteam"
-            $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-            $ player_max_hp = player_hp
+            $ player_hp = persistent.player_hp
+            $ player_max_hp = persistent.player_max_hp
             $ max_heals = 20
             $ enemy_hp = 225
             $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
@@ -725,6 +750,8 @@ label felixbeforefight:
             $ enemy_name = "Бандиты"
             $ bgname = "bg_felix_nocars"
             $ EnemyType = "Regular"
+            $ enemy_damage_multiplier = 1.2
+
             scene bg_felix_nocars
             show felixteam at center
 
@@ -751,6 +778,7 @@ label felixbeforefight:
                 $ config.keymap['game_menu'] = ['game_menu']
                 $ persistent._in_battle = False
                 $ renpy.sound.stop(channel="shoot")
+                $ persistent.player_hp = player_hp
 
                 hide felixteam with dissolve
 
@@ -1131,6 +1159,7 @@ label KventinZaimka:
             renpy.notify(f'В вашем инвентаре недостаточно места. "{display_name}" был автоматически продан за {price} монет.')
 
     $ player_config.current_gun = "Storm"
+    $ player_config.gun_type = "Shotgun"
 
     "Вы ставите новое вооружение на свою машину и едете к Феликсу..."
 
@@ -1194,6 +1223,11 @@ label felixbase:
 
     "Вы снова начинаете бой с Феликсом."
 
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
+
     $ _window_hide()
     $ _game_menu_screen = None
     $ _menu = False
@@ -1205,14 +1239,9 @@ label felixbase:
     jump felix_battle
 
 label felix_battle:
-    if TakeGunFromZaimka == "True":
-        $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-        $ player_max_hp = player_hp
-        $ max_heals = 10
-    elif TakeGunFromZaimka == "False":
-        $ player_hp = int(CarHP.get(CurrentCar, CarHP["Van"])) - 350
-        $ player_max_hp = 850
-        $ max_heals = 20
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
+    $ max_heals = 20
     $ enemy_hp = 200
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 15 
@@ -1225,7 +1254,7 @@ label felix_battle:
     $ enemy_image = "felixcar"
     $ bgname = "bg_felixbase"
     $ EnemyType = "Regular"
-
+    $ enemy_damage_multiplier = 1.0
 
     scene bg_felixbase
     show felixcar at center
@@ -1253,6 +1282,7 @@ label felix_battle:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         hide felixcar with dissolve
 

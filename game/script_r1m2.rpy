@@ -40,8 +40,11 @@ label arrivetor1m2:
     "Вы доехали до первой развязки и вновь задумались."
     mc "Так. А здесь то куда?"
     mc "Прямо вроде \"тупик\". Значит нужно поехать направо."
+
     scene bg_loot with dissolve
-    play music "music/alarm2.ogg"
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+
     "Однако впереди вы замечаете лежащий в развалинах ящик."
     mc "Там может быть что-то полезное..."
     mc "Однако он охраняется..."
@@ -58,7 +61,13 @@ label arrivetor1m2:
             jump movetovostochnoe
 
 label attackforloot:
-    play music "music/battle2.ogg"
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
+
     $ _window_hide()
     $ _game_menu_screen = None
     $ _menu = False
@@ -67,8 +76,8 @@ label attackforloot:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "lootdefender"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 200
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20
@@ -80,6 +89,8 @@ label attackforloot:
     $ enemy_name = "Бандит"
     $ bgname = "bg_fightforloot"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.0
+
     scene bg_fightforloot
     show lootdefender at center
 
@@ -106,6 +117,7 @@ label attackforloot:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide lootdefender with dissolve
@@ -164,12 +176,15 @@ label defeateddefender:
     if 1 <= randomgun <= 3:
         "Вы нашли оружие \"Корд\"!"
         $ player_config.current_gun = "Kord"
+        $ player_config.gun_type = "Shotgun"
     elif 4 <= randomgun <= 6:
         "Вы нашли оружие \"ПКТ\"!"
         $ player_config.current_gun = "PKT"
+        $ player_config.gun_type = "Firearm"
     else:
         "Вы нашли оружие \"Шторм\"!"
         $ player_config.current_gun = "Storm"
+        $ player_config.gun_type = "Firearm"
 
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."
@@ -388,7 +403,8 @@ label toportoe1:
 
     "Вы спокойно ехали в Порто и уже думали, что сопровождение окажется лёгкой прогулкой."
 
-    play music "music/alarm1.ogg"
+    $ randommus = random.randint(1, 2)
+    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
     scene bg_toportoe1 with dissolve
 
     $ renpy.notify("Игра сохранена в слот 3.")
@@ -397,7 +413,12 @@ label toportoe1:
     "Однако вы замечаете бандитскую машину."
     "Вам ничего не остаётся, кроме как начать с ней бой."
 
-    play music "music/battle1.ogg"
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -407,8 +428,8 @@ label toportoe1:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "to_porto_e1"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 850
     $ bgname = "bg_toporto"
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
@@ -420,6 +441,8 @@ label toportoe1:
     $ attack_locked = False
     $ enemy_name = "Бандит"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.0
+
     scene bg_toporto
     show to_porto_e1 at center
 
@@ -446,6 +469,7 @@ label toportoe1:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide to_porto_e1 with dissolve
@@ -810,6 +834,11 @@ label lisanearporto:
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
+    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if persistent.player_hp is None:
+        $ persistent.player_hp = persistent.player_max_hp
+
     $ _window_hide()
     $ _game_menu_screen = None
     $ _menu = False
@@ -818,8 +847,8 @@ label lisanearporto:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "lisarescue_fight"
-    $ player_hp = CarHP.get(player_config.car, CarHP["Van"])
-    $ player_max_hp = player_hp
+    $ player_hp = persistent.player_hp
+    $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 650
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = 20 
@@ -831,6 +860,7 @@ label lisanearporto:
     $ enemy_name = "Бандиты"
     $ bgname = "bg_lisarescue_fight"
     $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.1
 
     scene bg_lisarescue_fight
     show lisarescue_fight at center
@@ -858,6 +888,7 @@ label lisanearporto:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ persistent.player_hp = player_hp
 
         play sound "sfx/explosion04.wav"
         hide lisarescue_fight with dissolve

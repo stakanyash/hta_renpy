@@ -80,7 +80,7 @@ screen InGameMenu():
             ysize 63
             xpos 1365
             yalign 0.12
-            text player_config.town_name xalign 0.5 yalign 0.5 size 28 color "#404040"
+            text player_config.town_name xalign 0.5 yalign 0.5 size 28 color "#404040" font "fonts/ARIALBD.ttf"
 
         add f"gui/townmenu/clans/{player_config.group_logo}.png" xpos 1510 ypos 450
 
@@ -235,14 +235,14 @@ screen Selling_Menu():
                 $ price = 0
         
             frame:
-                xpos 1170
+                xpos 1230
                 ypos 280
                 xsize 500
                 ysize 300
                 background None
                 padding (20, 20)
 
-                text item_data["name"] size 40 color "#353535"
+                text item_data["name"] size 40 color "#353535" xanchor 0.5 font "fonts/ARIALBD.ttf"
 
             frame:
                 xpos 800
@@ -395,7 +395,7 @@ screen Gun_Shop_Menu():
                                     spacing 5
                                     yalign 0.5
                                     xpos 20
-                                    text "[gun_names.get(weapon_name, weapon_name)]" size 30 color "#353535"
+                                    text "[gun_names.get(weapon_name, weapon_name)]" size 30 color "#353535" font "fonts/ARIALBD.ttf"
                                     text "[price] монет" size 28 color "#353535"
 
         if selected_shop_item:
@@ -405,14 +405,14 @@ screen Gun_Shop_Menu():
             $ full_desc = f"{base_desc}\n\nНаносимый урон: от {min_dmg} до {max_dmg} единиц"
         
             frame:
-                xpos 1170
+                xpos 1230
                 ypos 280
                 xsize 500
                 ysize 300
                 background None
                 padding (20, 20)
 
-                text item_data["name"] size 40 color "#353535"
+                text item_data["name"] size 40 color "#353535" xanchor 0.5
 
             frame:
                 xpos 800
@@ -469,10 +469,10 @@ screen Gun_Shop_Menu():
 
 screen Car_Shop():
     tag menu
+    default selected_car = None
 
     frame:
-        style "menu_frame"
-        background "gui/townmenu/backmain.png"
+        background "gui/townmenu/carshop.png"
         xsize 1920
         ysize 1080
 
@@ -506,7 +506,138 @@ screen Car_Shop():
             yalign 0.0
             focus_mask True 
 
-        text "Work in progress..." size 60 xalign 0.5 yalign 0.5 color "#FFF"
+        viewport:
+            xpos 115
+            ypos 190
+            xsize 550
+            ysize 770
+            scrollbars "vertical"
+            mousewheel True
+
+            vbox:
+                spacing 12
+
+                python:
+                    car_requirements = {
+                        "Van": "r1m1",
+                        "Molokovoz": "r1m2",
+                        "Ural": "r1m4"
+                    }
+
+                    available_cars = {}
+                    for car_name, price in CarPrices.items():
+                        if car_name in car_requirements:
+                            required_region = car_requirements[car_name]
+                            if player_config.region_allowed(required_region):
+                                available_cars[car_name] = price
+
+                for car_name, price in available_cars.items():
+                    $ is_current = (player_config.car == car_name)
+
+                    button:
+                        xsize 440
+                        background None
+                        hover_background Solid("#4c4c4c40")
+                        action SetScreenVariable("selected_car", car_name)
+
+                        vbox:
+                            spacing 4
+                            text car_names.get(car_name, car_name) size 28 color ("#007700" if is_current else "#333333") font "fonts/ARIALBD.ttf"
+                            text "[price] монет" size 24 color "#555555"
+
+        python:
+            if persistent.player_hp < persistent.player_max_hp and player_config.car:
+                hp_to_repair = persistent.player_max_hp - persistent.player_hp
+                repair_cost = int(hp_to_repair * 0.75)
+                can_repair = (player_config.money >= repair_cost)
+            else:
+                hp_to_repair = 0
+                repair_cost = 0
+                can_repair = False
+
+        fixed:
+            xpos 793
+            ypos 563
+            xysize (217, 79)
+
+            imagebutton auto "gui/townmenu/buttons/carshopbtn_%s.png":
+                selected False
+                action If(
+                    selected_car and player_config.car != selected_car,
+                    Confirm(
+                        "Купить {name} за {cost} монет?".format(
+                            name=car_names.get(selected_car, selected_car or ""),
+                            cost=max(CarPrices.get(selected_car, 0) - CarSellPrices.get(player_config.car, 0), 0)
+                        ),
+                        yes=Function(buy_car_with_exchange, selected_car)
+                    ),
+                    NullAction()
+                )
+                activate_sound "audio/sfx/click.wav"
+            text "Купить" xalign 0.5 yalign 0.46 size 28 color "#fed11b"
+
+            fixed:
+                ypos 261
+                xysize (217, 79)
+                imagebutton auto "gui/townmenu/buttons/carshopbtn_%s.png" sensitive can_repair:
+                    selected False
+                    action If(can_repair,
+                            Confirm("Починить машину?\n\nВосстановить: {0} HP\nСтоимость: {1} монет".format(hp_to_repair, repair_cost),
+                                    yes=Function(repair_car)),
+                            NullAction())
+                    activate_sound "audio/sfx/click.wav"
+                text ("[repair_cost]" if can_repair else ("{color=#960000}0{/color}" if hp_to_repair == 0 else "{color=#960000}[repair_cost]{/color}")) xalign 0.5 yalign 0.46 size 28 color "#fed11b"
+
+        if selected_car:
+            $ car_hp = CarHP.get(selected_car, 0)
+            $ car_price = CarPrices.get(selected_car, 0)
+            $ sell_price = CarSellPrices.get(player_config.car, 0)
+            $ actual_cost = car_price - sell_price if player_config.car != selected_car else 0
+
+            text car_names.get(selected_car, selected_car):
+                xpos 1480
+                ypos 124
+                xanchor 0.5
+                size 26
+                color "#353535"
+
+            hbox:
+                spacing 260
+                vbox:
+                    xpos 1065
+                    ypos 768
+                    spacing 20
+                    text "Макс. HP:" size 20 color "#353535" font "fonts/ARIALBD.ttf"
+                    text "Цена:" size 20 color "#353535" font "fonts/ARIALBD.ttf"
+
+                vbox:
+                    xpos 991
+                    ypos 768
+                    xanchor 0.5
+                    xsize 100
+                    text "[car_hp]" size 20 color "#353535"
+
+                python:
+                    price_str = str(car_price)
+                    price_len = len(price_str)
+
+                    if price_len == 3:
+                        price_x = 632
+                    elif price_len == 4:
+                        price_x = 632
+                    elif price_len >= 5:
+                        price_x = 622
+                    else:
+                        price_x = 632
+
+                vbox:
+                    xpos price_x
+                    ypos 812
+                    xanchor 0.5
+                    xsize 100
+                    text "[car_price]" size 20 color "#353535"
+
+            add f"{selected_car}_slideshow" xpos 1480 ypos 450 xanchor 0.5 yanchor 0.5
 
     imagebutton activate_sound "audio/sfx/click.wav":
         idle "gui/townmenu/buttons/tab_stats_e.png" 
@@ -524,19 +655,18 @@ screen Car_Shop():
         ypos 6
         focus_mask True 
 
-    if player_config.town_type in ["City", "Village"]:
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/buttons/tab_weapon_e.png" 
-            hover "gui/townmenu/buttons/tab_weapon_s.png"
-            action [Hide("Car_Shop"), Show("Gun_Shop_Menu")]
-            xpos 1456
-            ypos 7
-            focus_mask True
-
     imagebutton:
+        idle "gui/townmenu/buttons/tab_weapon_e.png" 
+        hover "gui/townmenu/buttons/tab_weapon_s.png"
+        action [Hide("Car_Shop"), Show("Gun_Shop_Menu")]
+        xpos 1456
+        ypos 7
+        focus_mask True
+
+    imagebutton activate_sound "audio/sfx/click.wav":
         idle "gui/townmenu/buttons/tab_truck_s.png" 
         hover "gui/townmenu/buttons/tab_truck_s.png"
         action NullAction()
         xpos 1276
         ypos 7
-        focus_mask True 
+        focus_mask True
