@@ -5,6 +5,8 @@ default difficulty_base_multiplier = 0.03
 default selected_shop_item = None
 default persistent.player_hp = None
 default persistent.player_max_hp = None
+default persistent.player_heals = None
+default persistent.player_max_heals = None
 
 init python:
     from dataclasses import dataclass, field
@@ -184,6 +186,22 @@ init python:
         "Ural": 2000, 
         "Belaz": 2500, 
         "Mirotvorec": 3500 
+    }
+
+    CarMaxHeals = { 
+        "Van": 15, 
+        "Molokovoz": 20, 
+        "Ural": 25, 
+        "Belaz": 30, 
+        "Mirotvorec": 35 
+    }
+
+    battle_heal_prices = {
+        "Van": 48,
+        "Molokovoz": 84,
+        "Ural": 113,
+        "Belaz": 141,      
+        "Mirotvorec": 197 
     }
 
     ItemDatabase = {
@@ -383,41 +401,42 @@ init python:
         persistent.player_hp = None
     if not hasattr(persistent, "player_max_hp"):
         persistent.player_max_hp = None
-    if not hasattr(persistent, "last_car"):
-        persistent.last_car = None
+    if not hasattr(persistent, "player_heals"):
+        persistent.player_heals = None
+    if not hasattr(persistent, "player_max_heals"):
+        persistent.player_max_heals = None
 
     def buy_car_with_exchange(car_name):
         car_price = CarPrices.get(car_name, 0)
         sell_price = CarSellPrices.get(player_config.car, 0) if player_config.car else 0
-        actual_cost = car_price - sell_price  # может быть отрицательным, если старая дороже новой
+        actual_cost = car_price - sell_price
 
         if actual_cost > 0:
-            # тратим деньги через player_config.spend_money
             if not player_config.spend_money(actual_cost):
                 renpy.notify("Недостаточно денег!")
                 return
         elif actual_cost < 0:
-            # получаем деньги за разницу через player_config.add_money
-            player_config.add_money(-actual_cost)  # actual_cost отрицательное => -actual_cost положительное
+            player_config.add_money(-actual_cost)
 
-        # Меняем машину
         player_config.car = car_name
 
-        # Обновляем HP
         new_max_hp = CarHP.get(car_name, 850)
         persistent.player_max_hp = new_max_hp
         persistent.player_hp = new_max_hp
 
-        # Уведомление
+        new_max_heal = CarMaxHeals.get(car_name, 15)
+        persistent.player_max_heals = new_max_heal
+        persistent.player_heals = new_max_heal
+
         if actual_cost > 0:
             renpy.notify(
                 f"Куплена машина: {car_names.get(car_name, car_name)} "
-                f"за {actual_cost} монет. HP: {new_max_hp}"
+                f"за {actual_cost} монет."
             )
         else:
             renpy.notify(
                 f"Куплена машина: {car_names.get(car_name, car_name)} "
-                f"(получено {-actual_cost} монет сверху). HP: {new_max_hp}"
+                f"(получено {-actual_cost} монет сверху)."
             )
 
     def repair_car():
@@ -428,27 +447,29 @@ init python:
             if player_config.money >= repair_cost:
                 player_config.spend_money(repair_cost)
                 persistent.player_hp = persistent.player_max_hp
-                renpy.notify(f"Машина отремонтирована! Восстановлено {hp_to_repair} HP")
+                renpy.notify(f"Вы отдали {repair_cost} монет")
             else:
                 renpy.notify("Недостаточно денег для ремонта!")
         else:
             renpy.notify("Машина не нуждается в ремонте")
 
-    def repair_car_partial(amount):
-        cost = int(amount * 0.75)
-        if amount <= 0:
-            renpy.notify("Вы не выбрали HP для восстановления!")
+    def buy_heals():
+        heals_needed = persistent.player_max_heals - persistent.player_heals
+
+        if heals_needed <= 0:
+            renpy.notify("У вас уже максимум лечений.")
             return
 
-        if player_config.money >= cost:
-            player_config.spend_money(cost)
-            persistent.player_hp += amount
-            if persistent.player_hp > persistent.player_max_hp:
-                persistent.player_hp = persistent.player_max_hp
-            renpy.notify(f"Машина отремонтирована! Восстановлено {amount} HP, потрачено {cost} монет.")
-        else:
-            renpy.notify("Недостаточно денег для ремонта!")
+        price_per_heal = battle_heal_prices.get(player_config.car, 48)
+        heal_cost = heals_needed * price_per_heal
 
+        if player_config.money < heal_cost:
+            renpy.notify("Недостаточно денег!")
+            return
+
+        player_config.spend_money(heal_cost)
+        renpy.notify(f"Вы отдали {heal_cost} монет")
+        persistent.player_heals = persistent.player_max_heals
 
 default player_config = PlayerConfig()
 
@@ -516,7 +537,7 @@ label randomfight:
         $ enemy_hp = random.randint(180, 300)
 
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 20
+    $ max_heals = persistent.player_heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -554,6 +575,7 @@ label randomfight:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         $ renpy.hide(enemy_image) 

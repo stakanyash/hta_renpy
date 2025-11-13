@@ -53,17 +53,14 @@ init python:
         renpy.restart_interaction()
 
     def heal():
-        global player_hp, heal_count, max_heals, player_max_hp
+        global player_hp, heal_count, max_heals, remainheals
 
         if heal_count < max_heals:
-            heal_per = random.uniform(0.02, 0.1)
-
+            heal_per = 0.05
             heal_amount = int(player_max_hp * heal_per)
-
             player_hp = min(player_hp + heal_amount, player_max_hp)
-
             heal_count += 1
-
+            remainheals = max_heals - heal_count
             renpy.notify(f"Восстановлено {heal_amount} здоровья.")
             renpy.sound.play("audio/sfx/life.wav", channel="sound")
 

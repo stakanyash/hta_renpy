@@ -197,7 +197,7 @@ label mvillage:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 2000
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 20
+    $ max_heals = persistent.player_heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -235,6 +235,7 @@ label mvillage:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide minerattackers with dissolve
@@ -327,7 +328,7 @@ label brigdedestroy:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 1200
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 20
+    $ max_heals = persistent.player_heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -365,6 +366,7 @@ label brigdedestroy:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide brigde_defender with dissolve
@@ -755,7 +757,7 @@ label oilmine1st:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 15 
+    $ max_heals = persistent.player_heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -794,6 +796,7 @@ label oilmine1st:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide oilbandits with dissolve
@@ -856,7 +859,7 @@ label followlastone:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 15 
+    $ max_heals = persistent.player_heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -894,6 +897,7 @@ label followlastone:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide banditsonbase with dissolve
@@ -1265,7 +1269,7 @@ label base51lisa:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 650
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 20 
+    $ max_heals = persistent.player_heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -1303,6 +1307,7 @@ label base51lisa:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide base51fight with dissolve

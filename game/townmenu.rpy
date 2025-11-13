@@ -67,13 +67,13 @@ screen InGameMenu():
                 ypos 1
                 focus_mask True 
 
-            imagebutton activate_sound "audio/sfx/click.wav":
-                idle "gui/townmenu/buttons/tab_truck_e.png" 
-                hover "gui/townmenu/buttons/tab_truck_s.png"
-                action [Hide("InGameMenu"), Show("Car_Shop")]
-                xpos 1270
-                ypos 1
-                focus_mask True 
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_truck_e.png" 
+            hover "gui/townmenu/buttons/tab_truck_s.png"
+            action [Hide("InGameMenu"), Show("Car_Shop")]
+            xpos 1270
+            ypos 1
+            focus_mask True 
 
         hbox:
             xsize 527
@@ -298,13 +298,13 @@ screen Selling_Menu():
             ypos 7
             focus_mask True 
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/buttons/tab_truck_e.png" 
-            hover "gui/townmenu/buttons/tab_truck_s.png"
-            action [Hide("Selling_Menu"), Show("Car_Shop")]
-            xpos 1276
-            ypos 7
-            focus_mask True
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_truck_e.png" 
+        hover "gui/townmenu/buttons/tab_truck_s.png"
+        action [Hide("Selling_Menu"), Show("Car_Shop")]
+        xpos 1276
+        ypos 7
+        focus_mask True
 
 # Gun Shop
 
@@ -456,14 +456,13 @@ screen Gun_Shop_Menu():
         ypos 7
         focus_mask True
 
-    if player_config.town_type == "City":
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/buttons/tab_truck_e.png" 
-            hover "gui/townmenu/buttons/tab_truck_s.png"
-            action [Hide("Gun_Shop_Menu"), Show("Car_Shop")]
-            xpos 1276
-            ypos 7
-            focus_mask True
+    imagebutton activate_sound "audio/sfx/click.wav":
+        idle "gui/townmenu/buttons/tab_truck_e.png" 
+        hover "gui/townmenu/buttons/tab_truck_s.png"
+        action [Hide("Gun_Shop_Menu"), Show("Car_Shop")]
+        xpos 1276
+        ypos 7
+        focus_mask True
 
 # Car Shop
 
@@ -506,44 +505,46 @@ screen Car_Shop():
             yalign 0.0
             focus_mask True 
 
-        viewport:
-            xpos 115
-            ypos 190
-            xsize 550
-            ysize 770
-            scrollbars "vertical"
-            mousewheel True
+        if player_config.town_type == "City":
+            viewport:
+                xpos 115
+                ypos 190
+                xsize 550
+                ysize 770
+                scrollbars "vertical"
+                mousewheel True
 
-            vbox:
-                spacing 12
+                vbox:
+                    spacing 12
 
-                python:
-                    car_requirements = {
-                        "Van": "r1m1",
-                        "Molokovoz": "r1m2",
-                        "Ural": "r1m4"
-                    }
+                    python:
+                        car_requirements = {
+                            "Van": "r1m1",
+                            "Molokovoz": "r1m2",
+                            "Ural": "r1m4"
+                        }
 
-                    available_cars = {}
-                    for car_name, price in CarPrices.items():
-                        if car_name in car_requirements:
-                            required_region = car_requirements[car_name]
-                            if player_config.region_allowed(required_region):
-                                available_cars[car_name] = price
+                        available_cars = {}
+                        for car_name, price in CarPrices.items():
+                            if car_name in car_requirements:
+                                required_region = car_requirements[car_name]
+                                if player_config.region_allowed(required_region):
+                                    available_cars[car_name] = price
 
-                for car_name, price in available_cars.items():
-                    $ is_current = (player_config.car == car_name)
+                    for car_name, price in available_cars.items():
+                        $ is_current = (player_config.car == car_name)
 
-                    button:
-                        xsize 440
-                        background None
-                        hover_background Solid("#4c4c4c40")
-                        action SetScreenVariable("selected_car", car_name)
+                        button:
+                            xsize 440
+                            background None
+                            hover_background Solid("#4c4c4c40")
+                            sensitive (player_config.town_type == "City")
+                            action SetScreenVariable("selected_car", car_name)
 
-                        vbox:
-                            spacing 4
-                            text car_names.get(car_name, car_name) size 28 color ("#007700" if is_current else "#333333") font "fonts/ARIALBD.ttf"
-                            text "[price] монет" size 24 color "#555555"
+                            vbox:
+                                spacing 4
+                                text car_names.get(car_name, car_name) size 28 color ("#007700" if is_current else "#333333") font "fonts/ARIALBD.ttf"
+                                text "[price] монет" size 24 color "#555555"
 
         python:
             if persistent.player_hp < persistent.player_max_hp and player_config.car:
@@ -555,6 +556,11 @@ screen Car_Shop():
                 repair_cost = 0
                 can_repair = False
 
+            heals_needed = persistent.player_max_heals - persistent.player_heals
+            price_per_heal = battle_heal_prices.get(player_config.car, 48)
+            heal_cost = heals_needed * price_per_heal
+            can_buy_heals = (player_config.money >= heal_cost and heals_needed > 0)
+
         fixed:
             xpos 793
             ypos 563
@@ -562,6 +568,7 @@ screen Car_Shop():
 
             imagebutton auto "gui/townmenu/buttons/carshopbtn_%s.png":
                 selected False
+                sensitive (player_config.town_type == "City")
                 action If(
                     selected_car and player_config.car != selected_car,
                     Confirm(
@@ -577,7 +584,7 @@ screen Car_Shop():
             text "Купить" xalign 0.5 yalign 0.46 size 28 color "#fed11b"
 
             fixed:
-                ypos 261
+                ypos 185
                 xysize (217, 79)
                 imagebutton auto "gui/townmenu/buttons/carshopbtn_%s.png" sensitive can_repair:
                     selected False
@@ -587,6 +594,20 @@ screen Car_Shop():
                             NullAction())
                     activate_sound "audio/sfx/click.wav"
                 text ("[repair_cost]" if can_repair else ("{color=#960000}0{/color}" if hp_to_repair == 0 else "{color=#960000}[repair_cost]{/color}")) xalign 0.5 yalign 0.46 size 28 color "#fed11b"
+            
+            # FightHeal button placeholder
+            fixed:
+                ypos 370
+                xysize (217, 79)
+                imagebutton auto "gui/townmenu/buttons/carshopbtn_%s.png" sensitive can_buy_heals:
+                    selected False
+                    action If(can_buy_heals,
+                            Confirm("Восстановить все лечения?\n\nКоличество: {0}\nСтоимость: {1} монет".format(heals_needed, heal_cost),
+                                    yes=Function(buy_heals)),
+                            NullAction())
+                    activate_sound "audio/sfx/click.wav"
+
+                text ("[heal_cost]" if can_buy_heals else ("{color=#960000}0{/color}" if heals_needed == 0 else "{color=#960000}[heal_cost]{/color}")) xalign 0.5 yalign 0.46 size 28 color "#fed11b"
 
         if selected_car:
             $ car_hp = CarHP.get(selected_car, 0)
@@ -655,13 +676,14 @@ screen Car_Shop():
         ypos 6
         focus_mask True 
 
-    imagebutton:
-        idle "gui/townmenu/buttons/tab_weapon_e.png" 
-        hover "gui/townmenu/buttons/tab_weapon_s.png"
-        action [Hide("Car_Shop"), Show("Gun_Shop_Menu")]
-        xpos 1456
-        ypos 7
-        focus_mask True
+    if player_config.town_type == "City":
+        imagebutton:
+            idle "gui/townmenu/buttons/tab_weapon_e.png" 
+            hover "gui/townmenu/buttons/tab_weapon_s.png"
+            action [Hide("Car_Shop"), Show("Gun_Shop_Menu")]
+            xpos 1456
+            ypos 7
+            focus_mask True
 
     imagebutton activate_sound "audio/sfx/click.wav":
         idle "gui/townmenu/buttons/tab_truck_s.png" 

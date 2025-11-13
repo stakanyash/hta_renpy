@@ -80,7 +80,7 @@ label attackforloot:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 200
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 20
+    $ max_heals = persistent.player_heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -118,6 +118,7 @@ label attackforloot:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide lootdefender with dissolve
@@ -433,7 +434,7 @@ label toportoe1:
     $ enemy_hp = 850
     $ bgname = "bg_toporto"
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 15 
+    $ max_heals = persistent.player_heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -470,6 +471,7 @@ label toportoe1:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide to_porto_e1 with dissolve
@@ -851,7 +853,7 @@ label lisanearporto:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 650
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 20 
+    $ max_heals = persistent.player_heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -889,6 +891,7 @@ label lisanearporto:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide lisarescue_fight with dissolve

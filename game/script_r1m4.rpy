@@ -287,7 +287,7 @@ label tokranfight:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 2500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 20
+    $ max_heals = persistent.player_heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -324,6 +324,7 @@ label tokranfight:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide kranboss with dissolve
@@ -556,7 +557,7 @@ label r1m4SideQuest_warehousefight:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 2125 # 50% of 5 van hp
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 20
+    $ max_heals = persistent.player_heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -594,6 +595,7 @@ label r1m4SideQuest_warehousefight:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide warehouseguard with dissolve
@@ -678,7 +680,7 @@ label r1m4SideQuest_freeleader:
     $ player_max_hp = persistent.player_max_hp
     $ enemy_hp = 2025 # 50% HP of 3 Vans and 1 Lorry
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = 20
+    $ max_heals = persistent.player_heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -716,6 +718,7 @@ label r1m4SideQuest_freeleader:
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
         $ persistent.player_hp = player_hp
+        $ persistent.player_heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide leadertakers with dissolve
