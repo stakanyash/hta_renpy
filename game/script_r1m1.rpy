@@ -604,6 +604,7 @@ label sergo:
             "Фермер сел в вашу машину и вы поехали в сторону заправки по его наводке."
 
             if LisaAgreed == "False":
+                $ player_config.town_type = "NotInCity"
                 jump secondenemy
             elif LisaAgreed == "True":
                 if random.random() <= 0.5:

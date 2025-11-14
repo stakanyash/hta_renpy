@@ -195,7 +195,7 @@ label mvillage:
     $ enemy_image = "minerattackers"
     $ player_hp = persistent.player_hp
     $ player_max_hp = persistent.player_max_hp
-    $ enemy_hp = 2000
+    $ enemy_hp = 500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = persistent.player_heals
     $ turn_count = 0
@@ -296,6 +296,8 @@ label mvillageafterfight:
     hide miner with dissolve
     hide mchar with dissolve
 
+    $ player_config.town_type = "NotInCity"
+
     jump brigdedestroy
 
 label brigdedestroy:
@@ -326,7 +328,7 @@ label brigdedestroy:
     $ enemy_image = "brigde_defender"
     $ player_hp = persistent.player_hp
     $ player_max_hp = persistent.player_max_hp
-    $ enemy_hp = 1200
+    $ enemy_hp = 1000
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
     $ max_heals = persistent.player_heals
     $ turn_count = 0

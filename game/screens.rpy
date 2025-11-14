@@ -269,11 +269,11 @@ screen enemy_ui():
     # Таймер разблокировки атаки
     if attack_locked:
         if player_config.gun_type == "Shotgun":
-            timer 2 action SetVariable("attack_locked", False)
+            timer 1.3 action SetVariable("attack_locked", False)
         elif player_config.gun_type == "Plasma":
-            timer 3.5 action SetVariable("attack_locked", False)
+            timer 2.5 action SetVariable("attack_locked", False)
         else:
-            timer 0.75 action SetVariable("attack_locked", False)
+            timer 0.5 action SetVariable("attack_locked", False)
 
     # Завершение боя
     if enemy_hp <= 0 or player_hp <= 0:
@@ -484,10 +484,9 @@ screen quick_menu():
             xalign 0.5
             yalign 0.98
 
+            textbutton _("Главное меню") activate_sound "audio/sfx/click.wav" action ShowMenu('save')
             textbutton _("История") activate_sound "audio/sfx/click.wav" action ShowMenu('history')
             textbutton _("Авто") activate_sound "audio/sfx/click.wav" action Preference("auto-forward", "toggle")
-            textbutton _("Сохранить") activate_sound "audio/sfx/click.wav" action ShowMenu('save')
-            textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu('load')
             textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
 
             if player_config.town_type == "City" or player_config.town_type == "Village":
@@ -539,7 +538,7 @@ screen navigation():
 
             textbutton _("История") activate_sound "audio/sfx/click.wav" action ShowMenu("history")
 
-            textbutton _("Сохранить") activate_sound "audio/sfx/click.wav" action ShowMenu("save")
+            textbutton _("Сохранить") activate_sound "audio/sfx/click.wav" action ShowMenu("save_hta")
 
         textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu("load")
 
@@ -592,7 +591,7 @@ screen main_menu():
     ## заменять этот.
     tag menu
 
-    add "slideshow"
+    add "mainmenu_loop"
 
     add "gui/overlay/main_menu.png" xpos 0 ypos 0
 
@@ -613,9 +612,9 @@ screen main_menu():
                 style "main_menu_version"
 
     if config.developer:
-        text "Ex Machina RenPy - developer version 0.3.95 (251113a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - developer version 0.4.1 (251114a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
     else:
-        text "Ex Machina RenPy - demo version 0.3.95 (251113a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - demo version 0.4.1 (251114a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -773,8 +772,6 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     if main_menu:
         add gui.main_menu_background
-    else:
-        add gui.game_menu_background
 
     frame:
         style "game_menu_outer_frame"
@@ -882,8 +879,9 @@ style game_menu_label:
 
 style game_menu_label_text:
     size gui.title_text_size
-    color gui.accent_color
+    color "#fed11b"
     yalign 0.4
+    font "fonts/ARIALBD.ttf"
 
 style return_button:
     xpos 50
@@ -898,29 +896,69 @@ style return_button:
 ## можно сделать свой экран.
 
 screen about():
+    modal True
+    zorder 200
 
-    tag menu
+    # Затемнение фона
+    button:
+        style "empty"
+        xfill True
+        yfill True
+        action NullAction()
+        background "#000000cc"
 
-    ## Этот оператор включает игровое меню внутрь этого экрана. Дочерний vbox
-    ## включён в порт просмотра внутри экрана игрового меню.
-    use game_menu(_("Об игре"), scroll="viewport"):
+    # Статическое изображение меню поверх видео (если нужно)
+    add "gui/settings_menu.png"
 
-        style_prefix "about"
+    # Основное окно с контентом
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 1400
+        ysize 900
+        padding (50, 50)
+        background None
 
         vbox:
-            text ""
-            label "[config.name!t]"
-            text _("Версия [config.version!t]\n")
+            spacing 20
 
-            text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл RenPy.\n")
-            text _("Посвящен 20-летию оригинальной Ex Machina/Hard Truck Apocalypse.\n")
+            # Заголовок
+            hbox:
+                xfill True
+                text "Об игре" size 60 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 20 xpos 5
 
-            text _("Данная версия является демонстрационной, её разработка не завершена!\n")
+                # Кнопка закрытия
+                imagebutton:
+                    idle "gui/townmenu/close_e.png"
+                    hover "gui/townmenu/close_h.png"
+                    action Hide("about")
+                    xalign 1.0
+                    yalign 0.0
+                    activate_sound "audio/sfx/click.wav"
 
-            text _("GitHub репозиторий проекта доступен {a=https://github.com/stakanyash/hta_renpy}здесь{/a}.")
-            text _("{a=https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md}Отказ от ответственности{/a}\n")
+            null height 1
 
-            text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
+            # Основной контент
+            viewport:
+                scrollbars "vertical"
+                mousewheel True
+                ypos 100
+                xsize 1350
+                ysize 585
+
+                vbox:
+                    spacing 20
+
+                    label "[config.name!t]"
+                    text _("Версия [config.version!t]\n")
+
+                    text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл RenPy.\n")
+                    text _("Посвящен 20-летию оригинальной Ex Machina/Hard Truck Apocalypse.\n")
+                    text _("Данная версия является демонстрационной, её разработка не завершена!\n")
+                    text _("GitHub репозиторий проекта доступен {a=https://github.com/stakanyash/hta_renpy}здесь{/a}.")
+                    text _("{a=https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md}Отказ от ответственности{/a}\n")
+                    text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
+
 
 style about_label is gui_label
 style about_label_text is gui_label_text
@@ -942,15 +980,251 @@ screen save():
 
     tag menu
 
-    use file_slots(_("Сохранить"), is_load=False)
+    use game_menu("")
 
+screen save_hta(title="Сохранить", is_load=False):
+    modal True
+    zorder 200
 
-screen load():
+    # Затемнение фона
+    button:
+        style "empty"
+        xfill True
+        yfill True
+        action NullAction()
+        background "#000000cc"
 
-    tag menu
+    # Статическое изображение меню поверх видео (если нужно)
+    add "gui/settings_menu.png"
 
-    use file_slots(_("Загрузить"), is_load=True)
+    default page_name_value = FilePageNameInputValue(
+        pattern=_("{} страница"), 
+        auto=_("Автосохранения"), 
+        quick=_("Быстрые сохранения"), 
+        checkpoint=_("Чекпоинты")
+    )
 
+    $ current_page = FileCurrentPage()
+
+    # Основное окно с контентом
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 1400
+        ysize 900
+        padding (50, 50)
+        background None
+
+        vbox:
+            spacing 20
+
+            # Заголовок
+            hbox:
+                xfill True
+                text title size 50 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
+
+                # Кнопка закрытия
+                imagebutton:
+                    idle "gui/townmenu/close_e.png"
+                    hover "gui/townmenu/close_h.png"
+                    action Hide("save_hta")
+                    xalign 1.0
+                    yalign 0.0
+                    activate_sound "audio/sfx/click.wav"
+
+            null height 1
+
+            # Контент слотов
+            fixed:
+
+                # Номер страницы
+                button:
+                    style "page_label"
+                    key_events True
+                    xalign 0.5
+                    ypos -70
+                    action page_name_value.Toggle()
+
+                    input:
+                        style "page_label_text"
+                        value page_name_value
+
+                # Сетка слотов
+                grid gui.file_slot_cols gui.file_slot_rows:
+                    style_prefix "slot"
+                    xalign 0.5
+                    ypos 100
+                    spacing gui.slot_spacing
+
+                    for i in range(gui.file_slot_cols * gui.file_slot_rows):
+                        $ slot = i + 1
+                        button:
+                            if current_page == "checkpoint" and not is_load:
+                                action NullAction()
+                                sensitive False
+                            else:
+                                action FileAction(slot)
+
+                            has vbox
+                            add FileScreenshot(slot) xalign 0.5
+                            text FileTime(slot, format=_("{#file_time}%A, %d %B %Y, %H:%M"), empty=_("Пустой слот")):
+                                style "slot_time_text"
+                            text FileSaveName(slot):
+                                style "slot_name_text"
+                            key "save_delete" action FileDelete(slot)
+
+                # Кнопки страниц
+                vbox:
+                    style_prefix "page"
+                    xalign 0.51
+                    yalign 0.01
+
+                    $ current_page = FileCurrentPage()
+
+                    hbox:
+                        xalign 0.5
+                        spacing gui.page_spacing
+
+                        if current_page not in ("auto", "quick", "checkpoint"):
+                            textbutton _("<") activate_sound "audio/sfx/click.wav" action FilePagePrevious()
+                            key "save_page_prev" activate_sound "audio/sfx/click.wav" action FilePagePrevious()
+
+                        if config.has_autosave:
+                            textbutton _("{#auto_page}А") activate_sound "audio/sfx/click.wav" action FilePage("auto")
+
+                        if config.has_quicksave:
+                            textbutton _("{#quick_page}Б") activate_sound "audio/sfx/click.wav" action FilePage("quick")
+
+                        textbutton "Ч" activate_sound "audio/sfx/click.wav" action FilePage("checkpoint")
+
+                        for page in range(1, 10):
+                            textbutton "[page]" activate_sound "audio/sfx/click.wav" action FilePage(page)
+
+                        if current_page not in ("auto", "quick", "checkpoint"):
+                            textbutton _(">") activate_sound "audio/sfx/click.wav" action FilePageNext()
+                            key "save_page_next" activate_sound "audio/sfx/click.wav" action FilePageNext()
+
+screen load(title="Загрузить", is_load=True):
+    modal True
+    zorder 200
+
+    # Затемнение фона
+    button:
+        style "empty"
+        xfill True
+        yfill True
+        action NullAction()
+        background "#000000cc"
+
+    # Статическое изображение меню поверх видео (если нужно)
+    add "gui/settings_menu.png"
+
+    default page_name_value = FilePageNameInputValue(
+        pattern=_("{} страница"), 
+        auto=_("Автосохранения"), 
+        quick=_("Быстрые сохранения"), 
+        checkpoint=_("Чекпоинты")
+    )
+
+    $ current_page = FileCurrentPage()
+
+    # Основное окно с контентом
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 1400
+        ysize 900
+        padding (50, 50)
+        background None
+
+        vbox:
+            spacing 20
+
+            # Заголовок
+            hbox:
+                xfill True
+                text title size 50 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
+
+                # Кнопка закрытия
+                imagebutton:
+                    idle "gui/townmenu/close_e.png"
+                    hover "gui/townmenu/close_h.png"
+                    action Hide("load")
+                    xalign 1.0
+                    yalign 0.0
+                    activate_sound "audio/sfx/click.wav"
+
+            null height 1
+
+            # Контент слотов
+            fixed:
+
+                # Номер страницы
+                button:
+                    style "page_label"
+                    key_events True
+                    xalign 0.5
+                    ypos -70
+                    action page_name_value.Toggle()
+
+                    input:
+                        style "page_label_text"
+                        value page_name_value
+
+                # Сетка слотов
+                grid gui.file_slot_cols gui.file_slot_rows:
+                    style_prefix "slot"
+                    xalign 0.5
+                    ypos 100
+                    spacing gui.slot_spacing
+
+                    for i in range(gui.file_slot_cols * gui.file_slot_rows):
+                        $ slot = i + 1
+                        button:
+                            if current_page == "checkpoint" and not is_load:
+                                action NullAction()
+                                sensitive False
+                            else:
+                                action FileAction(slot)
+
+                            has vbox
+                            add FileScreenshot(slot) xalign 0.5
+                            text FileTime(slot, format=_("{#file_time}%A, %d %B %Y, %H:%M"), empty=_("Пустой слот")):
+                                style "slot_time_text"
+                            text FileSaveName(slot):
+                                style "slot_name_text"
+                            key "save_delete" action FileDelete(slot)
+
+                # Кнопки страниц
+                vbox:
+                    style_prefix "page"
+                    xalign 0.51
+                    yalign 0.01
+
+                    $ current_page = FileCurrentPage()
+
+                    hbox:
+                        xalign 0.5
+                        spacing gui.page_spacing
+
+                        if current_page not in ("auto", "quick", "checkpoint"):
+                            textbutton _("<") activate_sound "audio/sfx/click.wav" action FilePagePrevious()
+                            key "save_page_prev" activate_sound "audio/sfx/click.wav" action FilePagePrevious()
+
+                        if config.has_autosave:
+                            textbutton _("{#auto_page}А") activate_sound "audio/sfx/click.wav" action FilePage("auto")
+
+                        if config.has_quicksave:
+                            textbutton _("{#quick_page}Б") activate_sound "audio/sfx/click.wav" action FilePage("quick")
+
+                        textbutton "Ч" activate_sound "audio/sfx/click.wav" action FilePage("checkpoint")
+
+                        for page in range(1, 10):
+                            textbutton "[page]" activate_sound "audio/sfx/click.wav" action FilePage(page)
+
+                        if current_page not in ("auto", "quick", "checkpoint"):
+                            textbutton _(">") activate_sound "audio/sfx/click.wav" action FilePageNext()
+                            key "save_page_next" activate_sound "audio/sfx/click.wav" action FilePageNext()
 
 screen file_slots(title, is_load=False):
 
@@ -1044,7 +1318,6 @@ screen file_slots(title, is_load=False):
                     if current_page not in ("auto", "quick", "checkpoint"):
                         textbutton _(">") activate_sound "audio/sfx/click.wav" action FilePageNext()
                         key "save_page_next" activate_sound "audio/sfx/click.wav" action FilePageNext()
-
 
 style page_label is gui_label
 style page_label_text is gui_label_text
@@ -1535,27 +1808,124 @@ style history_label_text:
 ## помощь.
 
 screen help():
-
-    tag menu
+    modal True
+    zorder 200
 
     default device = "keyboard"
 
-    use game_menu(_("Помощь"), scroll="viewport"):
+    # Затемнение фона
+    button:
+        style "empty"
+        xfill True
+        yfill True
+        action NullAction()
+        background "#000000cc"
 
-        style_prefix "help"
+    # Статическое изображение меню (по желанию)
+    add "gui/settings_menu.png"
+
+    # Основное окно с контентом
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 1400
+        ysize 900
+        padding (50, 50)
+        background None
 
         vbox:
-            spacing 23
+            spacing 20
 
+            # Заголовок
             hbox:
+                xfill True
+                text _("Помощь") size 60 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
 
-                textbutton _("Клавиатура") activate_sound "audio/sfx/click.wav" action SetScreenVariable("device", "keyboard")
-                textbutton _("Мышь") activate_sound "audio/sfx/click.wav" action SetScreenVariable("device", "mouse")
+                # Кнопка закрытия
+                imagebutton:
+                    idle "gui/townmenu/close_e.png"
+                    hover "gui/townmenu/close_h.png"
+                    action Hide("help")
+                    xalign 1.0
+                    yalign 0.0
+                    activate_sound "audio/sfx/click.wav"
 
-            if device == "keyboard":
-                use keyboard_help
-            elif device == "mouse":
-                use mouse_help
+            null height 1
+
+            # Выбор устройства
+            hbox:
+                spacing 20
+                yoffset -12
+
+                fixed:
+                    xysize (180, 90)
+                    imagebutton auto "gui/test/b_opts_%s.png":
+                        action SetScreenVariable("device", "keyboard")
+                        activate_sound "audio/sfx/click.wav"
+                    
+                    text "Клавиатура" xalign 0.5 yalign 0.4 size 24 color "#fed11b"
+
+                fixed:
+                    xysize (180, 90)
+                    imagebutton auto "gui/test/b_opts_%s.png":
+                        action SetScreenVariable("device", "mouse")
+                        activate_sound "audio/sfx/click.wav"
+                    
+                    text "Мышь" xalign 0.5 yalign 0.38 size 28 color "#fed11b"
+
+                #textbutton _("Клавиатура") activate_sound "audio/sfx/click.wav" action SetScreenVariable("device", "keyboard")
+                #textbutton _("Мышь") activate_sound "audio/sfx/click.wav" action SetScreenVariable("device", "mouse")
+
+            null height 20
+
+            # Контент с прокруткой
+            viewport:
+                scrollbars "vertical"
+                mousewheel True
+                xsize 1350
+                ysize 700
+
+                vbox:
+                    spacing 15
+
+                    if device == "keyboard":
+                        hbox:
+                            label _("Enter")
+                            text _("Прохождение диалогов, активация интерфейса.") xpos 30
+
+                        hbox:
+                            label _("Пробел")
+                            text _("Прохождение диалогов без возможности делать выбор.") xpos 30
+
+                        hbox:
+                            label _("Стрелки")
+                            text _("Навигация по интерфейсу.") xpos 30
+
+                        hbox:
+                            label _("Esc")
+                            text _("Вход в игровое меню.") xpos 30
+
+                        hbox:
+                            label "H"
+                            text _("Скрывает интерфейс пользователя.") xpos 30
+
+                        hbox:
+                            label "S"
+                            text _("Делает снимок экрана.") xpos 30
+
+                    elif device == "mouse":
+                        hbox:
+                            label _("Левый клик")
+                            text _("Прохождение диалогов, активация интерфейса.") xpos 30
+
+                        hbox:
+                            label _("Клик колёсиком")
+                            text _("Скрывает интерфейс пользователя.") xpos 30
+
+                        hbox:
+                            label _("Правый клик")
+                            text _("Вход в игровое меню.") xpos 30
+
 
 
 screen keyboard_help():
@@ -1575,10 +1945,6 @@ screen keyboard_help():
     hbox:
         label _("Esc")
         text _("Вход в игровое меню.")
-
-    hbox:
-        label _("Ctrl")
-        text _("Пропускает диалоги, пока зажат.")
 
     hbox:
         label "H"

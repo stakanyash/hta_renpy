@@ -307,6 +307,12 @@ init python:
         },
     }
 
+    car_descriptions = {
+        "Van": "Только самые беспечные или отчаянные торговцы рискуют отправляться в рейс на такой машине. Всего одна слабая пушка и почти полное отсутствие брони лишь частично компенсируются высокой мобильностью.",
+        "Molokovoz": "Легкий грузовик, любимый богатыми фермерами и скупыми торговцами за прекрасное соотношение цены и качества. Однако профессионалы недолюбливают эту недостаточно безопасную модель.",
+        "Ural": "Те, кто преуспел – выбирают Урал за отличный баланс грузоподъемности и вооружения. Самый быстрый из тяжелых грузовиков вывезет вас из любой передряги."
+    }
+
     ItemPricesCity = {
         "Hornet": 140,
         "Specter": 295,
@@ -470,6 +476,41 @@ init python:
         player_config.spend_money(heal_cost)
         renpy.notify(f"Вы отдали {heal_cost} монет")
         persistent.player_heals = persistent.player_max_heals
+
+    def get_lowhealincs():
+        percent = persistent.player_hp / float(persistent.player_max_hp)
+        if percent < 0.15:
+            return "gui/bossbar/redlight_hp.png"
+        else:
+            return "gui/bossbar/redlight_blank.png"
+
+    def get_lowhealamountincs():
+        percent = persistent.player_heals / persistent.player_max_heals
+        if percent < 0.30:
+            return "gui/bossbar/redlight_fuel.png"
+        else:
+            return "gui/bossbar/redlight_blank.png"
+
+    def show_loadingtomm(load_slides):
+
+        total_time = random.uniform(4.0, 7.0)
+        num_slides = len(load_slides)
+
+        # Генерируем веса для случайного распределения пауз
+        weights = [random.random() for _ in range(num_slides)]
+        weight_sum = sum(weights)
+        pauses = [total_time * w / weight_sum for w in weights]
+
+        for i, slide in enumerate(load_slides):
+            # Показываем слайд
+            renpy.show(slide, at_list=[truecenter])
+            # Ждем нужное время
+            renpy.pause(pauses[i], hard=True)
+            # Скрываем слайд
+            renpy.hide(slide)
+
+        # После показа всех слайдов вызываем главное меню
+        renpy.call_in_new_context("MainMenu")
 
 default player_config = PlayerConfig()
 

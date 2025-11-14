@@ -177,7 +177,7 @@ label defeateddefender:
     if 1 <= randomgun <= 3:
         "Вы нашли оружие \"Корд\"!"
         $ player_config.current_gun = "Kord"
-        $ player_config.gun_type = "Shotgun"
+        $ player_config.gun_type = "Firearm"
     elif 4 <= randomgun <= 6:
         "Вы нашли оружие \"ПКТ\"!"
         $ player_config.current_gun = "PKT"
@@ -185,7 +185,7 @@ label defeateddefender:
     else:
         "Вы нашли оружие \"Шторм\"!"
         $ player_config.current_gun = "Storm"
-        $ player_config.gun_type = "Firearm"
+        $ player_config.gun_type = "Shotgun"
 
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."

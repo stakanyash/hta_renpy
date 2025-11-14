@@ -469,6 +469,18 @@ screen Gun_Shop_Menu():
 screen Car_Shop():
     tag menu
     default selected_car = None
+    default tooltip_text = ""
+    default tooltip_pending_text = ""
+    default tooltip_showing = False
+    default mouse_pos = (0, 0)
+
+    timer 0.02 repeat True action [
+        SetScreenVariable("mouse_pos", renpy.get_mouse_pos()),
+        If(tooltip_showing,
+            SetScreenVariable("tooltip_text", tooltip_pending_text),
+            SetScreenVariable("tooltip_text", "")
+        )
+    ]
 
     frame:
         background "gui/townmenu/carshop.png"
@@ -496,6 +508,8 @@ screen Car_Shop():
         elif player_config.money >= 1000000:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
             text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+
+        text "Сравнение:" size 22 color "#404040" font "fonts/ARIALBD.ttf" xpos 1138 ypos 871
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
@@ -581,12 +595,17 @@ screen Car_Shop():
                     NullAction()
                 )
                 activate_sound "audio/sfx/click.wav"
-            text "Купить" xalign 0.5 yalign 0.46 size 28 color "#fed11b"
+            text ("Купить" if player_config.town_type == "City" else ("{color=#960000}Купить{/color}")) xalign 0.5 yalign 0.46 size 28 color "#fed11b"
 
             fixed:
                 ypos 185
                 xysize (217, 79)
                 imagebutton auto "gui/townmenu/buttons/carshopbtn_%s.png" sensitive can_repair:
+                    hovered [ SetScreenVariable("tooltip_pending_text", "Починить машину (0.75 монет за 1 HP)"),
+                                SetScreenVariable("tooltip_showing", True) ]
+                    unhovered [ SetScreenVariable("tooltip_pending_text", ""),
+                                SetScreenVariable("tooltip_showing", False),
+                                SetScreenVariable("tooltip_text", "") ]
                     selected False
                     action If(can_repair,
                             Confirm("Починить машину?\n\nВосстановить: {0} HP\nСтоимость: {1} монет".format(hp_to_repair, repair_cost),
@@ -595,11 +614,15 @@ screen Car_Shop():
                     activate_sound "audio/sfx/click.wav"
                 text ("[repair_cost]" if can_repair else ("{color=#960000}0{/color}" if hp_to_repair == 0 else "{color=#960000}[repair_cost]{/color}")) xalign 0.5 yalign 0.46 size 28 color "#fed11b"
             
-            # FightHeal button placeholder
             fixed:
                 ypos 370
                 xysize (217, 79)
                 imagebutton auto "gui/townmenu/buttons/carshopbtn_%s.png" sensitive can_buy_heals:
+                    hovered [ SetScreenVariable("tooltip_pending_text", "Пополнить запас лечения ([battle_heal_prices.get(player_config.car, 48)] монет за 1 лечение)"),
+                                SetScreenVariable("tooltip_showing", True) ]
+                    unhovered [ SetScreenVariable("tooltip_pending_text", ""),
+                                SetScreenVariable("tooltip_showing", False),
+                                SetScreenVariable("tooltip_text", "") ]
                     selected False
                     action If(can_buy_heals,
                             Confirm("Восстановить все лечения?\n\nКоличество: {0}\nСтоимость: {1} монет".format(heals_needed, heal_cost),
@@ -614,6 +637,19 @@ screen Car_Shop():
             $ car_price = CarPrices.get(selected_car, 0)
             $ sell_price = CarSellPrices.get(player_config.car, 0)
             $ actual_cost = car_price - sell_price if player_config.car != selected_car else 0
+            $ car_desc = car_descriptions.get(selected_car, "Описание отсутствует.")
+
+            $ selected_max_hp = CarHP.get(selected_car, 0)
+            $ selected_max_heals = CarMaxHeals.get(selected_car, 0)
+            $ selected_heal_price = battle_heal_prices.get(selected_car, 0)
+            
+            $ current_max_hp = persistent.player_max_hp if player_config.car else 0
+            $ current_max_heals = persistent.player_max_heals if player_config.car else 0
+            $ current_heal_price = battle_heal_prices.get(player_config.car, 0) if player_config.car else 0
+            
+            $ hp_diff = selected_max_hp - current_max_hp
+            $ heals_diff = selected_max_heals - current_max_heals
+            $ heal_price_diff = selected_heal_price - current_heal_price
 
             text car_names.get(selected_car, selected_car):
                 xpos 1480
@@ -660,6 +696,91 @@ screen Car_Shop():
 
             add f"{selected_car}_slideshow" xpos 1480 ypos 450 xanchor 0.5 yanchor 0.5
 
+            if player_config.car:
+                vbox:
+                    xpos 1060
+                    ypos 915
+                    spacing 18.5
+                    
+                    hbox:
+                        spacing 5
+                        text "Макс. HP: " size 18 color "#404040" font "fonts/ARIALBD.ttf" xsize 180 textalign 1.0
+                        if hp_diff > 0:
+                            text "[current_max_hp] → {color=#007700}[selected_max_hp]{/color}" size 20 color "#404040" ypos -3
+                        elif hp_diff < 0:
+                            text "[current_max_hp] → {color=#960000}[selected_max_hp]{/color}" size 20 color "#404040" ypos -3
+                        else:
+                            text "[current_max_hp] → [selected_max_hp]" size 20 color "#404040" ypos -3
+                    
+                    hbox:
+                        spacing 5
+                        text "Макс. лечений: " size 18 color "#404040" font "fonts/ARIALBD.ttf" xsize 180 textalign 1.0
+                        if heals_diff > 0:
+                            text "[current_max_heals] → {color=#007700}[selected_max_heals]{/color}" size 20 color "#404040" ypos -3
+                        elif heals_diff < 0:
+                            text "[current_max_heals] → {color=#960000}[selected_max_heals]{/color}" size 20 color "#404040" ypos -3
+                        else:
+                            text "[current_max_heals] → [selected_max_heals]" size 20 color "#404040" ypos -3
+                    
+                    hbox:
+                        spacing 5
+                        text "Цена покупки лечения: " size 16 color "#404040" font "fonts/ARIALBD.ttf" xsize 200 textalign 1.0
+                        if heal_price_diff > 0:
+                            text "[current_heal_price] → {color=#960000}[selected_heal_price]{/color}" size 20 color "#404040" ypos -3
+                        elif heal_price_diff < 0:
+                            text "[current_heal_price] → {color=#007700}[selected_heal_price]{/color}" size 20 color "#404040" ypos -3
+                        else:
+                            text "[current_heal_price] → [selected_heal_price]" size 20 color "#404040" ypos -3
+
+            vbox:
+                xsize 495
+                ysize 270
+                xalign 0.98
+                yalign 0.96
+
+                frame:
+                    background None
+                    xsize 495
+                    ysize 270
+                    text "[car_desc]" style "cardesc"
+
+    fixed:
+        xpos 792
+        ypos 200
+
+        hbox:
+            xalign 0.0134
+            yalign 0.0145
+            for digit_img in get_hp_digit_images(persistent.player_hp):
+                add digit_img
+
+        hbox:
+            xalign 0.037
+            yalign 0.034
+            if persistent.player_hp <= 0:
+                add get_lowhealincs()
+            elif "redlight_hp.png" in get_lowhealincs():
+                add get_lowhealincs() at blinking
+            else:
+                add get_lowhealincs()
+
+    fixed:
+        hbox:
+            xalign 0.467
+            yalign 0.384
+            if persistent.player_heals <= 0:
+                add get_lowhealamountincs()
+            elif "redlight_fuel.png" in get_lowhealamountincs():
+                add get_lowhealamountincs() at blinking
+            else:
+                add get_lowhealamountincs()
+
+        hbox:
+            xalign 0.483
+            yalign 0.357
+            for healing in get_heal_digit_images(persistent.player_heals):
+                add healing
+
     imagebutton activate_sound "audio/sfx/click.wav":
         idle "gui/townmenu/buttons/tab_stats_e.png" 
         hover "gui/townmenu/buttons/tab_stats_s.png"
@@ -692,3 +813,18 @@ screen Car_Shop():
         xpos 1276
         ypos 7
         focus_mask True
+
+    if tooltip_text:
+        frame:
+            background Solid("#000C")
+            padding (10, 6)
+            text tooltip_text size 20 color "#fff"
+            xpos mouse_pos[0] + 15
+            ypos mouse_pos[1] + 15
+            xanchor 0.0
+            yanchor 0.0
+
+style cardesc:
+    xmaximum 495
+    color "#404040"
+    size 18

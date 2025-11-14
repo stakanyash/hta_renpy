@@ -16,7 +16,7 @@ init python:
         if config.developer:
             renpy.notify(f"Damage Random is: {randomDamage}")
 
-        if randomDamage <= 0.40:
+        if randomDamage <= 0.35:
             damage_percent = difficulty_base_multiplier * enemy_damage_multiplier
             damage = int(player_max_hp * damage_percent)
 
@@ -113,7 +113,11 @@ init python:
             return "gui/bossbar/redlight_blank.png"
 
     def get_lowhealamount():
-        percent = get_remain_heals() / float(max_heals)
+        max_h = max_heals
+        remain = get_remain_heals()
+
+        percent = 0.0 if max_h == 0 else remain / float(max_h)
+
         if percent < 0.30:
             return "gui/bossbar/redlight_fuel.png"
         else:

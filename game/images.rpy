@@ -293,4 +293,4 @@ image tr_checkpoints = "images/tutorial/tr_checkpoints.jpg"
 
 image damage = "images/effects/damage.png"
 
-image vanshop = Animation("images/vanshop.png")
+image mainmenu_loop = Movie(play="movies/mainmenu_loop1.avi")
