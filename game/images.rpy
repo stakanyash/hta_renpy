@@ -294,3 +294,31 @@ image tr_checkpoints = "images/tutorial/tr_checkpoints.jpg"
 image damage = "images/effects/damage.png"
 
 image mainmenu_loop = Movie(play="movies/mainmenu_loop1.avi")
+
+image scrach_anim_24fps:
+    blend "multiply"
+    "gui/scratch/scrach00.png"
+    pause 0.0667
+    "gui/scratch/scrach01.png"
+    pause 0.0667
+    "gui/scratch/scrach02.png"
+    pause 0.0667
+    "gui/scratch/scrach03.png"
+    pause 0.0667
+    "gui/scratch/scrach04.png"
+    pause 0.0667
+    "gui/scratch/scrach05.png"
+    pause 0.0667
+    "gui/scratch/scrach06.png"
+    pause 0.0667
+    "gui/scratch/scrach07.png"
+    pause 0.0667
+    "gui/scratch/scrach08.png"
+    pause 0.0667
+    "gui/scratch/scrach09.png"
+    pause 0.0667
+    "gui/scratch/scrach10.png"
+    pause 0.0667
+    "gui/scratch/scrach11.png"
+    pause 0.0667
+    repeat

@@ -90,7 +90,7 @@ define gui.title_text_size = 75
 
 ## Изображения, используемые в главном и игровом меню.
 define gui.main_menu_background = "mainmenu_loop"
-define gui.game_menu_background = "gui/game_menu.png"
+define gui.game_menu_background = None
 
 
 ## Диалог ######################################################################
@@ -356,10 +356,10 @@ define gui.history_spacing = 0
 
 ## Местоположение, ширина и выравнивание заголовка, показывающего имя говорящего
 ## персонажа.
-define gui.history_name_xpos = 233
+define gui.history_name_xpos = 0
 define gui.history_name_ypos = 0
 define gui.history_name_width = 233
-define gui.history_name_xalign = 1.0
+define gui.history_name_xalign = 0.0
 
 ## Местоположение, ширина и выравнивание диалогового текста.
 define gui.history_text_xpos = 255

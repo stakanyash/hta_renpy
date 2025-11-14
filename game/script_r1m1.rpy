@@ -1169,11 +1169,11 @@ label KventinZaimka:
 
     "Вы ставите новое вооружение на свою машину и едете к Феликсу..."
 
+    $ player_config.town_type = "NotInCity"
+
     jump felixbase
 
 label felixbase:
-
-    $ player_config.town_type = "NotInCity"
 
     scene bg_felixbase with fade
 

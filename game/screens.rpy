@@ -485,9 +485,10 @@ screen quick_menu():
             yalign 0.98
 
             textbutton _("Главное меню") activate_sound "audio/sfx/click.wav" action ShowMenu('save')
-            textbutton _("История") activate_sound "audio/sfx/click.wav" action ShowMenu('history')
             textbutton _("Авто") activate_sound "audio/sfx/click.wav" action Preference("auto-forward", "toggle")
-            textbutton _("Профиль") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
+            textbutton _("Быстрое сохранение") activate_sound "audio/sfx/click.wav" action QuickSave()
+            textbutton _("Быстрая загрузка") activate_sound "audio/sfx/click.wav" action QuickLoad()
+            textbutton _("Статистика") activate_sound "audio/sfx/click.wav" action ShowMenu("statistics_screen")
 
             if player_config.town_type == "City" or player_config.town_type == "Village":
                 textbutton _("Меню города") activate_sound "audio/sfx/click.wav" action ShowMenu("InGameMenu")
@@ -520,25 +521,15 @@ style quick_button_text:
 ## Этот экран включает в себя главное и игровое меню, и обеспечивает навигацию к
 ## другим меню и к началу игры.
 
-screen navigation():
+screen navigation_main_menu():
 
     vbox:
-        style_prefix "navigation"
-
+        style_prefix "navigationmm"
         xpos 50
         yalign 0.5
-
         spacing 9
 
-        if main_menu:
-
-            textbutton _("Новая игра") activate_sound "audio/sfx/click.wav" action [Show("name_input_screen")]
-
-        else:
-
-            textbutton _("История") activate_sound "audio/sfx/click.wav" action ShowMenu("history")
-
-            textbutton _("Сохранить") activate_sound "audio/sfx/click.wav" action ShowMenu("save_hta")
+        textbutton _("Новая игра") activate_sound "audio/sfx/click.wav" action Show("name_input_screen")
 
         textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu("load")
 
@@ -547,23 +538,46 @@ screen navigation():
         textbutton _("Об игре") activate_sound "audio/sfx/click.wav" action ShowMenu("about")
 
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
-
-            ## Помощь не необходима и не относится к мобильным устройствам.
             textbutton _("Помощь") activate_sound "audio/sfx/click.wav" action ShowMenu("help")
 
+        if renpy.variant("pc"):
+            textbutton _("Выход") activate_sound "audio/sfx/click.wav" action Quit(confirm=True)
+
+screen navigation_in_game():
+
+    vbox:
+        style_prefix "navigation"
+        xalign 0.5
+        yalign 0.52
+        spacing 10
+
+        textbutton _("История") activate_sound "audio/sfx/click.wav" action ShowMenu("history") style "navigation_button"
+
+        textbutton _("Сохранить") activate_sound "audio/sfx/click.wav" action ShowMenu("save_hta") style "navigation_button"
+
+        textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu("load") style "navigation_button"
+
+        textbutton _("Настройки") activate_sound "audio/sfx/click.wav" action ShowMenu("preferences") style "navigation_button"
+
+        textbutton _("Об игре") activate_sound "audio/sfx/click.wav" action ShowMenu("about") style "navigation_button"
+
+        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
+            textbutton _("Помощь") activate_sound "audio/sfx/click.wav" action ShowMenu("help") style "navigation_button"
+
         if _in_replay:
+            textbutton _("Завершить повтор") activate_sound "audio/sfx/click.wav" action EndReplay(confirm=True) style "navigation_button"
 
-            textbutton _("Завершить повтор") activate_sound "audio/sfx/click.wav" action EndReplay(confirm=True)
-
-        elif not main_menu:
-
-            textbutton _("Главное меню") activate_sound "audio/sfx/click.wav" action MainMenu()
+        textbutton _("Главное меню") activate_sound "audio/sfx/click.wav" action MainMenu() style "navigation_button"
 
         if renpy.variant("pc"):
+            textbutton _("Выход") activate_sound "audio/sfx/click.wav" action Quit(confirm=True) style "navigation_button"
 
-            ## Кнопка выхода блокирована в iOS и не нужна на Android и в веб-
-            ## версии.
-            textbutton _("Выход") activate_sound "audio/sfx/click.wav" action Quit(confirm=True)
+        textbutton _("Вернуться"):
+            style "navigation_button"
+            activate_sound "audio/sfx/click.wav"
+            yoffset 20
+
+            action Return()
 
 
 style navigation_button is gui_button
@@ -574,9 +588,21 @@ style navigation_button:
     properties gui.button_properties("navigation_button")
 
 style navigation_button_text:
-    properties gui.text_properties("navigation_button")
-    color "#FED11B"
-    hover_color "#AD8E13"
+    xalign 0.5
+    text_align 0.5
+    color "#404040"
+    hover_color "#202020"
+
+style navigationmm_button is gui_button
+style navigationmm_button_text is gui_button_text
+
+style navigationmm_button:
+    size_group "navigation"
+    properties gui.button_properties("navigation_button")
+
+style navigationmm_button_text:
+    color "#fed11b"
+    hover_color "#f9fd00"
 
 
 ## Экран главного меню #########################################################
@@ -598,7 +624,7 @@ screen main_menu():
     ## Оператор use включает отображение другого экрана в данном. Актуальное
     ## содержание главного меню находится на экране навигации.
     
-    use navigation
+    use navigation_main_menu
 
     if gui.show_name:
 
@@ -612,9 +638,9 @@ screen main_menu():
                 style "main_menu_version"
 
     if config.developer:
-        text "Ex Machina RenPy - developer version 0.4.1 (251114a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - developer version 0.4.2 (251114c)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
     else:
-        text "Ex Machina RenPy - demo version 0.4.1 (251114a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - demo version 0.4.2 (251114c)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -772,6 +798,10 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     if main_menu:
         add gui.main_menu_background
+    else:
+        add Solid("#5a5a5a4f")
+        add "scrach_anim_24fps"
+        add "gui/ingame_mm.png" 
 
     frame:
         style "game_menu_outer_frame"
@@ -822,13 +852,7 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
                     transclude
 
-    use navigation
-
-    textbutton _("Вернуться"):
-        style "return_button"
-        activate_sound "audio/sfx/click.wav"
-
-        action Return()
+    use navigation_in_game
 
     label title
 
@@ -852,8 +876,6 @@ style return_button_text is navigation_button_text
 style game_menu_outer_frame:
     bottom_padding 45
     top_padding 180
-
-    background "gui/overlay/game_menu.png"
 
 style game_menu_navigation_frame:
     xsize 420
@@ -884,7 +906,6 @@ style game_menu_label_text:
     font "fonts/ARIALBD.ttf"
 
 style return_button:
-    xpos 50
     yalign 0.8
 
 
@@ -1709,6 +1730,76 @@ style slider_vbox:
 ## https://www.renpy.org/doc/html/history.html
 
 screen history():
+    modal True
+    zorder 200
+
+    button:
+        style "empty"
+        xfill True
+        yfill True
+        action NullAction()
+        background "#000000cc"
+
+    add "gui/settings_menu.png"
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 1400
+        ysize 900
+        padding (50, 50)
+        background None
+
+        vbox:
+            spacing 20
+
+            hbox:
+                xfill True
+                text "История" size 60 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 20 xpos 5
+
+                imagebutton:
+                    idle "gui/townmenu/close_e.png"
+                    hover "gui/townmenu/close_h.png"
+                    action Hide("history")
+                    xalign 1.0
+                    yalign 0.0
+                    activate_sound "audio/sfx/click.wav"
+
+            null height 1
+
+            viewport:
+                scrollbars "vertical"
+                mousewheel True
+                ypos 100
+                xsize 1350
+                ysize 585
+
+                vbox:
+                    spacing 50
+
+                    if _history_list:
+                        for h in _history_list:
+
+                            vbox:
+                                spacing 5
+
+                                if h.who:
+                                    label h.who:
+                                        style "history_name"
+                                        substitute False
+                                        if "color" in h.who_args:
+                                            text_color "#404040"
+
+                                $ what = renpy.filter_text_tags(h.what, allow=gui.history_allow_tags)
+                                text what:
+                                    substitute False
+
+                    else:
+                        text _("История диалогов пуста.") size 30 color "#FFFFFF"
+
+ 
+
+screen historyold():
 
     tag menu
     predict False
@@ -1777,13 +1868,14 @@ style history_window:
 
 style history_name:
     xpos gui.history_name_xpos
-    xanchor gui.history_name_xalign
     ypos gui.history_name_ypos
     xsize gui.history_name_width
+    color "#404040"
 
 style history_name_text:
     min_width gui.history_name_width
     textalign gui.history_name_xalign
+    color "#404040"
 
 style history_text:
     xpos gui.history_text_xpos
