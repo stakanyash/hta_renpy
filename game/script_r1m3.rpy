@@ -180,10 +180,10 @@ label mvillage:
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -193,11 +193,11 @@ label mvillage:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "minerattackers"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals
+    $ max_heals = player_config.heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -234,8 +234,8 @@ label mvillage:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide minerattackers with dissolve
@@ -313,10 +313,10 @@ label brigdedestroy:
 
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -326,11 +326,11 @@ label brigdedestroy:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "brigde_defender"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 1000
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals
+    $ max_heals = player_config.heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -367,8 +367,8 @@ label brigdedestroy:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide brigde_defender with dissolve
@@ -421,7 +421,7 @@ label BOOOM:
 
     stop sound
 
-    $ renpy.movie_cutscene("movies/r1m3/bridge_destroy.mp4")
+    $ renpy.movie_cutscene("movies/r1m3/bridge_destroy.ogv")
 
     scene bg_bandbridge_down
 
@@ -742,10 +742,10 @@ label oilmine1st:
 
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -755,11 +755,11 @@ label oilmine1st:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "oilbandits"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals
+    $ max_heals = player_config.heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -797,8 +797,8 @@ label oilmine1st:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide oilbandits with dissolve
@@ -844,10 +844,10 @@ label followlastone:
     $ renpy.save("checkpoint-4")
     mc "Всё таки заметил..."
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -857,11 +857,11 @@ label followlastone:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "banditsonbase"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals 
+    $ max_heals = player_config.heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -898,8 +898,8 @@ label followlastone:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide banditsonbase with dissolve
@@ -1254,10 +1254,10 @@ label base51lisa:
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -1267,11 +1267,11 @@ label base51lisa:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "base51fight"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 650
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals 
+    $ max_heals = player_config.heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -1308,8 +1308,8 @@ label base51lisa:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide base51fight with dissolve

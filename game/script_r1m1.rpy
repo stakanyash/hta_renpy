@@ -17,10 +17,10 @@ label main_game:
     $ config.keymap['load'] = ['load']
     $ config.keymap['game_menu'] = ['game_menu']
     $ persistent._in_battle = False
-    $ persistent.player_max_hp = CarHP.get(player_config.car, 850)
-    $ persistent.player_hp = persistent.player_max_hp
-    $ persistent.player_max_heals = CarMaxHeals.get(player_config.car, 15)
-    $ persistent.player_heals = persistent.player_max_heals
+    $ player_config.max_hp = CarHP.get(player_config.car, 850)
+    $ player_config.hp = player_config.max_hp
+    $ player_config.max_heals = CarMaxHeals.get(player_config.car, 15)
+    $ player_config.heals = player_config.max_heals
 
     $ renpy.notify("Игра сохранена в слот 1.")
     $ renpy.save("checkpoint-1")
@@ -115,10 +115,10 @@ label main_game:
     jump firstenemyfight
 
 label firstenemyfight:
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -128,12 +128,12 @@ label firstenemyfight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "firsteverenemy"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 80
     $ bgname = "bg_firsteverenemy"
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals
+    $ max_heals = player_config.heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -169,8 +169,8 @@ label firstenemyfight:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide firsteverenemy with dissolve
@@ -316,10 +316,10 @@ label secondenemy:
 
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -329,12 +329,12 @@ label secondenemy:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "secenemy"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 125
     $ bgname = "bg_secondenemy"
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals 
+    $ max_heals = player_config.heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -370,8 +370,8 @@ label secondenemy:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide secenemy with dissolve
@@ -728,10 +728,10 @@ label felixbeforefight:
 
     menu:
         "Атаковать":
-            $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+            $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-            if persistent.player_hp is None:
-                $ persistent.player_hp = persistent.player_max_hp
+            if player_config.hp is None:
+                $ player_config.hp = player_config.max_hp
             
             $ _window_hide()
             $ _game_menu_screen = None
@@ -742,9 +742,9 @@ label felixbeforefight:
             $ persistent._in_battle = True
             $ RunFromFelix = "False"
             $ enemy_image = "felixteam"
-            $ player_hp = persistent.player_hp
-            $ player_max_hp = persistent.player_max_hp
-            $ max_heals = persistent.player_heals
+            $ player_hp = player_config.hp
+            $ player_max_hp = player_config.max_hp
+            $ max_heals = player_config.heals
             $ enemy_hp = 225
             $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
             $ turn_count = 0
@@ -783,8 +783,8 @@ label felixbeforefight:
                 $ config.keymap['game_menu'] = ['game_menu']
                 $ persistent._in_battle = False
                 $ renpy.sound.stop(channel="shoot")
-                $ persistent.player_hp = player_hp
-                $ persistent.player_heals = remainheals
+                $ player_config.hp = player_hp
+                $ player_config.heals = remainheals
 
                 hide felixteam with dissolve
 
@@ -1229,10 +1229,10 @@ label felixbase:
 
     "Вы снова начинаете бой с Феликсом."
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -1245,12 +1245,12 @@ label felixbase:
     jump felix_battle
 
 label felix_battle:
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
-    $ max_heals = persistent.player_heals
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
+    $ max_heals = player_config.heals
     $ enemy_hp = 200
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals 
+    $ max_heals = player_config.heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -1288,8 +1288,8 @@ label felix_battle:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         hide felixcar with dissolve
 

@@ -561,8 +561,8 @@ screen Car_Shop():
                                 text "[price] монет" size 24 color "#555555"
 
         python:
-            if persistent.player_hp < persistent.player_max_hp and player_config.car:
-                hp_to_repair = persistent.player_max_hp - persistent.player_hp
+            if player_config.hp < player_config.max_hp and player_config.car:
+                hp_to_repair = player_config.max_hp - player_config.hp
                 repair_cost = int(hp_to_repair * 0.75)
                 can_repair = (player_config.money >= repair_cost)
             else:
@@ -570,7 +570,7 @@ screen Car_Shop():
                 repair_cost = 0
                 can_repair = False
 
-            heals_needed = persistent.player_max_heals - persistent.player_heals
+            heals_needed = player_config.max_heals - player_config.heals
             price_per_heal = battle_heal_prices.get(player_config.car, 48)
             heal_cost = heals_needed * price_per_heal
             can_buy_heals = (player_config.money >= heal_cost and heals_needed > 0)
@@ -643,8 +643,8 @@ screen Car_Shop():
             $ selected_max_heals = CarMaxHeals.get(selected_car, 0)
             $ selected_heal_price = battle_heal_prices.get(selected_car, 0)
             
-            $ current_max_hp = persistent.player_max_hp if player_config.car else 0
-            $ current_max_heals = persistent.player_max_heals if player_config.car else 0
+            $ current_max_hp = player_config.max_hp if player_config.car else 0
+            $ current_max_heals = player_config.max_heals if player_config.car else 0
             $ current_heal_price = battle_heal_prices.get(player_config.car, 0) if player_config.car else 0
             
             $ hp_diff = selected_max_hp - current_max_hp
@@ -751,13 +751,13 @@ screen Car_Shop():
         hbox:
             xalign 0.0134
             yalign 0.0145
-            for digit_img in get_hp_digit_images(persistent.player_hp):
+            for digit_img in get_hp_digit_images(player_config.hp):
                 add digit_img
 
         hbox:
             xalign 0.037
             yalign 0.034
-            if persistent.player_hp <= 0:
+            if player_config.hp <= 0:
                 add get_lowhealincs()
             elif "redlight_hp.png" in get_lowhealincs():
                 add get_lowhealincs() at blinking
@@ -768,7 +768,7 @@ screen Car_Shop():
         hbox:
             xalign 0.467
             yalign 0.384
-            if persistent.player_heals <= 0:
+            if player_config.heals <= 0:
                 add get_lowhealamountincs()
             elif "redlight_fuel.png" in get_lowhealamountincs():
                 add get_lowhealamountincs() at blinking
@@ -778,7 +778,7 @@ screen Car_Shop():
         hbox:
             xalign 0.483
             yalign 0.357
-            for healing in get_heal_digit_images(persistent.player_heals):
+            for healing in get_heal_digit_images(player_config.heals):
                 add healing
 
     imagebutton activate_sound "audio/sfx/click.wav":

@@ -748,8 +748,8 @@ screen statistics_screen():
             text "[DifficultyNames.get(difficulty, '—')]" size 24 color "#2a2a2a"
             text "[region_names.get(player_config.current_region, '—')]" size 24 color "#2a2a2a"
             text "[format_time(renpy.get_game_runtime())]" size 24 color "#2a2a2a"
-            text "[persistent.player_hp]" size 24 color "#2a2a2a"
-            text "[persistent.player_heals]" size 24 color "#2a2a2a"
+            text "[player_config.hp]" size 24 color "#2a2a2a"
+            text "[player_config.heals]" size 24 color "#2a2a2a"
 
         imagebutton:
             idle "gui/townmenu/buttons/tab_stats_s.png" 

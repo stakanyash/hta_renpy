@@ -63,10 +63,10 @@ label arrivetor1m2:
 label attackforloot:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -76,11 +76,11 @@ label attackforloot:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "lootdefender"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 200
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals
+    $ max_heals = player_config.heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -117,8 +117,8 @@ label attackforloot:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide lootdefender with dissolve
@@ -416,10 +416,10 @@ label toportoe1:
 
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -429,12 +429,12 @@ label toportoe1:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "to_porto_e1"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 850
     $ bgname = "bg_toporto"
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals 
+    $ max_heals = player_config.heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -470,8 +470,8 @@ label toportoe1:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide to_porto_e1 with dissolve
@@ -836,10 +836,10 @@ label lisanearporto:
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -849,11 +849,11 @@ label lisanearporto:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "lisarescue_fight"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 650
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals 
+    $ max_heals = player_config.heals 
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -890,8 +890,8 @@ label lisanearporto:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide lisarescue_fight with dissolve

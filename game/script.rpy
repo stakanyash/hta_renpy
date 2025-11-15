@@ -3,10 +3,6 @@ default player_name = "Игрок"
 default difficulty = "normal"
 default difficulty_base_multiplier = 0.03
 default selected_shop_item = None
-default persistent.player_hp = None
-default persistent.player_max_hp = None
-default persistent.player_heals = None
-default persistent.player_max_heals = None
 
 init python:
     from dataclasses import dataclass, field
@@ -20,6 +16,10 @@ init python:
         car: str = "Van"
         current_region: str = "r1m1"
         gun_type: str = "Firearm"
+        max_hp: int = 0
+        hp: int = 0
+        max_heals: int = 0
+        heals: int = 0
 
         town_type: str = None
         town_name: str = None
@@ -403,15 +403,6 @@ init python:
         else:
             renpy.notify("Недостаточно денег!")
 
-    if not hasattr(persistent, "player_hp"):
-        persistent.player_hp = None
-    if not hasattr(persistent, "player_max_hp"):
-        persistent.player_max_hp = None
-    if not hasattr(persistent, "player_heals"):
-        persistent.player_heals = None
-    if not hasattr(persistent, "player_max_heals"):
-        persistent.player_max_heals = None
-
     def buy_car_with_exchange(car_name):
         car_price = CarPrices.get(car_name, 0)
         sell_price = CarSellPrices.get(player_config.car, 0) if player_config.car else 0
@@ -427,12 +418,12 @@ init python:
         player_config.car = car_name
 
         new_max_hp = CarHP.get(car_name, 850)
-        persistent.player_max_hp = new_max_hp
-        persistent.player_hp = new_max_hp
+        player_config.max_hp = new_max_hp
+        player_config.hp = new_max_hp
 
         new_max_heal = CarMaxHeals.get(car_name, 15)
-        persistent.player_max_heals = new_max_heal
-        persistent.player_heals = new_max_heal
+        player_config.max_heals = new_max_heal
+        player_config.heals = new_max_heal
 
         if actual_cost > 0:
             renpy.notify(
@@ -446,13 +437,13 @@ init python:
             )
 
     def repair_car():
-        if persistent.player_hp < persistent.player_max_hp:
-            hp_to_repair = persistent.player_max_hp - persistent.player_hp
+        if player_config.hp < player_config.max_hp:
+            hp_to_repair = player_config.max_hp - player_config.hp
             repair_cost = int(hp_to_repair * 0.75)
 
             if player_config.money >= repair_cost:
                 player_config.spend_money(repair_cost)
-                persistent.player_hp = persistent.player_max_hp
+                player_config.hp = player_config.max_hp
                 renpy.notify(f"Вы отдали {repair_cost} монет")
             else:
                 renpy.notify("Недостаточно денег для ремонта!")
@@ -460,7 +451,7 @@ init python:
             renpy.notify("Машина не нуждается в ремонте")
 
     def buy_heals():
-        heals_needed = persistent.player_max_heals - persistent.player_heals
+        heals_needed = player_config.max_heals - player_config.heals
 
         if heals_needed <= 0:
             renpy.notify("У вас уже максимум лечений.")
@@ -475,17 +466,17 @@ init python:
 
         player_config.spend_money(heal_cost)
         renpy.notify(f"Вы отдали {heal_cost} монет")
-        persistent.player_heals = persistent.player_max_heals
+        player_config.heals = player_config.max_heals
 
     def get_lowhealincs():
-        percent = persistent.player_hp / float(persistent.player_max_hp)
+        percent = player_config.hp / float(player_config.max_hp)
         if percent < 0.15:
             return "gui/bossbar/redlight_hp.png"
         else:
             return "gui/bossbar/redlight_blank.png"
 
     def get_lowhealamountincs():
-        percent = persistent.player_heals / persistent.player_max_heals
+        percent = player_config.heals / player_config.max_heals
         if percent < 0.30:
             return "gui/bossbar/redlight_fuel.png"
         else:
@@ -553,10 +544,10 @@ label randomfight:
 
     $ enemyint = random.randint(1, 4)
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -566,8 +557,8 @@ label randomfight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = f"randomenemy{enemyint}"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_damage_multiplier = 1.0
 
     if player_config.current_region == "r1m1":
@@ -578,7 +569,7 @@ label randomfight:
         $ enemy_hp = random.randint(180, 300)
 
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals
+    $ max_heals = player_config.heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -615,8 +606,8 @@ label randomfight:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         $ renpy.hide(enemy_image) 

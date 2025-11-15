@@ -249,7 +249,7 @@ label tokranfight:
 
     scene black with fade
 
-    $ renpy.movie_cutscene("movies/r1m4/bosskran.mp4")
+    $ renpy.movie_cutscene("movies/r1m4/bosskran.ogv")
 
     play sound "audio/sfx/stand1_boss02.wav" channel "sfx2"
     play music "music/intensedialogue01.ogg"
@@ -270,10 +270,10 @@ label tokranfight:
 
     pause 0.5
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -283,11 +283,11 @@ label tokranfight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "kranboss"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 2500
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals
+    $ max_heals = player_config.heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -323,8 +323,8 @@ label tokranfight:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide kranboss with dissolve
@@ -540,10 +540,10 @@ label r1m4SideQuest_warehousefight:
     $ randommus = random.choice([1, 2, 7])
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -553,11 +553,11 @@ label r1m4SideQuest_warehousefight:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "warehouseguard"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 2125 # 50% of 5 van hp
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals
+    $ max_heals = player_config.heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -594,8 +594,8 @@ label r1m4SideQuest_warehousefight:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide warehouseguard with dissolve
@@ -663,10 +663,10 @@ label r1m4SideQuest_freeleader:
     $ randommus = random.choice([1, 2, 7])
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    $ persistent.player_max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
-    if persistent.player_hp is None:
-        $ persistent.player_hp = persistent.player_max_hp
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -676,11 +676,11 @@ label r1m4SideQuest_freeleader:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
     $ enemy_image = "leadertakers"
-    $ player_hp = persistent.player_hp
-    $ player_max_hp = persistent.player_max_hp
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
     $ enemy_hp = 2025 # 50% HP of 3 Vans and 1 Lorry
     $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = persistent.player_heals
+    $ max_heals = player_config.heals
     $ turn_count = 0
     $ enemy_max_hp = enemy_hp
     $ heal_count = 0
@@ -717,8 +717,8 @@ label r1m4SideQuest_freeleader:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
-        $ persistent.player_hp = player_hp
-        $ persistent.player_heals = remainheals
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
 
         play sound "sfx/explosion04.wav"
         hide leadertakers with dissolve
