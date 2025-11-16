@@ -358,7 +358,7 @@ define gui.history_spacing = 0
 ## персонажа.
 define gui.history_name_xpos = 0
 define gui.history_name_ypos = 0
-define gui.history_name_width = 233
+define gui.history_name_width = 270
 define gui.history_name_xalign = 0.0
 
 ## Местоположение, ширина и выравнивание диалогового текста.

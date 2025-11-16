@@ -36,6 +36,7 @@ define mayor = Character('Мэр Минина', color="#FED11B")
 define chris = Character('Нефтяник Крис', color="#FED11B") 
 define rid = Character('Рабочий Рид', color="#FED11B")
 define bob = Character('Пройдоха Боб', color="#FED11B")
+define pablo = Character('Бармен Павло', color="#FED11B")
 
 # Region 1, part 4
 

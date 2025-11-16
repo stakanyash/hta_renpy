@@ -1797,57 +1797,6 @@ screen history():
                     else:
                         text _("История диалогов пуста.") size 30 color "#FFFFFF"
 
- 
-
-screen historyold():
-
-    tag menu
-    predict False
-
-    use game_menu(_("История")):
-
-        frame:
-            background None
-            xpos 0.0
-            ypos 100
-            xsize 1420
-            ysize 750
-
-            viewport:
-                scrollbars "vertical"
-                mousewheel True
-                yinitial 1.0
-
-                vbox:
-                    style_prefix "history"
-                    spacing 5
-
-                    for h in _history_list:
-
-                        window:
-
-                            has fixed:
-                                yfit True
-
-                            if h.who:
-
-                                label h.who:
-                                    style "history_name"
-                                    substitute False
-
-                                    if "color" in h.who_args:
-                                        text_color h.who_args["color"]
-
-                            $ what = renpy.filter_text_tags(h.what, allow=gui.history_allow_tags)
-                            text what:
-                                substitute False
-
-                    null height 20
-
-        if not _history_list:
-            label _("История диалогов пуста.")
-
-
 ## Это определяет, какие теги могут отображаться на экране истории.
 
 define gui.history_allow_tags = { "alt", "noalt", "rt", "rb", "art" }

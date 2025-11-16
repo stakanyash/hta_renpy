@@ -42,8 +42,7 @@ label arrivetor1m2:
     mc "Прямо вроде \"тупик\". Значит нужно поехать направо."
 
     scene bg_loot with dissolve
-    $ randommus = random.randint(1, 2)
-    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+    $ renpy.music.play(f"audio/music/alarm2.ogg", channel='music')
 
     "Однако впереди вы замечаете лежащий в развалинах ящик."
     mc "Там может быть что-то полезное..."
@@ -61,7 +60,7 @@ label arrivetor1m2:
             jump movetovostochnoe
 
 label attackforloot:
-    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+    $ renpy.music.play(f"audio/music/battle2.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 
@@ -251,7 +250,12 @@ label movetovostochnoe:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -309,7 +313,12 @@ label tolocus:
     hide mc6 with dissolve
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -545,7 +554,12 @@ label portoa:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -698,7 +712,12 @@ label firstmeetben:
     hide mc5 with dissolve
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -764,7 +783,12 @@ label r1m2withlisa:
     "Вы направились в Порто."
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -796,7 +820,12 @@ label portolisa:
     "Вы отправляетесь искать Лису по пути Порто - Мидгард."
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -994,7 +1023,12 @@ label lisasavedporto:
     "После этого вы направились в Асгард."
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"

@@ -3,6 +3,20 @@ default player_name = "Игрок"
 default difficulty = "normal"
 default difficulty_base_multiplier = 0.03
 default selected_shop_item = None
+default battle_tracks = [
+    "audio/music/battle01.ogg",
+    "audio/music/battle1.ogg",
+    "audio/music/battle02.ogg",
+    "audio/music/battle2.ogg",
+    "audio/music/battle7.ogg"
+]
+default driving_tracks_by_region = {
+    "r1m1": ["driving1", "driving2"],
+    "r1m2": ["driving1", "driving2"],
+    "r1m3": ["driving1", "driving2"],
+    "r1m4": ["driving1", "driving2", "driving7"],
+}
+
 
 init python:
     from dataclasses import dataclass, field
@@ -482,26 +496,9 @@ init python:
         else:
             return "gui/bossbar/redlight_blank.png"
 
-    def show_loadingtomm(load_slides):
-
-        total_time = random.uniform(4.0, 7.0)
-        num_slides = len(load_slides)
-
-        # Генерируем веса для случайного распределения пауз
-        weights = [random.random() for _ in range(num_slides)]
-        weight_sum = sum(weights)
-        pauses = [total_time * w / weight_sum for w in weights]
-
-        for i, slide in enumerate(load_slides):
-            # Показываем слайд
-            renpy.show(slide, at_list=[truecenter])
-            # Ждем нужное время
-            renpy.pause(pauses[i], hard=True)
-            # Скрываем слайд
-            renpy.hide(slide)
-
-        # После показа всех слайдов вызываем главное меню
-        renpy.call_in_new_context("MainMenu")
+    def get_region_driving_tracks():
+        region = player_config.current_region
+        return driving_tracks_by_region.get(region, ["driving1", "driving2"])
 
 default player_config = PlayerConfig()
 
@@ -654,7 +651,10 @@ label randomfight:
                     renpy.say(None, f"Найдено: {money_drop} монет.")
 
             if persistent._prebattle_music:
-                $ renpy.music.play(persistent._prebattle_music, channel='music', fadeout=1.0)
+                $ renpy.music.play(persistent._prebattle_music, channel="music", fadeout=1.0)
+            else:
+                $ allowed_tracks = get_region_driving_tracks()
+                $ renpy.music.play(renpy.random.choice(allowed_tracks), channel="music", fadeout=1.0)
                 
         return
 

@@ -131,7 +131,12 @@ label asgardboom:
     hide mcsurp
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -455,7 +460,12 @@ label peshtallow:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -919,7 +929,12 @@ label banditbaseelim:
     mc "Пора ехать в Минин."
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1025,7 +1040,12 @@ label mayorspy:
     "С этой мыслью вы аккуратно покидаете место событий и уезжаете обратно в Минин."
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1068,7 +1088,12 @@ label minin4th_nl:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1095,7 +1120,12 @@ label oilmine2nd:
     "Вы грузите бочку нефти в машину и уезжаете в Минин."
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1136,7 +1166,12 @@ label minin5th_nl:
     $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1206,7 +1241,12 @@ label r1m3withlisa:
     hide pguard
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1351,7 +1391,12 @@ label base51afterfight:
     "Вам ничего не остаётся, кроме как отправиться в Мидгард."
 
     if random.random() <= 0.5:
-        $ persistent._prebattle_music = renpy.music.get_playing(channel='music')
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
@@ -1390,6 +1435,68 @@ label asgardtunnel:
 
     $ player_config.current_region = "r1m3"
 
-    "..."
+    if random.random() <= 0.5:
+        scene bg_m3nolisa with fade
+        $ current_music = renpy.music.get_playing(channel='music')
 
-    return
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
+    $ player_config.update_town_info("City", "Асгард", "free_traders_alliance")
+
+    play music "music/town1.ogg" fadeout 1.0
+    scene bg_asgard with fade
+
+    "Приехав в Асгард вы подходите к местному бармену."
+
+    show pablo at right with dissolve
+
+    pablo "Чего желаете?"
+
+    show mc6 at left with dissolve
+
+    mc "Я тут слышал, поблизости есть один любопытный тоннель."
+    mc "Прямо через горы на запад ведет. Не слыхал?"
+
+    pablo "А как же, конечно слыхал. Я тут все знаю."
+
+    mc "А не подскажешь, где он начинается?"
+
+    pablo "Давай, я помечу на твоей карте."
+
+    hide mc6
+    show mc_2 at left, stretch_in
+
+    mc "Так просто? Ни денег тебе не надо, ни помощи?"
+
+    hide pablo
+    show pablo at right, stretch_in
+
+    pablo "Молодой человек, не надо учить меня коммерции."
+
+    mc "Что ты, я и не думал даже!"
+
+    "Бармен делает отметку на вашей карте и после этого вы отправляетесь к туннелю."
+
+    hide pablo
+    hide mc_2
+
+    if random.random() <= 0.5:
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
+    jump tunnelfirst

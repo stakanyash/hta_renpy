@@ -246,6 +246,7 @@ image galden = "images/sprites/chr/galden.png"
 image wsecurity = "images/sprites/chr/wsecurity.png"
 image bobbase51 = "images/sprites/chr/bob.png"
 image kane = "images/sprites/chr/kane.png"
+image pablo = "images/sprites/chr/pablo.png"
 
 # Sprites: Enemy's
 
