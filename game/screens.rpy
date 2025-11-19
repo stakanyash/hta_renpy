@@ -1592,28 +1592,28 @@ screen preferences():
                                         action Function(set_difficulty, "easy", 0.015)
                                         selected (difficulty == "easy")
                                         style "settings_text_button"
-                                        hovered [SetScreenVariable("help_title", "Новичок"), SetScreenVariable("help_text", "Враги наносят минимальный урон. Подходит для новичков.")]
+                                        hovered [SetScreenVariable("help_title", "Новичок"), SetScreenVariable("help_text", "Урон:\n2% от максимального HP.\n\nУрон может быть выше в зависимости от количества противников.")]
                                         unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                         activate_sound "audio/sfx/click.wav"
                                     textbutton _("Бывалый"):
                                         action Function(set_difficulty, "normal", 0.03)
                                         selected (difficulty == "normal")
                                         style "settings_text_button"
-                                        hovered [SetScreenVariable("help_title", "Бывалый"), SetScreenVariable("help_text", "Сбалансированная сложность для обычного прохождения.")]
+                                        hovered [SetScreenVariable("help_title", "Бывалый"), SetScreenVariable("help_text", "Урон:\n3% от максимального HP.\n\nУрон может быть выше в зависимости от количества противников.")]
                                         unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                         activate_sound "audio/sfx/click.wav"
                                     textbutton _("Профессионал"):
                                         action Function(set_difficulty, "hard", 0.04)
                                         selected (difficulty == "hard")
                                         style "settings_text_button"
-                                        hovered [SetScreenVariable("help_title", "Профессионал"), SetScreenVariable("help_text", "Враги наносят повышенный урон. Для опытных игроков.")]
+                                        hovered [SetScreenVariable("help_title", "Профессионал"), SetScreenVariable("help_text", "Урон:\n4% от максимального HP.\n\nУрон может быть выше в зависимости от количества противников.")]
                                         unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                         activate_sound "audio/sfx/click.wav"
                                     textbutton _("Мастер"):
                                         action Function(set_difficulty, "expert", 0.055)
                                         selected (difficulty == "expert")
                                         style "settings_text_button"
-                                        hovered [SetScreenVariable("help_title", "Мастер"), SetScreenVariable("help_text", "Максимальная сложность. Враги очень опасны!")]
+                                        hovered [SetScreenVariable("help_title", "Мастер"), SetScreenVariable("help_text", "Урон:\n5.5% от максимального HP.\n\nУрон может быть выше в зависимости от количества противников.")]
                                         unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                         activate_sound "audio/sfx/click.wav"
 
