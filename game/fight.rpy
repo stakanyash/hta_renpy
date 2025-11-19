@@ -69,10 +69,21 @@ init python:
             return
         attack_locked = True
 
+        random_hit = random.random()
+
+        if player_config.gun_type == "Firearm":
+            attack_chances = 0.7
+        elif player_config.gun_type == "Plasma":
+            attack_chances = 0.5
+        elif player_config.gun_type == "Energy":
+            attack_chances = 0.6
+        else:
+            attack_chances = 0.75
+
         hits_count = random.randint(2, 3) if player_config.gun_type == "Firearm" else 1
 
         for _ in range(hits_count):
-            if random.random() <= 0.7:
+            if random_hit <= attack_chances:
                 damage = random.randint(*damage_range)
                 enemy_hp = max(0, enemy_hp - damage)
                 renpy.sound.play(f"audio/sfx/shoot/{player_config.current_gun}_shoot.wav", channel="shoot")

@@ -1,3 +1,8 @@
+# Default's definitions
+
+default shop_random_weapons = None
+default shop_random_city = None
+
 # Town Menu
 
 screen InGameMenu():
@@ -313,6 +318,8 @@ screen Gun_Shop_Menu():
 
     default selected_shop_item = None
 
+    on "show" action generate_random_weapons()
+
     frame:
         style "menu_frame"
         background "gui/townmenu/backgunshop.png"
@@ -360,9 +367,12 @@ screen Gun_Shop_Menu():
             has vbox
 
             python:
-                combined_weapons = dict(smallweapon_prices)
-                if player_config.big_gun_install == "Possible":
-                    combined_weapons.update(bigweapon_prices)
+                combined_weapons = {}
+                for w in shop_random_weapons:
+                    if w in smallweapon_prices:
+                        combined_weapons[w] = smallweapon_prices[w]
+                    elif w in bigweapon_prices:
+                        combined_weapons[w] = bigweapon_prices[w]
 
             grid 1 len(combined_weapons) spacing 20:
 
@@ -588,7 +598,7 @@ screen Car_Shop():
                     Confirm(
                         "Купить {name} за {cost} монет?".format(
                             name=car_names.get(selected_car, selected_car or ""),
-                            cost=max(CarPrices.get(selected_car, 0) - CarSellPrices.get(player_config.car, 0), 0)
+                            cost=max(CarPrices.get(selected_car, 0) - CarSellPrices.get(player_config.car, 0), 0),
                         ),
                         yes=Function(buy_car_with_exchange, selected_car)
                     ),

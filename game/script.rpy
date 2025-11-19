@@ -17,7 +17,6 @@ default driving_tracks_by_region = {
     "r1m4": ["driving1", "driving2", "driving7"],
 }
 
-
 init python:
     from dataclasses import dataclass, field
     import random
@@ -109,7 +108,7 @@ init python:
     renpy.music.register_channel("boss_charge", mixer="sfx", loop=True, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
 
     smallweapon_prices = {
-        "Hornet": 280, "Specter": 590, "PKT": 1670, "Kord": 3680, "Storm": 3450,
+        "Hornet": 280, "Specter": 590, "PKT": 1670, "Kord": 3680, "Storm": 3450, "Maxim": 26600, "Fagot": 25500
     }
 
     bigweapon_prices = {
@@ -148,7 +147,7 @@ init python:
         "Kord": "Корд", "Vector": "Вектор", "Vulcan": "Вулкан", "KPVT": "КПВТ",
         "Bumblebee": "Шмель", "Hurricane": "Ураган", "Flag": "Флаг",
         "Rapier": "Рапира", "Rainmetal": "Рейнметалл", "Omega": "Омега",
-        "Elephant": "Слон", "None": "-"
+        "Elephant": "Слон", "Maxim": "Максим", "Fagot": "Фагот", "None": "-"
     }
 
     gun_stats = {
@@ -156,6 +155,7 @@ init python:
         "Storm": (20, 55), "Vector": (18, 30), "Vulcan": (12, 20), "KPVT": (16, 26),
         "Rainmetal": (28, 48), "Bumblebee": (35, 90), "Hurricane": (22, 50),
         "Flag": (45, 100), "Rapier": (50, 85), "Omega": (55, 130), "Elephant": (700, 800),
+        "Maxim": (32, 45), "Fagot": (60, 110),
     }
 
     R1M1DropNames = {"Hornet": "Шершень", "Potato": "Картофель", "Wood": "Дрова"}
@@ -169,6 +169,8 @@ init python:
         "PKT": {"name": "ПКТ", "desc": "Пулемёт калибра 7,62 - с ним уже можно не бояться отправляться в недалёкое путешествие.", "type": "Firearm", "size": "Small"},
         "Kord": {"name": "Корд", "desc": "Пулемёт калибра 12,7 - достойное оружие для борца с бандитами.", "type": "Firearm", "size": "Small"},
         "Storm": {"name": "Шторм", "desc": "Дробовик наносит значительные повреждения на близком расстоянии.", "type": "Shotgun", "size": "Small"},
+        "Maxim": {"name": "Максим", "desc": "Малый импульсный лазер, несмотря на небольшую мощность, прожигает насквозь почти любую броню.", "type": "Energy", "size": "Small"},
+        "Fagot": {"name": "Фагот", "desc": "Заряд плазмы, посылаемый этим оружием, летит с небольшой скоростью, но при удачном попадании может буквально испепелить противника.", "type": "Plasma", "size": "Small"},
 
         "Vector": {"name": "Вектор", "desc": "Мелкокалиберная пушка - хороший выбор для начинающего путешественника.", "type": "Firearm", "size": "Big"},
         "Vulcan": {"name": "Вулкан", "desc": "Многоствольный пулемёт калибра 5,56 посылает во врага море свинца. Правда, мощная отдача может даже перевернуть небольшой автомобиль.", "type": "Firearm", "size": "Big"},
@@ -186,6 +188,7 @@ init python:
         "Firearm": "Огнестрельное",
         "Shotgun": "Дробовик",
         "Plasma": "Плазма",
+        "Energy": "Энергетическое",
     }
 
     DifficultyNames = { 
@@ -320,6 +323,16 @@ init python:
             "desc": "Весьма достойный плазмомёт. Во всяком случае, никто из противников не жаловался.",
             "icon": "gui/townmenu/items/elephant.png",
         },
+        "Maxim": {
+            "name": "Максим",
+            "desc": "Малый импульсный лазер, несмотря на небольшую мощность, прожигает насквозь почти любую броню.",
+            "icon": "gui/townmenu/items/maxim.png",
+        },
+        "Fagot": {
+            "name": "Фагот",
+            "desc": "Заряд плазмы, посылаемый этим оружием, летит с небольшой скоростью, но при удачном попадании может буквально испепелить противника.",
+            "icon": "gui/townmenu/items/fagot.png",
+        },
     }
 
     car_descriptions = {
@@ -349,6 +362,8 @@ init python:
         "Wood": 50,
         "Oil": 200,
         "Fuel": 1850,
+        "Maxim": 13300,
+        "Fagot": 12750,
     }
 
     ItemPricesVillage = {
@@ -372,6 +387,8 @@ init python:
         "Wood": 285,
         "Oil": 1100,
         "Fuel": 900,
+        "Maxim": 13300,
+        "Fagot": 12750,
     }
 
     CarPrices = {
@@ -391,6 +408,9 @@ init python:
     }
 
     def buy_weapon_with_old_handling(weapon_name):
+        addedg = None
+        sell_price = 0
+
         if weapon_name in smallweapon_prices:
             price = smallweapon_prices[weapon_name]
         elif weapon_name in bigweapon_prices:
@@ -403,7 +423,16 @@ init python:
             player_config.money -= price
 
             if player_config.current_gun not in player_config.inventory:
-                player_config.inventory.append(player_config.current_gun)
+                addedg = player_config.try_add_item(player_config.current_gun)
+            
+                # Если инвентарь полон, продаём оружие
+                if not addedg:
+                    if player_config.town_type == "City":
+                        sell_price = ItemPricesCity.get(player_config.current_gun, 0)
+                    else:
+                        sell_price = ItemPricesVillage.get(player_config.current_gun, 0)
+
+                    player_config.add_money(sell_price)
 
             player_config.current_gun = weapon_name
 
@@ -414,7 +443,10 @@ init python:
                 player_config.gun_type = None
 
             renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
-            renpy.notify(f"Вы купили {gun_names.get(weapon_name, weapon_name)} за {price} монет.")
+            if not addedg:
+                renpy.notify(f"Вы купили {gun_names.get(weapon_name, weapon_name)} за {price} монет.\nИнвентарь полон. Старое оружие было продано за {sell_price} монет.")
+            else:
+                renpy.notify(f"Вы купили {gun_names.get(weapon_name, weapon_name)} за {price} монет.")
         else:
             renpy.notify("Недостаточно денег!")
 
@@ -450,6 +482,8 @@ init python:
                 f"Куплена машина: {car_names.get(car_name, car_name)} "
                 f"(получено {-actual_cost} монет сверху)."
             )
+        
+        renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
 
     def repair_car():
         if player_config.hp < player_config.max_hp:
@@ -460,6 +494,7 @@ init python:
                 player_config.spend_money(repair_cost)
                 player_config.hp = player_config.max_hp
                 renpy.notify(f"Вы отдали {repair_cost} монет")
+                renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
             else:
                 renpy.notify("Недостаточно денег для ремонта!")
         else:
@@ -482,6 +517,7 @@ init python:
         player_config.spend_money(heal_cost)
         renpy.notify(f"Вы отдали {heal_cost} монет")
         player_config.heals = player_config.max_heals
+        renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
 
     def get_lowhealincs():
         percent = player_config.hp / float(player_config.max_hp)
@@ -500,6 +536,31 @@ init python:
     def get_region_driving_tracks():
         region = player_config.current_region
         return driving_tracks_by_region.get(region, ["driving1", "driving2"])
+
+    def generate_random_weapons():
+        global shop_random_weapons, shop_random_city
+
+        current_city = player_config.town_name
+
+        if shop_random_city == current_city and shop_random_weapons is not None:
+            return
+
+        all_weapons = list(smallweapon_prices.keys())
+        if player_config.big_gun_install == "Possible":
+            all_weapons += list(bigweapon_prices.keys())
+
+        if current_city not in ["Мидгард", "Ольм"]:
+            all_weapons = [w for w in all_weapons if w not in ["Fagot", "Maxim"]]
+
+        if len(all_weapons) == 0:
+            shop_random_weapons = []
+            return
+
+        count = random.randint(2, len(all_weapons))
+
+        shop_random_weapons = random.sample(all_weapons, count)
+
+        shop_random_city = current_city
 
 default player_config = PlayerConfig()
 
@@ -659,12 +720,6 @@ label randomfight:
                 
         return
 
-label titles:
-
-    $ renpy.movie_cutscene("movies/titles.mp4")
-
-    return
-
 label fightlost:
     scene black with fade
     stop music fadeout 1.0
@@ -680,58 +735,10 @@ label fightlost:
     
     return
 
-label carshop:
-    $ oldcarsell_value = CarSellPrices.get(player_config.car, 0)
+## Not used now
 
-    python:
-        affordable_cars = [
-            car_names[name]
-            for name, price in CarPrices.items()
-            if price <= player_config.money
-            and (name != player_config.car or CarPrices[name] < CarPrices.get(player_config.car, 0))
-            and player_config.region_allowed(CarMinRegion.get(name, "r1m1"))
-        ]
+#label titles:
 
-        car_text = ", ".join(affordable_cars)
+#    $ renpy.movie_cutscene("movies/titles.mp4")
 
-    "Ваших средств достаточно на: [car_text]."
-
-    menu:
-        "Купить Вэн" if player_config.money >= 1401 and player_config.car != "Van" and player_config.region_allowed("r1m1"):
-            $ sellprice = 1401 - oldcarsell_value
-            $ player_config.spend_money(sellprice)
-            $ player_config.car = "Van"
-            if sellprice > 0:
-                $ renpy.notify(f"Вы отдали {sellprice} монет.")
-                "Вы купили Вэн и отдали [sellprice] монет."
-            elif sellprice < 0:
-                $ renpy.notify(f"Вы получили {abs(sellprice)} монет.")
-                "Вы купили Вэн и получили [abs(sellprice)] монет из-за того, что ваш старый автомобиль дороже нового."
-
-        "Купить Молоковоз" if player_config.money >= 6501 and player_config.car != "Molokovoz" and player_config.region_allowed("r1m2"):
-            $ sellprice = 6501 - oldcarsell_value
-            $ player_config.spend_money(sellprice)
-            $ player_config.car = "Molokovoz"
-            if sellprice > 0:
-                $ renpy.notify(f"Вы отдали {sellprice} монет.")
-                "Вы купили Молоковоз и отдали [sellprice] монет."
-            elif sellprice < 0:
-                $ renpy.notify(f"Вы получили {abs(sellprice)} монет.")
-                "Вы купили Молоковоз и получили [abs(sellprice)] монет из-за того, что ваш старый автомобиль дороже нового."
-
-        "Купить Урал" if player_config.money >= 31001 and player_config.car != "Ural" and player_config.region_allowed("r1m4"):
-            $ sellprice = 31001 - oldcarsell_value
-            $ player_config.spend_money(sellprice)
-            $ player_config.car = "Ural"
-            if sellprice > 0:
-                $ renpy.notify(f"Вы отдали {sellprice} монет.")
-                "Вы купили Урал и отдали [sellprice] монет."
-            elif sellprice < 0:
-                $ renpy.notify(f"Вы получили {abs(sellprice)} монет.")
-                "Вы купили Урал и получили [abs(sellprice)] монет из-за того, что ваш старый автомобиль дороже нового."
-
-        "Не покупать новую машину":
-            "Вы решили не покупать новую машину.\nНа вашем балансе: [player_config.money] монет."
-            return
-
-    return
+#    return

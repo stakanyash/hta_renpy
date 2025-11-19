@@ -272,6 +272,8 @@ screen enemy_ui():
             timer 1.3 action SetVariable("attack_locked", False)
         elif player_config.gun_type == "Plasma":
             timer 2.5 action SetVariable("attack_locked", False)
+        elif player_config.gun_type == "Energy":
+            timer 0.75 action SetVariable("attack_locked", False)
         else:
             timer 0.5 action SetVariable("attack_locked", False)
 
@@ -638,9 +640,9 @@ screen main_menu():
                 style "main_menu_version"
 
     if config.developer:
-        text "Ex Machina RenPy - developer version 0.4.5 (251119a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - developer version 0.4.5 (251120a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
     else:
-        text "Ex Machina RenPy - demo version 0.4.5 (251119a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - demo version 0.4.5 (251120a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -1388,7 +1390,6 @@ screen preferences():
     default help_title = ""
     default help_text = ""
 
-    # Затемнение фона
     button:
         style "empty"
         xfill True
@@ -1398,7 +1399,6 @@ screen preferences():
 
     add "gui/settings_menu.png"
 
-    # Само окно настроек
     frame:
         xalign 0.5
         yalign 0.5
@@ -1410,12 +1410,10 @@ screen preferences():
         vbox:
             spacing 20
 
-            # Заголовок (общий для всего окна)
             hbox:
                 xfill True
                 text "Настройки" size 50 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
                 
-                # Кнопка закрытия
                 imagebutton:
                     idle "gui/townmenu/close_e.png"
                     hover "gui/townmenu/close_h.png"
@@ -1426,7 +1424,6 @@ screen preferences():
 
             null height 1
 
-            # Вкладки
             hbox:
                 spacing 25
                 yoffset -8
@@ -1452,29 +1449,18 @@ screen preferences():
                         
                         text "Игра" xalign 0.5 yalign 0.38 size 28 color "#fed11b"
                 
-                #imagebutton:
-                #    idle "gui/test/b_opts_s.png"
-                #    hover "gui/test/b_opts_hp.png"
-                #    selected_idle "gui/test/b_opts_p.png"
-                #    selected (current_tab == "game")
-                #    action SetScreenVariable("current_tab", "game")
-                #    activate_sound "audio/sfx/click.wav"
-
-            # === ОСНОВНОЙ КОНТЕНТ (настройки + справка) ===
             hbox:
                 spacing 0
 
-                # === ЛЕВАЯ ЧАСТЬ (настройки) ===
                 viewport:
                     scrollbars "vertical"
                     mousewheel True
                     xsize 800
                     ysize 800
 
-                    # === ВКЛАДКА ЗВУК ===
                     if current_tab == "sound":
                         vbox:
-                            spacing 40  # расстояние между блоками
+                            spacing 40
 
                             if config.has_music:
                                 vbox:
@@ -1531,12 +1517,10 @@ screen preferences():
                                     hovered [SetScreenVariable("help_title", "Тест звука"), SetScreenVariable("help_text", "Проигрывает тестовый звук для проверки громкости.")]
                                     unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
 
-                    # === ВКЛАДКА ИГРА ===
                     elif current_tab == "game":
                         vbox:
-                            spacing 40  # расстояние между блоками (между группами настроек)
+                            spacing 40
 
-                            # Скорость текста
                             vbox:
                                 spacing 10
                                 style_prefix "slider"
@@ -1549,7 +1533,6 @@ screen preferences():
                                     hovered [SetScreenVariable("help_title", "Скорость текста"), SetScreenVariable("help_text", "Скорость появления текста на экране. Чем выше — тем быстрее.")]
                                     unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
 
-                            # Скорость авточтения
                             vbox:
                                 spacing 10
                                 style_prefix "slider"
@@ -1564,7 +1547,6 @@ screen preferences():
 
                             null height 20
 
-                            # Режим экрана и сложность
                             hbox:
                                 spacing 100
 
@@ -1617,7 +1599,6 @@ screen preferences():
                                         unhovered [SetScreenVariable("help_title", ""), SetScreenVariable("help_text", "")]
                                         activate_sound "audio/sfx/click.wav"
 
-                # === ПРАВАЯ ЧАСТЬ (справка) ===
                 frame:
                     xsize 450
                     ysize 550
@@ -1628,7 +1609,6 @@ screen preferences():
                         spacing 20
                         xfill True
 
-                        # Заголовок элемента
                         if help_title:
                             text help_title size 33 color "#404040" font "fonts/ARIALBD.ttf"
                         else:
@@ -1636,7 +1616,6 @@ screen preferences():
 
                         null height 20
 
-                        # Описание
                         if help_text:
                             text help_text size 25 color "#404040"
                         else:
@@ -2174,7 +2153,7 @@ screen notify(message):
         xalign 0.5
         yalign 0.03
         
-        text "[message!tq]" xpos 20 yalign 0.5
+        text "[message!tq]" xpos 20 yalign 0.5 text_align 0.5
 
     timer 3.25 action Hide('notify')
 
