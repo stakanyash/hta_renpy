@@ -1,3 +1,9 @@
+default boss_last_attack = {}
+default boss_attack_cooldowns = {
+    "Кран": 5.0,
+}
+default boss_charge_sound_playing = False
+
 init python:
     import random
     import math
@@ -9,22 +15,50 @@ init python:
     attack_locked = False
 
     def apply_enemy_attack():
-        global player_hp, player_max_hp
+        global player_hp, player_max_hp, boss_last_attack, boss_charge_sound_playing
 
-        randomDamage = random.random()
+        random_damage = random.random()
 
         if config.developer:
-            renpy.notify(f"Damage Random is: {randomDamage}")
+            renpy.notify(f"Damage Random is: {random_damage:.2f}")
 
-        if randomDamage <= 0.35:
+        attack_threshold = 0.25 if EnemyType == "Boss" else 0.35
+
+        if random_damage <= attack_threshold:
+            if EnemyType == "Boss" and enemy_name in boss_attack_cooldowns:
+                current_time = renpy.get_game_runtime()
+                last_attack = boss_last_attack.get(enemy_name, 0)
+                cooldown = boss_attack_cooldowns[enemy_name]
+                
+                if current_time - last_attack < cooldown:
+                    if not boss_charge_sound_playing:
+                        renpy.sound.stop(channel="boss_charge")
+                        renpy.sound.play("audio/sfx/attack2_boss01.wav", channel="boss_charge")
+                        boss_charge_sound_playing = True
+                        if config.developer:
+                            renpy.notify("Босс заряжается!")
+                    
+                    if config.developer:
+                        renpy.notify(f"Кулдаун: ещё {cooldown - (current_time - last_attack):.1f} сек")
+                    return
+                
+                if boss_charge_sound_playing:
+                    renpy.sound.stop(channel="boss_charge")
+                    boss_charge_sound_playing = False
+                
+                boss_last_attack[enemy_name] = current_time
+            
             damage_percent = difficulty_base_multiplier * enemy_damage_multiplier
             damage = int(player_max_hp * damage_percent)
-
+            
             player_hp = max(0, player_hp - damage)
-
+            
             renpy.sound.play("audio/sfx/landing_car_sparkle.wav", channel="damage")
             renpy.show(bgname, at_list=[Shake(None, 1.0, dist=7)], what=None)
             renpy.show("damage", at_list=[fadeout_damage, Shake(None, 2.0, dist=5)])
+            
+            if EnemyType == "Boss" and enemy_name == "Кран":
+                renpy.sound.play("audio/sfx/explosion04.wav", channel="bossattack")
 
     def attack_enemy():
         global enemy_hp, enemy_max_hp, turn_count

@@ -1446,7 +1446,7 @@ label asgardtunnel:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_1
 
     $ player_config.update_town_info("City", "Асгард", "free_traders_alliance")
 
@@ -1497,6 +1497,6 @@ label asgardtunnel:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_36
 
     jump tunnelfirst

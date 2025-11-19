@@ -106,6 +106,7 @@ init python:
     renpy.music.register_channel("missshot", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("bossattack", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("sellitem", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
+    renpy.music.register_channel("boss_charge", mixer="sfx", loop=True, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
 
     smallweapon_prices = {
         "Hornet": 280, "Specter": 590, "PKT": 1670, "Kord": 3680, "Storm": 3450,

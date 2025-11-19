@@ -236,6 +236,8 @@ label homersearch:
 
     "Вы поехали к месту, указанному Гомером."
 
+    $ player_config.town_type = "NotInCity"
+
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')
 
@@ -317,7 +319,7 @@ label tokranfight:
     $ bgname = "bg_kranfight"
     $ EnemyType = "Boss"
     $ BossIcon = "boss1.png"
-    $ enemy_damage_multiplier = 1.0
+    $ enemy_damage_multiplier = 2.0
     show kranboss at center
 
     while enemy_hp > 0 and player_hp > 0:
@@ -331,6 +333,7 @@ label tokranfight:
         $ config.keymap['game_menu'] = ['game_menu']
         $ persistent._in_battle = False
         $ renpy.sound.stop(channel="shoot")
+        $ renpy.sound.stop(channel="boss_charge")
         
         hide kranboss
         play sound "sfx/explosion04.wav"
@@ -415,17 +418,19 @@ label leaveregion1:
 
     scene black with fade
 
-    "Конец первой главы."
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+
+    pause 1.0
+
+    call screen onebuttonpopup("Демо-версия завершена.\nСпасибо за игру!")
 
     if not config.developer:
-        $ _window_hide()
-        $ _game_menu_screen = None
-        $ _menu = False
-        $ config.keymap['save'] = []
-        $ config.keymap['load'] = []
-        $ config.keymap['game_menu'] = []
-        $ persistent._in_battle = True
-
         pause 1.0
 
         $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
