@@ -440,7 +440,7 @@ screen Gun_Shop_Menu():
             no=NullAction()
         )
 
-        textbutton _("Купить как второе оружие") activate_sound "audio/sfx/click.wav" action NullAction() xpos 1045 yalign 0.86 sensitive selected_shop_item in bigweapon_prices
+        textbutton _("Купить как второе оружие (недоступно)") activate_sound "audio/sfx/click.wav" text_color "#808080" action NullAction() xpos 935 yalign 0.86 sensitive selected_shop_item in bigweapon_prices
 
     imagebutton activate_sound "audio/sfx/click.wav":
         idle "gui/townmenu/buttons/tab_stats_e.png" 
