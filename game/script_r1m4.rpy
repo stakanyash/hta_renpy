@@ -428,19 +428,7 @@ label leaveregion1:
 
     pause 1.0
 
-    call screen onebuttonpopup("Демо-версия завершена.\nСпасибо за игру!")
-
-    if not config.developer:
-        pause 1.0
-
-        $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
-        python:
-            for i in range(len(slides)):
-                renpy.show(slides[i])
-                renpy.pause(pauses[i], hard=True)
-                renpy.hide(slides[i])
-
-    return
+    jump demofinished
 
 # With Lisa route
 

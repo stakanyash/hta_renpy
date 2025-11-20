@@ -181,38 +181,7 @@ label firstenemyfight:
 
         if drops:
             python:
-                drop_names_text = []
-                dropped_something = False
-                items_not_added = 0
-
-                for drop_id, drop_name in drops:
-                    if player_config.try_add_item(drop_id):
-                        drop_names_text.append(drop_name)
-                        dropped_something = True
-                    else:
-                        items_not_added += 1
-
-                if player_config.current_region == "r1m1":
-                    money_drop = random.randint(50, 150)
-                elif player_config.current_region == "r1m2":
-                    money_drop = random.randint(100, 250)
-                elif player_config.current_region == "r1m3":
-                    money_drop = random.randint(150, 350)
-                elif player_config.current_region == "r1m4":
-                    money_drop = random.randint(300, 600)
-
-                if items_not_added > 0:
-                    compensation = items_not_added * random.randint(100, 200)
-                    money_drop += compensation
-                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
-                
-                player_config.add_money(money_drop)
-
-                if dropped_something:
-                    drop_names_str = ", ".join(drop_names_text)
-                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
-                else:
-                    renpy.say(None, f"Найдено: {money_drop} монет.")
+                process_battle_loot(drops)
 
         if random.random() <= 0.5:
             $ current_music = renpy.music.get_playing(channel='music')
@@ -388,38 +357,7 @@ label secondenemy:
 
         if drops:
             python:
-                drop_names_text = []
-                dropped_something = False
-                items_not_added = 0
-
-                for drop_id, drop_name in drops:
-                    if player_config.try_add_item(drop_id):
-                        drop_names_text.append(drop_name)
-                        dropped_something = True
-                    else:
-                        items_not_added += 1
-
-                if player_config.current_region == "r1m1":
-                    money_drop = random.randint(50, 150)
-                elif player_config.current_region == "r1m2":
-                    money_drop = random.randint(100, 250)
-                elif player_config.current_region == "r1m3":
-                    money_drop = random.randint(150, 350)
-                elif player_config.current_region == "r1m4":
-                    money_drop = random.randint(300, 600)
-
-                if items_not_added > 0:
-                    compensation = items_not_added * random.randint(100, 200)
-                    money_drop += compensation
-                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
-                
-                player_config.add_money(money_drop)
-
-                if dropped_something:
-                    drop_names_str = ", ".join(drop_names_text)
-                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
-                else:
-                    renpy.say(None, f"Найдено: {money_drop} монет.")
+                process_battle_loot(drops)
 
         if LisaAgreed == "True":
             jump tozaimka

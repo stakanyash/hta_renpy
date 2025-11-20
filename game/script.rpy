@@ -562,6 +562,44 @@ init python:
 
         shop_random_city = current_city
 
+    def process_battle_loot(drops):
+        drop_names_text = []
+        dropped_something = False
+        items_not_added = 0
+
+        for drop_id, drop_name in drops:
+            if player_config.try_add_item(drop_id):
+                drop_names_text.append(drop_name)
+                dropped_something = True
+            else:
+                items_not_added += 1
+
+        region = player_config.current_region
+        if region == "r1m1":
+            money_drop = random.randint(50, 150)
+        elif region == "r1m2":
+            money_drop = random.randint(100, 250)
+        elif region == "r1m3":
+            money_drop = random.randint(150, 350)
+        elif region == "r1m4":
+            money_drop = random.randint(300, 600)
+        else:
+            money_drop = random.randint(50, 150)
+
+        if items_not_added > 0:
+            compensation = items_not_added * random.randint(100, 200)
+            money_drop += compensation
+            renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
+
+        player_config.add_money(money_drop)
+
+        if dropped_something:
+            drop_list = ", ".join(drop_names_text)
+            renpy.say(None, f"Найдены следующие предметы: {drop_list}.\nТакже получено {money_drop} монет.")
+        else:
+            renpy.say(None, f"Найдено: {money_drop} монет.")
+
+
 default player_config = PlayerConfig()
 
 transform stretch_in:
@@ -676,41 +714,7 @@ label randomfight:
 
         if drops:
             python:
-                drop_names_text = []
-                dropped_something = False
-                items_not_added = 0
-
-                for drop_id, drop_name in drops:
-                    if player_config.try_add_item(drop_id):
-                        drop_names_text.append(drop_name)
-                        dropped_something = True
-                    else:
-                        items_not_added += 1
-
-                if items_not_added > 0:
-                    compensation = items_not_added * random.randint(100, 200)
-                    player_config.add_money(compensation)
-                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет.")
-                else:
-                    if player_config.current_region == "r1m1":
-                        money_drop = random.randint(50, 150)
-                    elif player_config.current_region == "r1m2":
-                        money_drop = random.randint(100, 250)
-                    elif player_config.current_region == "r1m3":
-                        money_drop = random.randint(150, 350)
-                    elif player_config.current_region == "r1m4":
-                        money_drop = random.randint(300, 600)
-                    
-                    player_config.add_money(money_drop)
-
-                if dropped_something:
-                    drop_names_str = ", ".join(drop_names_text)
-                    if items_not_added > 0:
-                        renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.")
-                    else:
-                        renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
-                elif items_not_added == 0:
-                    renpy.say(None, f"Найдено: {money_drop} монет.")
+                process_battle_loot(drops)
 
             if persistent._prebattle_music:
                 $ renpy.music.play(persistent._prebattle_music, channel="music", fadeout=1.0)
@@ -733,6 +737,21 @@ label fightlost:
 
     $ renpy.say(mc, random.choice(dead_msgs))
     
+    return
+
+label demofinished:
+    call screen onebuttonpopup("Демо-версия завершена.\nСпасибо за игру!")
+
+    if not config.developer:
+        pause 1.0
+
+        $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
+        python:
+            for i in range(len(slides)):
+                renpy.show(slides[i])
+                renpy.pause(pauses[i], hard=True)
+                renpy.hide(slides[i])
+
     return
 
 ## Not used now

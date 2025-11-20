@@ -163,6 +163,16 @@ image bg_spymer_5 = "images/bgs/r1m3/bg_spymer_5.jpg"
 image bg_spymer_6 = "images/bgs/r1m3/bg_spymer_6.jpg"
 image bg_base51 = "images/bgs/r1m3/bg_base51.jpg"
 image bg_base51fight = "images/bgs/r1m3/bg_base51fight.jpg"
+image bg_tunnel = "images/bgs/r1m3/bg_tunnel.jpg"
+image bg_tunnelhide_1 = "images/bgs/r1m3/bg_tunnelhide_1.jpg"
+image bg_tunnelhide_2 = "images/bgs/r1m3/bg_tunnelhide_2.jpg"
+image bg_tunnelhide_3 = "images/bgs/r1m3/bg_tunnelhide_3.jpg"
+image bg_tunnelhide_4 = "images/bgs/r1m3/bg_tunnelhide_4.jpg"
+image bg_fightforkey = "images/bgs/r1m3/bg_fightforkey.jpg"
+image bg_followkeyman_1 = "images/bgs/r1m3/bg_followkeyman_1.jpg"
+image bg_followkeyman_2 = "images/bgs/r1m3/bg_followkeyman_2.jpg"
+image bg_followkeyman_3 = "images/bgs/r1m3/bg_followkeyman_3.jpg"
+image bg_followkeyman_4 = "images/bgs/r1m3/bg_followkeyman_4.jpg"
 
 # Backgrounds: r1m4
 
@@ -247,6 +257,7 @@ image wsecurity = "images/sprites/chr/wsecurity.png"
 image bobbase51 = "images/sprites/chr/bob.png"
 image kane = "images/sprites/chr/kane.png"
 image pablo = "images/sprites/chr/pablo.png"
+image tunnelguy = "images/sprites/chr/tunnelguy.png"
 
 # Sprites: Enemy's
 
@@ -260,6 +271,7 @@ image brigde_defender = "images/sprites/enemy/brigde_defender.png"
 image minerattackers = "images/sprites/enemy/minerattackers.png"
 image oilbandits = "images/sprites/enemy/oilbandits.png"
 image base51fight = "images/sprites/enemy/base51fight.png"
+image keyholder = "images/sprites/enemy/keyholder.png"
 
 image randomenemy1 = "images/sprites/enemy/randomenemy1.png"
 image randomenemy2 = "images/sprites/enemy/randomenemy2.png"

@@ -249,38 +249,7 @@ label mvillage:
 
         if drops:
             python:
-                drop_names_text = []
-                dropped_something = False
-                items_not_added = 0
-
-                for drop_id, drop_name in drops:
-                    if player_config.try_add_item(drop_id):
-                        drop_names_text.append(drop_name)
-                        dropped_something = True
-                    else:
-                        items_not_added += 1
-
-                if player_config.current_region == "r1m1":
-                    money_drop = random.randint(50, 150)
-                elif player_config.current_region == "r1m2":
-                    money_drop = random.randint(100, 250)
-                elif player_config.current_region == "r1m3":
-                    money_drop = random.randint(150, 350)
-                elif player_config.current_region == "r1m4":
-                    money_drop = random.randint(300, 600)
-
-                if items_not_added > 0:
-                    compensation = items_not_added * random.randint(100, 200)
-                    money_drop += compensation
-                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
-                
-                player_config.add_money(money_drop)
-
-                if dropped_something:
-                    drop_names_str = ", ".join(drop_names_text)
-                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
-                else:
-                    renpy.say(None, f"Найдено: {money_drop} монет.")
+                process_battle_loot(drops)
 
         jump mvillageafterfight
 
@@ -382,38 +351,7 @@ label brigdedestroy:
 
         if drops:
             python:
-                drop_names_text = []
-                dropped_something = False
-                items_not_added = 0
-
-                for drop_id, drop_name in drops:
-                    if player_config.try_add_item(drop_id):
-                        drop_names_text.append(drop_name)
-                        dropped_something = True
-                    else:
-                        items_not_added += 1
-
-                if player_config.current_region == "r1m1":
-                    money_drop = random.randint(50, 150)
-                elif player_config.current_region == "r1m2":
-                    money_drop = random.randint(100, 250)
-                elif player_config.current_region == "r1m3":
-                    money_drop = random.randint(150, 350)
-                elif player_config.current_region == "r1m4":
-                    money_drop = random.randint(300, 600)
-
-                if items_not_added > 0:
-                    compensation = items_not_added * random.randint(100, 200)
-                    money_drop += compensation
-                    renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
-                
-                player_config.add_money(money_drop)
-
-                if dropped_something:
-                    drop_names_str = ", ".join(drop_names_text)
-                    renpy.say(None, f"Найдены следующие предметы: {drop_names_str}.\nТак-же получено {money_drop} монет.")
-                else:
-                    renpy.say(None, f"Найдено: {money_drop} монет.")
+                process_battle_loot(drops)
 
         stop music fadeout 1.0
         jump BOOOM
@@ -1487,6 +1425,8 @@ label asgardtunnel:
     hide pablo
     hide mc_2
 
+    $ player_config.town_type = "NotInCity"
+
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')
 
@@ -1500,3 +1440,225 @@ label asgardtunnel:
         call randomfight from _call_randomfight_36
 
     jump tunnelfirst
+
+label tunnelfirst:
+
+    play music "music/bio07unloop.ogg" fadeout 1.0
+    scene bg_tunnel with fade
+
+    "Приехав к тоннелю вы замечаете, что он наглухо закрыт."
+
+    mc "И как же открыть эти громадные ворота?"
+    mc "Бармен не так прост, как я думал."
+    mc "Если вернусь, заломит такую цену за ключ..."
+    mc "Может быть, стоит придумать другой план?"
+
+    play music "music/techno03.ogg" fadeout 1.0
+    scene bg_tunnelhide_1 with fade
+
+    mc "Раз уж я сюда приехал, тут и буду ждать!"
+    
+    scene bg_tunnelhide_2 with dissolve
+
+    mc "Кто-нибудь да появится. Надо только найти неприметное место, где спрятаться."
+
+    scene bg_tunnelhide_3 with dissolve
+
+    mc "Вот здесь и спрячусь. Отличное место для засады."
+
+    pause 1.5
+
+    scene bg_tunnelhide_4 with dissolve
+
+    mc "Кто-то выезжает из тоннеля! Можно атаковать сразу."
+    mc "Или лучше проследить за ним и попробовать решить дело миром?"
+
+    menu:
+        "Атаковать":
+            $ renpy.notify("Игра сохранена в слот 1.")
+            $ renpy.save("checkpoint-1")
+            "Вы решили атаковать машину в надежде на получение ключа."
+
+            $ renpy.music.play(f"audio/music/battle{random.randint(1, 2)}.ogg", channel='music')
+
+            $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+            if player_config.hp is None:
+                $ player_config.hp = player_config.max_hp
+
+            $ _window_hide()
+            $ _game_menu_screen = None
+            $ _menu = False
+            $ config.keymap['save'] = []
+            $ config.keymap['load'] = []
+            $ config.keymap['game_menu'] = []
+            $ persistent._in_battle = True
+            $ enemy_image = "keyholder"
+            $ player_hp = player_config.hp
+            $ player_max_hp = player_config.max_hp
+            $ enemy_hp = 340
+            $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
+            $ max_heals = player_config.heals
+            $ turn_count = 0
+            $ enemy_max_hp = enemy_hp
+            $ heal_count = 0
+            $ remainheals = max_heals - heal_count
+            $ attack_locked = False
+            $ enemy_name = "???"
+            $ bgname = "bg_fightforkey"
+            $ EnemyType = "Regular"
+            $ enemy_damage_multiplier = 1.0
+
+            scene bg_fightforkey
+            show keyholder at center
+
+            while enemy_hp > 0 and player_hp > 0:
+                call screen enemy_ui
+
+            if player_hp <= 0:
+                $ _game_menu_screen = "save_screen"
+                $ _menu = True
+                $ config.keymap['save'] = ['save']
+                $ config.keymap['load'] = ['load']
+                $ config.keymap['game_menu'] = ['game_menu']
+                $ persistent._in_battle = False
+                $ renpy.sound.stop(channel="shoot")
+                
+                hide keyholder
+                play sound "sfx/explosion04.wav"
+                jump fightlost
+            else:
+                $ _game_menu_screen = "save_screen"
+                $ _menu = True
+                $ config.keymap['save'] = ['save']
+                $ config.keymap['load'] = ['load']
+                $ config.keymap['game_menu'] = ['game_menu']
+                $ persistent._in_battle = False
+                $ renpy.sound.stop(channel="shoot")
+                $ player_config.hp = player_hp
+                $ player_config.heals = remainheals
+
+                play sound "sfx/explosion04.wav"
+                hide keyholder with dissolve
+
+                $ drops = player_config.get_random_drops()
+
+                if drops:
+                    python:
+                        process_battle_loot(drops)
+
+                jump gotthekey
+
+        "Проследить":
+            $ renpy.notify("Игра сохранена в слот 1.")
+            $ renpy.save("checkpoint-1")
+
+            "Вы решили проследить за машиной."
+
+            jump tunnelfollow
+
+label gotthekey:
+    mc "Прости, что так нехорошо получилось, но мне необходим этот ключ."
+
+    play music "music/bio07unloop.ogg" fadeout 1.0
+    scene bg_tunnel with fade
+    
+    "После этого вы вернулись к тоннелю, открыли ворота и отправились в соседний регион."
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+
+    scene black with fade
+
+    pause 1.0
+
+    jump demofinished
+
+label tunnelfollow:
+
+    scene bg_followkeyman_1 with fade
+    pause 1.5
+    scene bg_followkeyman_2 with dissolve
+    pause 1.5
+    scene bg_followkeyman_3 with dissolve
+    pause 1.5
+    scene bg_followkeyman_4 with dissolve
+    pause 1.5
+
+    mc "Ага, он поехал развлечься в бар. Мне точно нужно последовать за ним."
+
+    $ player_config.update_town_info("City", "Асгард", "free_traders_alliance")
+
+    play music "music/town1.ogg" fadeout 1.0
+    scene bg_asgard with fade
+
+    show mc5 at right with dissolve
+
+    "Вы заезжаете в город и подходите к незнакомцу."
+
+    show tunnelguy at left, stretch_in
+
+    unknown "Раз уж заговорил со мной, то хоть выпивки закажи!"
+
+    hide mc5
+    show mc7 at right, stretch_in
+
+    mc "Бармен, налей-ка мне чего-нибудь."
+    mc "И угости моего друга за тем столиком. Проследи, чтобы его стакан был всегда полон."
+
+    hide mc7
+    show mcsurp at right, stretch_in
+
+    unknown "Да я вас!.."
+    unknown "Да вы все… вы ещё не знаете… меня…"
+    unknown "Хр-р-р-р-р."
+
+    hide mcsurp
+    show mc5 at right, stretch_in
+
+    mc "Приятель, да ты уже пьян!"
+    mc "А вот и ключ! И никто не пострадал."
+    mc "Теперь, пока никто не хватился, скорее к тоннелю!"
+
+    hide tunnelguy with dissolve
+    hide mc5 with dissolve
+
+    "Вы снова уезжаете к туннелю."
+
+    $ player_config.town_type = "NotInCity"
+
+    if random.random() <= 0.5:
+        $ current_music = renpy.music.get_playing(channel='music')
+
+        if current_music and current_music not in battle_tracks:
+            $ persistent._prebattle_music = current_music
+        else:
+            $ persistent._prebattle_music = None
+        $ randommus = random.randint(1, 2)
+        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+        "На вас нападают!"
+        call randomfight
+
+    play music "music/bio07unloop.ogg" fadeout 1.0
+    scene bg_tunnel with fade
+
+    "Вернувшись к тоннелю - вы открыли ворота и отправились в соседний регион."
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+
+    scene black with fade
+
+    pause 1.0
+
+    jump demofinished
