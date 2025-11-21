@@ -175,12 +175,12 @@ init python:
         "Vector": {"name": "Вектор", "desc": "Мелкокалиберная пушка - хороший выбор для начинающего путешественника.", "type": "Firearm", "size": "Big"},
         "Vulcan": {"name": "Вулкан", "desc": "Многоствольный пулемёт калибра 5,56 посылает во врага море свинца. Правда, мощная отдача может даже перевернуть небольшой автомобиль.", "type": "Firearm", "size": "Big"},
         "KPVT": {"name": "КПВТ", "desc": "Пулемёт калибра 14,5 - настоящий монстр, прошивающий тонкую броню, как бумагу.", "type": "Firearm", "size": "Big"},
-        "Bumblebee": {"name": "Шмель", "desc": "Поражение значительной площади с большой скоростью - это то, что нужно честному торговцу в борьбе с шайкой бандитов.", "type": "Firearm", "size": "Big"},
-        "Hurricane": {"name": "Ураган", "desc": "Это ракетница выстреливает ракеты с небольшим зарядом, но она выпускает очень много таких ракет.", "type": "Firearm", "size": "Big"},
+        "Bumblebee": {"name": "Шмель", "desc": "Поражение значительной площади с большой скоростью - это то, что нужно честному торговцу в борьбе с шайкой бандитов.", "type": "Artillery", "size": "Big"},
+        "Hurricane": {"name": "Ураган", "desc": "Это ракетница выстреливает ракеты с небольшим зарядом, но она выпускает очень много таких ракет.", "type": "Rocket", "size": "Big"},
         "Flag": {"name": "Флаг", "desc": "Тяжёлый дробовик - это веский аргумент для врагов, чтобы не подходить к вашей машине вплотную.", "type": "Shotgun", "size": "Big"},
-        "Rapier": {"name": "Рапира", "desc": "Дальнобойная пушка калибра 23 мм является серьёзным оружием в умелых руках.", "type": "Firearm", "size": "Big"},
+        "Rapier": {"name": "Рапира", "desc": "Дальнобойная пушка калибра 23 мм является серьёзным оружием в умелых руках.", "type": "Explosive", "size": "Big"},
         "Rainmetal": {"name": "Рейнметалл", "desc": "Скорострельная пушка калибра 20 мм - прекрасный выбор для охоты на двуногого зверя.", "type": "Firearm", "size": "Big"},
-        "Omega": {"name": "Омега", "desc": "Если враг пытается взять вас не умением, а числом, то эта пушка как раз для такого случая.", "type": "Firearm", "size": "Big"},
+        "Omega": {"name": "Омега", "desc": "Если враг пытается взять вас не умением, а числом, то эта пушка как раз для такого случая.", "type": "Artillery", "size": "Big"},
         "Elephant": {"name": "Слон", "desc": "Весьма достойный плазмомёт. Во всяком случае, никто из противников не жаловался.", "type": "Plasma", "size": "Big"},
     }
 
@@ -189,6 +189,9 @@ init python:
         "Shotgun": "Дробовик",
         "Plasma": "Плазма",
         "Energy": "Энергетическое",
+        "Artillery": "Артиллерия",
+        "Rocket": "Ракетница",
+        "Explosive": "Взрывное",
     }
 
     DifficultyNames = { 
@@ -462,16 +465,37 @@ init python:
         elif actual_cost < 0:
             player_config.add_money(-actual_cost)
 
-        player_config.car = car_name
+        if car_name in ["Molokovoz", "Van"]:
+            if player_config.current_gun and player_config.current_gun in bigweapon_prices:
+                weapon_to_handle = player_config.current_gun
+                
+                if player_config.try_add_item(weapon_to_handle):
+                    player_config.current_gun = "Hornet"
+                else:
+                    if player_config.town_type == "City":
+                        sell_price_weapon = ItemPricesCity.get(weapon_to_handle, 0)
+                    else:
+                        sell_price_weapon = ItemPricesVillage.get(weapon_to_handle, 0)
+                    
+                    player_config.add_money(sell_price_weapon)
+                    player_config.current_gun = "Hornet"
+                    renpy.notify(f"{gun_names.get(weapon_to_handle, weapon_to_handle)} было продано за {sell_price_weapon} монет (нет места в инвентаре).")
 
+        player_config.car = car_name
         new_max_hp = CarHP.get(car_name, 850)
+
         player_config.max_hp = new_max_hp
         player_config.hp = new_max_hp
 
         new_max_heal = CarMaxHeals.get(car_name, 15)
         player_config.max_heals = new_max_heal
         player_config.heals = new_max_heal
-
+        
+        if car_name == "Ural":
+            player_config.big_gun_install = "Possible"
+        elif car_name in ["Molokovoz", "Van"]:
+            player_config.big_gun_install = "NotPossible"
+            
         if actual_cost > 0:
             renpy.notify(
                 f"Куплена машина: {car_names.get(car_name, car_name)} "
@@ -538,11 +562,14 @@ init python:
         return driving_tracks_by_region.get(region, ["driving1", "driving2"])
 
     def generate_random_weapons():
-        global shop_random_weapons, shop_random_city
+        global shop_random_weapons, shop_random_city, shop_random_big_gun_state
 
         current_city = player_config.town_name
+        current_big_gun_state = player_config.big_gun_install
 
-        if shop_random_city == current_city and shop_random_weapons is not None:
+        if (shop_random_city == current_city and 
+            shop_random_weapons is not None and 
+            shop_random_big_gun_state == current_big_gun_state):
             return
 
         all_weapons = list(smallweapon_prices.keys())
@@ -561,6 +588,7 @@ init python:
         shop_random_weapons = random.sample(all_weapons, count)
 
         shop_random_city = current_city
+        shop_random_big_gun_state = current_big_gun_state
 
     def process_battle_loot(drops):
         drop_names_text = []

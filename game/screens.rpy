@@ -268,14 +268,18 @@ screen enemy_ui():
 
     # Таймер разблокировки атаки
     if attack_locked:
-        if player_config.gun_type == "Shotgun":
-            timer 1.3 action SetVariable("attack_locked", False)
-        elif player_config.gun_type == "Plasma":
-            timer 2.5 action SetVariable("attack_locked", False)
-        elif player_config.gun_type == "Energy":
-            timer 0.75 action SetVariable("attack_locked", False)
-        else:
-            timer 0.5 action SetVariable("attack_locked", False)
+        python:
+            reload_times = {
+                "Shotgun": 1.3,
+                "Plasma": 2.5,
+                "Energy": 0.75,
+                "Artillery": 0.75,
+                "Rocket": 1.1,
+                "Explosive": 1.0
+            }
+            reload_time = reload_times.get(player_config.gun_type, 0.5)
+    
+        timer reload_time action SetVariable("attack_locked", False)
 
     # Завершение боя
     if enemy_hp <= 0 or player_hp <= 0:
