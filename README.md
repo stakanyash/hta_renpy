@@ -50,50 +50,70 @@
 
 </div>
 
-<img width="1474" height="860" alt="1" src="https://github.com/user-attachments/assets/4f4a664a-4727-42b9-b635-726febec3e05" />
+<img width="1474" height="860" alt="screenshot0001" src="https://github.com/user-attachments/assets/248241ac-bc36-4b90-a7c7-c0e9ac4e6907" />
 <blockquote>Главное меню игры</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="2" src="https://github.com/user-attachments/assets/b3e83d4f-0901-4159-8e47-6666e9d381e6" />
+<img width="1474" height="860" alt="screenshot0002" src="https://github.com/user-attachments/assets/9f60915a-9bf0-4064-8e1b-942fdfc512f2" />
 <blockquote>Окно ввода имени</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="3" src="https://github.com/user-attachments/assets/04b09b2c-f06b-4dd4-a837-6ba21ff0cb6c" />
+<img width="1474" height="860" alt="screenshot0003" src="https://github.com/user-attachments/assets/a7d6f171-71a6-4e26-89ad-849c66bb2a14" />
 <blockquote>Окно выбора сложности (можно менять в процессе игры через настройки)</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="4" src="https://github.com/user-attachments/assets/83cac548-260a-4075-976f-afa6b440d44e" />
+<img width="1474" height="860" alt="screenshot0004" src="https://github.com/user-attachments/assets/48141a0d-69c1-4542-92c3-d39483456e6a" />
+<blockquote>Предложение пройти обучение (появляется единожды)</blockquote>
+
+---
+
+<img width="1474" height="860" alt="screenshot0005" src="https://github.com/user-attachments/assets/6811b9a2-43e7-4761-b380-a5a6e0b8fa40" />
 <blockquote>Диалог</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="5" src="https://github.com/user-attachments/assets/39e457ce-c1c1-498f-951d-2d012283ea05" />
+<img width="1474" height="860" alt="screenshot0006" src="https://github.com/user-attachments/assets/64010c95-f953-4c4c-a991-291d430d08e5" />
 <blockquote>Экран боя</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="6" src="https://github.com/user-attachments/assets/b596f4b0-605a-4e04-bf47-5473146655c3" />
+<img width="1474" height="860" alt="screenshot0007" src="https://github.com/user-attachments/assets/8d788fb8-d275-4784-9efa-69d600f6502b" />
+<blockquote>Дроп после боёв</blockquote>
+
+---
+
+<img width="1474" height="860" alt="screenshot0008" src="https://github.com/user-attachments/assets/cb253e85-ad4a-4616-85fb-583191adeebc" />
 <blockquote>Экран статистики</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="7" src="https://github.com/user-attachments/assets/eb20bd66-0872-47ea-9197-cf478d9413c9" />
+<img width="1474" height="860" alt="screenshot0009" src="https://github.com/user-attachments/assets/4cca73cd-f2ee-4294-a16c-a6faf6646b25" />
+<blockquote>Меню в процессе игры</blockquote>
+
+---
+
+<img width="1474" height="860" alt="screenshot0010" src="https://github.com/user-attachments/assets/a7d3d7c9-42e0-4915-80b3-57dfc1b9a8cc" />
 <blockquote>Экран инвентаря</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="8" src="https://github.com/user-attachments/assets/7777f45e-4e7b-4505-a8e8-cc4478d04a67" />
+<img width="1474" height="860" alt="screenshot0011" src="https://github.com/user-attachments/assets/7bdabfed-62d4-4c97-92ce-f9519d6ca489" />
 <blockquote>Экран города</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="9" src="https://github.com/user-attachments/assets/01c32582-6466-40fb-8447-58c263fc880d" />
+<img width="1474" height="860" alt="screenshot0012" src="https://github.com/user-attachments/assets/340403c3-ef5c-4664-9534-f2e7732bc60d" />
 <blockquote>Магазин оружия</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="10" src="https://github.com/user-attachments/assets/5901eeb9-6758-4680-a5db-3ecbcc25f3a3" />
+<img width="1474" height="860" alt="screenshot0013" src="https://github.com/user-attachments/assets/6fda7712-ee15-4f68-8dd5-5db99968f864" />
+<blockquote>Магазин автомобилей</blockquote>
+
+---
+
+<img width="1474" height="860" alt="screenshot0013" src="https://github.com/user-attachments/assets/549fb945-4368-4bcb-a081-a261443701ec" />
 <blockquote>Экран истории диалогов</blockquote>
