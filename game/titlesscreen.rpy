@@ -33,7 +33,7 @@ label splashscreen:
         $ save_flags(flags)
 
     if not config.developer:
-        $ renpy.movie_cutscene("movies/disclaimer.mp4")
+        $ renpy.movie_cutscene("movies/disclaimer.avi")
 
         pause 0.5
 
