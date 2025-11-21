@@ -1642,7 +1642,7 @@ label tunnelfollow:
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
         "На вас нападают!"
-        call randomfight
+        call randomfight from _call_randomfight_37
 
     play music "music/bio07unloop.ogg" fadeout 1.0
     scene bg_tunnel with fade
