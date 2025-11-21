@@ -16,16 +16,22 @@ screen name_input_screen():
             spacing 30
             xalign 0.5
 
-            text "Введите ваше имя:" size 36 xalign 0.5 color "#404040"
+            text "Введите имя игрока:" size 36 xalign 0.5 color "#404040"
 
-            input value VariableInputValue("temp_name") length 14 pixel_width 500 align (0.5, 0.5):
+            input value VariableInputValue("temp_name") length 14 pixel_width 500 xalign 0.5 ypos 10:
                 style "centered_input"
 
-            textbutton "Подтвердить" activate_sound "audio/sfx/click.wav" action [
-                SetVariable("player_name", temp_name.strip() or "Игрок"),
-                Hide("name_input_screen"),
-                Show("difficulty_select")
-            ] style "smaller_button" xalign 0.5
+            hbox:
+                xalign 0.5
+                ypos 10
+
+                textbutton "Подтвердить" activate_sound "audio/sfx/click.wav" action [
+                    SetVariable("player_name", temp_name.strip() or "Игрок"),
+                    Hide("name_input_screen"),
+                    Show("difficulty_select")
+                ] style "smaller_button"
+
+                textbutton "Вернуться" activate_sound "audio/sfx/click.wav" action Hide("name_input_screen") style "smaller_button"
 
 # Стиль для затемнения
 style name_input_overlay is default:

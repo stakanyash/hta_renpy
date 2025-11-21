@@ -13,6 +13,13 @@ label tutorial_check:
 
 label tutorial:
 
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
+
     play music "music/bio06.ogg" fadeout 1.0
 
     scene bg_glukhoe with fade
@@ -275,6 +282,15 @@ label tutorial_continue:
     "Удачи. Она Вам пригодится."
 
     hide mc3 with dissolve
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+
     scene black with dissolve
     pause 0.5
 
