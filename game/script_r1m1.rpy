@@ -455,6 +455,8 @@ label tozaimka:
 
     "Вы направились в Южный."
 
+    $ player_config.town_type = "NotInCity"
+
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')
 

@@ -180,6 +180,8 @@ label mvillage:
 
     mc "Опять двадцать пять. Ни дня без боя, что за жизнь!"
 
+    $ player_config.town_type = "NotInCity"
+
     hide mcsurp
 
     $ randommus = random.randint(1, 2)
@@ -254,6 +256,8 @@ label mvillage:
         jump mvillageafterfight
 
 label mvillageafterfight:
+
+    $ player_config.update_town_info("Village", "Горные шахты", "free_traders_alliance")
 
     scene bg_mvillage with dissolve
     play music "music/bar.ogg" fadeout 1.0
@@ -388,9 +392,9 @@ label peshtallow:
 
     mc "Больше бандиты этой дорогой не пройдут."
 
-    "Вам открыли ворота и вы проехали через Пешт."
-
     $ player_config.update_town_info("City", "Пешт", "free_traders_alliance")
+
+    "Вам открыли ворота и вы проехали через Пешт."
 
     hide pguard
     hide mc5
@@ -1057,6 +1061,8 @@ label oilmine2nd:
 
     "Вы грузите бочку нефти в машину и уезжаете в Минин."
 
+    $ player_config.town_type = "NotInCity"
+
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')
 
@@ -1177,6 +1183,8 @@ label r1m3withlisa:
 
     hide mcsurp
     hide pguard
+
+    $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')

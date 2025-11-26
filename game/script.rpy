@@ -428,7 +428,6 @@ init python:
             if player_config.current_gun not in player_config.inventory:
                 addedg = player_config.try_add_item(player_config.current_gun)
             
-                # Если инвентарь полон, продаём оружие
                 if not addedg:
                     if player_config.town_type == "City":
                         sell_price = ItemPricesCity.get(player_config.current_gun, 0)
@@ -781,11 +780,3 @@ label demofinished:
                 renpy.hide(slides[i])
 
     return
-
-## Not used now
-
-#label titles:
-
-#    $ renpy.movie_cutscene("movies/titles.mp4")
-
-#    return

@@ -281,6 +281,8 @@ label tolocus:
 
     hide mc6 with dissolve
 
+    $ player_config.town_type = "NotInCity"
+
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')
 
@@ -719,6 +721,8 @@ label r1m2withlisa:
     mc "Будем искать дальше."
 
     "Вы направились в Порто."
+    
+    $ player_config.town_type = "NotInCity"
 
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')
