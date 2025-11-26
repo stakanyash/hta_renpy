@@ -644,9 +644,9 @@ screen main_menu():
                 style "main_menu_version"
 
     if config.developer:
-        text "Ex Machina RenPy - developer version 0.4.9 (251121b)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - developer version 0.4.9 (251126a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
     else:
-        text "Ex Machina RenPy - demo version 0.4.9 (251121b)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina RenPy - demo version 0.4.9 (251126a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -780,13 +780,14 @@ screen statistics_screen():
                 ypos 1
                 focus_mask True 
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/buttons/tab_truck_e.png" 
-            hover "gui/townmenu/buttons/tab_truck_s.png"
-            action [Hide("statistics_screen"), Show("Car_Shop")]
-            xpos 1270
-            ypos 1
-            focus_mask True 
+        if player_config.town_type in ["City", "Village"]:
+            imagebutton activate_sound "audio/sfx/click.wav":
+                idle "gui/townmenu/buttons/tab_truck_e.png" 
+                hover "gui/townmenu/buttons/tab_truck_s.png"
+                action [Hide("statistics_screen"), Show("Car_Shop")]
+                xpos 1270
+                ypos 1
+                focus_mask True 
 
 
 ## Экран игрового меню #########################################################

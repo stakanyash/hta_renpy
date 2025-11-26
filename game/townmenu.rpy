@@ -73,13 +73,14 @@ screen InGameMenu():
                 ypos 1
                 focus_mask True 
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/buttons/tab_truck_e.png" 
-            hover "gui/townmenu/buttons/tab_truck_s.png"
-            action [Hide("InGameMenu"), Show("Car_Shop")]
-            xpos 1270
-            ypos 1
-            focus_mask True 
+        if player_config.town_type in ["City", "Village"]:
+            imagebutton activate_sound "audio/sfx/click.wav":
+                idle "gui/townmenu/buttons/tab_truck_e.png" 
+                hover "gui/townmenu/buttons/tab_truck_s.png"
+                action [Hide("InGameMenu"), Show("Car_Shop")]
+                xpos 1270
+                ypos 1
+                focus_mask True 
 
         hbox:
             xsize 527
@@ -304,13 +305,14 @@ screen Selling_Menu():
             ypos 7
             focus_mask True 
 
-    imagebutton activate_sound "audio/sfx/click.wav":
-        idle "gui/townmenu/buttons/tab_truck_e.png" 
-        hover "gui/townmenu/buttons/tab_truck_s.png"
-        action [Hide("Selling_Menu"), Show("Car_Shop")]
-        xpos 1276
-        ypos 7
-        focus_mask True
+    if player_config.town_type in ["City", "Village"]:
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_truck_e.png" 
+            hover "gui/townmenu/buttons/tab_truck_s.png"
+            action [Hide("Selling_Menu"), Show("Car_Shop")]
+            xpos 1276
+            ypos 7
+            focus_mask True
 
 # Gun Shop
 
@@ -467,13 +469,14 @@ screen Gun_Shop_Menu():
         ypos 7
         focus_mask True
 
-    imagebutton activate_sound "audio/sfx/click.wav":
-        idle "gui/townmenu/buttons/tab_truck_e.png" 
-        hover "gui/townmenu/buttons/tab_truck_s.png"
-        action [Hide("Gun_Shop_Menu"), Show("Car_Shop")]
-        xpos 1276
-        ypos 7
-        focus_mask True
+    if player_config.town_type in ["City", "Village"]:
+        imagebutton activate_sound "audio/sfx/click.wav":
+            idle "gui/townmenu/buttons/tab_truck_e.png" 
+            hover "gui/townmenu/buttons/tab_truck_s.png"
+            action [Hide("Gun_Shop_Menu"), Show("Car_Shop")]
+            xpos 1276
+            ypos 7
+            focus_mask True
 
 # Car Shop
 
