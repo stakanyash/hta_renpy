@@ -33,7 +33,8 @@ define gui.show_name = False
 
 ## Версия игры.
 
-define config.version = "0.4.9"
+define config.version = "0.5.0"
+define hta_build = "251207a"
 
 
 ## Текст, помещённый в экран "Об игре". Поместите текст между тройными скобками.

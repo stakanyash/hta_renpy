@@ -122,51 +122,6 @@ transform fadeinout:
     on hide:
         linear 1.5 alpha 0.0
 
-screen license_prompt():
-    tag menu
-
-    add Solid("#000000", alpha=0.7) at fadeinout
-
-    frame at fadeinout:
-        xalign 0.5
-        yalign 0.5
-        xsize 900
-        ysize 500
-        padding (30, 30)
-        background Solid("#1a1a1a")
-
-        vbox:
-            spacing 20
-            xfill True
-            yfill True
-
-            null height 20
-
-            text "Для использования требуется лицензия на оригинальную игру Hard Truck Apocalypse/Ex Machina. Нажимая «Принимаю», вы подтверждаете, что у вас есть такая лицензия." at fadeinout:
-                size 25
-                color "#ffffff"
-                line_spacing 5
-                text_align 0.5
-                xalign 0.5
-
-            null
-
-            textbutton "Принимаю" action Return(True) at fadeinout:
-                xalign 0.5
-                xminimum 220
-                yminimum 60
-                background Solid("#3a753a")
-                hover_background Solid("#4a954a")
-                text_style "button_text_center"
-
-            textbutton "Отказ от ответственности" action OpenURL("https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md") at fadeinout:
-                xalign 0.5
-                xminimum 500
-                yminimum 60
-                background Solid("#2a2a2a")
-                hover_background Solid("#444444")
-                text_style "button_text_center"
-
 style button_text_center is default:
     xalign 0.5
     yalign 0.5
@@ -644,9 +599,9 @@ screen main_menu():
                 style "main_menu_version"
 
     if config.developer:
-        text "Ex Machina RenPy - developer version 0.4.9 (251126a)" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina Ren'Py - developer version [config.version!t] ([hta_build!t])" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
     else:
-        text "Ex Machina RenPy - demo version 0.4.9 (251126a)" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina Ren'Py - demo version [config.version!t] ([hta_build!t])" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -978,13 +933,13 @@ screen about():
                     spacing 20
 
                     label "[config.name!t]"
-                    text _("Версия [config.version!t]\n")
+                    text _("Версия [config.version!t] [[[hta_build!t]]\n")
 
                     text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл RenPy.\n")
                     text _("Посвящен 20-летию оригинальной Ex Machina/Hard Truck Apocalypse.\n")
                     text _("Данная версия является демонстрационной, её разработка не завершена!\n")
                     text _("GitHub репозиторий проекта доступен {a=https://github.com/stakanyash/hta_renpy}здесь{/a}.")
-                    text _("{a=https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md}Отказ от ответственности{/a}\n")
+                    text _("{a=https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md}Дисклеймер{/a}\n")
                     text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
 
 
