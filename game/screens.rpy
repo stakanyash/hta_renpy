@@ -261,7 +261,7 @@ screen tutorial_prompt_call():
             spacing 20
             xalign 0.5
             yalign 0.5
-            text "Кажется, вы в первый раз играете в\nEx Machina RenPy.\n\nХотите пройти обучение?" size 36 textalign 0.5
+            text "Кажется, Вы в первый раз играете в\nEx Machina RenPy.\n\nХотите пройти обучение?" size 36 textalign 0.5
 
             hbox:
                 spacing 200

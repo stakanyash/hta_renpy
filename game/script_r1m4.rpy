@@ -25,7 +25,7 @@ label r1m4start:
 
     scene bg_helfirst with fade
 
-    "Приехав в Хель вы сразу направились в Ольм."
+    "Приехав в Хель Вы сразу направились в Ольм."
 
     $ player_config.update_town_info("City", "Ольм", "north_nath_traders")
     
@@ -41,7 +41,7 @@ label r1m4start:
 
 label homersearch:
 
-    "В Ольме вы решили начать поиски Гомера."
+    "В Ольме Вы решили начать поиски Гомера."
 
     show olmeper at right with dissolve
 
@@ -88,7 +88,7 @@ label homersearch:
             $ persistent._prebattle_music = None
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_21
 
     play music "music/driving7.ogg" fadeout 1.0
@@ -115,7 +115,7 @@ label homersearch:
             $ persistent._prebattle_music = None
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_22
 
     scene bg_kordan with fade
@@ -160,7 +160,7 @@ label homersearch:
             $ persistent._prebattle_music = None
         $ randommus = random.choice([1, 2, 7])   
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_23
 
     $ player_config.update_town_info("Village", "Салиниом", "free_traders_alliance")
@@ -171,7 +171,7 @@ label homersearch:
     $ renpy.notify("Игра сохранена в слот 2.")
     $ renpy.save("checkpoint-2")
 
-    "Приехав в Салиниом вы подходите к человеку, который подходит под описание Гомера."
+    "Приехав в Салиниом Вы подходите к человеку, который подходит под описание Гомера."
 
     show homer at left with dissolve
 
@@ -247,7 +247,7 @@ label homersearch:
             $ persistent._prebattle_music = None
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_24
 
     jump tokranfight
@@ -256,7 +256,7 @@ label tokranfight:
 
     play music "music/bio05.ogg" fadeout 1.0
     scene bg_boloto with fade
-    "Подъехав к болоту у вас возникли некоторые опасения."
+    "Подъехав к болоту у Вас возникли некоторые опасения."
 
     mc "Похоже, именно об этом месте и говорил Гомер. Точно ли я тут смогу проехать?"
     mc "Ладно, не попробуешь - не узнаешь..."
@@ -436,7 +436,7 @@ label leaveregion1:
 
 label galdenquest:
 
-    "Однако вас подзывает незнакомец."
+    "Однако Вас подзывает незнакомец."
 
     show galden at left, stretch_in
 
@@ -444,7 +444,7 @@ label galdenquest:
 
     show mchar at right, stretch_in
 
-    mc "Чем же я могу вам помочь?"
+    mc "Чем же я могу Вам помочь?"
 
     galden "Наш склад был захвачен местным населением."
 
@@ -453,7 +453,7 @@ label galdenquest:
     hide mchar
     show mcsurp at right, stretch_in
 
-    mc "Почему же вы не можете его отбить силой?"
+    mc "Почему же Вы не можете его отбить силой?"
 
     galden "Нам не хочется ссориться окончательно с жителями этих земель, поэтому мы и просим тебя."
 
@@ -477,7 +477,7 @@ label galdenquest:
                     $ persistent._prebattle_music = None
                 $ randommus = random.choice([1, 2, 7])
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                "На вас нападают!"
+                "На Вас нападают!"
                 call randomfight from _call_randomfight_25
             
             jump r1m4SideQuest_start
@@ -488,7 +488,7 @@ label galdenquest:
             $ r1m4SideQuest = "Failed"
             mc "Мне это неинтересно."
             hide galden with dissolve
-            "Вы спокойно уходите. Незнакомец ничего не говорит вам в след."
+            "Вы спокойно уходите. Незнакомец ничего не говорит Вам в след."
             mc "Видимо ему уже не один раз отказали..."
             hide mcsurp with dissolve
             jump homersearch
@@ -499,7 +499,7 @@ label r1m4SideQuest_start:
 
     scene bg_warehouse with fade
 
-    "На складе вас явно не готовы принимать \"с распростертыми объятиями\"."
+    "На складе Вас явно не готовы принимать \"с распростертыми объятиями\"."
 
     show wsecurity at right, stretch_in
 
@@ -520,7 +520,7 @@ label r1m4SideQuest_start:
 
     wsec "У нас сейчас сложные времена, понимаешь. Этот склад - единственный рычаг, с помощью которого мы можем диктовать свои требования грязным торговцам."
 
-    mc "И чего же вы хотите?"
+    mc "И чего же Вы хотите?"
 
     wsec "В данный момент мы просим освободить нашего лидера, только после этого мы уйдем со склада."
 
@@ -543,7 +543,7 @@ label r1m4SideQuest_start:
                     $ persistent._prebattle_music = None
                 $ randommus = random.choice([1, 2, 7])
                 $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                "На вас нападают!"
+                "На Вас нападают!"
                 call randomfight from _call_randomfight_26
             
             jump r1m4SideQuest_whereisleader
@@ -769,7 +769,7 @@ label r1m4SideQuest_leaderisfree:
             $ persistent._prebattle_music = None
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_27
 
     jump r1m4SideQuest_leaderisback
@@ -811,7 +811,7 @@ label r1m4SideQuest_leaderisback:
             $ persistent._prebattle_music = None
         $ randommus = random.choice([1, 2, 7])
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_28
 
     jump r1m4SideQuest_finish
@@ -825,7 +825,7 @@ label r1m4SideQuest_finish:
     scene bg_olm with fade
 
     if r1m4SideQuestLeaderSaved == True:
-        "Вернувшись в Ольм вы не замечаете ничего странного."
+        "Вернувшись в Ольм Вы не замечаете ничего странного."
 
     show galden at left with dissolve
 

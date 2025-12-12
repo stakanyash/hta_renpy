@@ -33,11 +33,11 @@ label r1m3nolisa:
     play music "music/driving1.ogg" fadeout 1.0
     scene bg_m3nolisa with fade
 
-    "Оказавшись в Фатерлянде вы продолжили ехать в сторону Пешта."
+    "Оказавшись в Фатерлянде Вы продолжили ехать в сторону Пешта."
 
     scene bg_pesht with dissolve
 
-    "Однако около ворот Пешта вас останавливают..."
+    "Однако около ворот Пешта Вас останавливают..."
 
     show pguard at left with dissolve
 
@@ -45,7 +45,7 @@ label r1m3nolisa:
 
     show mchar at right with dissolve
 
-    mc "Что здесь происходит? Почему все носятся как угорелые? Пожара вроде не видно? И кто вы такой?"
+    mc "Что здесь происходит? Почему все носятся как угорелые? Пожара вроде не видно? И кто Вы такой?"
 
     pguard "Я охранник Пешта. Бандиты, наконец, вскрыли нижние этажи военной базы и добыли себе мощное оружие."
     pguard "Мы думали, они просто пугали нас этой базой, чтобы увеличить поборы, а теперь даже убежать не успеем. Если ничего не предпринять, они захватят наш славный город."
@@ -97,7 +97,7 @@ label asgardboom:
     play music "music/town1.ogg" fadeout 1.0
     scene bg_asgard with fade
 
-    "Приехав в Асгард вы быстро находите магазин взрывчатки."
+    "Приехав в Асгард Вы быстро находите магазин взрывчатки."
 
     show seller at left with dissolve
 
@@ -139,7 +139,7 @@ label asgardboom:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_29
 
     jump mvillage
@@ -151,7 +151,7 @@ label mvillage:
     play music "music/bar.ogg" fadeout 1.0
     scene bg_mvillage with fade
 
-    "Не успели вы приехать, как вас сразу встречают."
+    "Не успели Вы приехать, как Вас сразу встречают."
 
     show miner at left with dissolve
 
@@ -159,7 +159,7 @@ label mvillage:
 
     show mc5 at right with dissolve
 
-    mc "Мне сказали, что у вас есть запас взрывчатки."
+    mc "Мне сказали, что у Вас есть запас взрывчатки."
 
     miner "Не тебе одному она нужна."
     miner "..."
@@ -284,7 +284,7 @@ label brigdedestroy:
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
 
-    "Подъехав к мосту вы заметили бандитские машины."
+    "Подъехав к мосту Вы заметили бандитские машины."
     $ renpy.notify("Игра сохранена в слот 2.")
     $ renpy.save("checkpoint-2")
     mc "Видимо, чтобы осуществить свою задачу нужно их уничтожить, но куда деваться..."
@@ -394,7 +394,7 @@ label peshtallow:
 
     $ player_config.update_town_info("City", "Пешт", "free_traders_alliance")
 
-    "Вам открыли ворота и вы проехали через Пешт."
+    "Вам открыли ворота и Вы проехали через Пешт."
 
     hide pguard
     hide mc5
@@ -410,7 +410,7 @@ label peshtallow:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_30
 
     jump minin1st_nl
@@ -422,7 +422,7 @@ label minin1st_nl:
     scene bg_minin with fade
     play music "music/town3.ogg" fadeout 1.0
 
-    "В Минине вы сразу привлекаете внимание местного рабочего."
+    "В Минине Вы сразу привлекаете внимание местного рабочего."
 
     show mworker at right with dissolve
 
@@ -451,7 +451,7 @@ label aivenhouse:
 
     play music "music/techno04.ogg" fadeout 1.0
 
-    "Заехав в дом Айвена вы заметили, что его явно покидали в спешке..."
+    "Заехав в дом Айвена Вы заметили, что его явно покидали в спешке..."
 
     show mcback at center with dissolve
 
@@ -515,7 +515,7 @@ label minin2nd_nl:
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
 
-    "Вернувшись в Минин вы подходите к тому же рабочему, который указал вам на дом отца."
+    "Вернувшись в Минин Вы подходите к тому же рабочему, который указал Вам на дом отца."
 
     show mworker at right with dissolve
 
@@ -600,7 +600,7 @@ label hundredcointosharki:
 
             "Вы идёте к мэру."
 
-            "Однако он кажется не рад вас видеть."
+            "Однако он кажется не рад Вас видеть."
 
             show mimayor at left, stretch_in
 
@@ -612,7 +612,7 @@ label hundredcointosharki:
 
             mayor "Тебя? Что ж, сейчас нам любая помощь пригодится…"
 
-            mc "Что у вас за проблемы?"
+            mc "Что у Вас за проблемы?"
 
             mayor "Тут как в анекдоте: \"Пушки не стреляли по 20 причинам: первая - не было патронов\"."
             mayor "Хех…"
@@ -622,7 +622,7 @@ label hundredcointosharki:
             hide mchar
             show mcsurp at right, stretch_in
 
-            mc "То есть вы хотите, чтобы я один отправился сражаться с бандитами, когда вы всем городом не могли с ними справиться?!"
+            mc "То есть Вы хотите, чтобы я один отправился сражаться с бандитами, когда Вы всем городом не могли с ними справиться?!"
 
             mayor "Признаться, мы не очень-то и сражались, так как были заняты внутренними проблемами: видишь ли, профсоюз работников объявил забастовку."
 
@@ -685,7 +685,7 @@ label oilmine1st:
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
     
-    "Приехав к нефтянной вышке вы действительно видите множество бандитов."
+    "Приехав к нефтянной вышке Вы действительно видите множество бандитов."
 
     $ renpy.notify("Игра сохранена в слот 3.")
     $ renpy.save("checkpoint-3") # Don't change number of checkpoint!!!
@@ -791,7 +791,7 @@ label followlastone:
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
-    "Приехав на базу вас сразу начали атаковать три машины."
+    "Приехав на базу Вас сразу начали атаковать три машины."
     $ renpy.notify("Игра сохранена в слот 4.")
     $ renpy.save("checkpoint-4")
     mc "Всё таки заметил..."
@@ -862,7 +862,7 @@ label banditbaseelim:
 
     if random.random() <= 0.4:
         if player_config.try_add_item("Elephant") == True:
-            "Расправившись с бандитами вы заметили, что у одного из них стоит неплохое оружие."
+            "Расправившись с бандитами Вы заметили, что у одного из них стоит неплохое оружие."
 
             mc "Надо бы забрать себе."
 
@@ -879,7 +879,7 @@ label banditbaseelim:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_16
 
     jump minin3rd_nl
@@ -891,7 +891,7 @@ label minin3rd_nl:
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
 
-    "Вернувшись в Минин вы сразу идёте к мэру."
+    "Вернувшись в Минин Вы сразу идёте к мэру."
 
     show mimayor at left with dissolve
 
@@ -933,7 +933,7 @@ label minin3rd_nl:
 
     sharki "И не проси!"
 
-    mc "Что же делать? Придётся разобраться, что здесь у вас происходит."
+    mc "Что же делать? Придётся разобраться, что здесь у Вас происходит."
 
     hide mc6 with dissolve
     hide mworker with dissolve
@@ -948,7 +948,7 @@ label mayorspy:
 
     scene bg_spymer_1 with fade
 
-    "Выехав из Минина вы заметили странную машину..."
+    "Выехав из Минина Вы заметили странную машину..."
 
     mc "По-моему, в этой машине едет мэр!"
     scene bg_spymer_2 with dissolve
@@ -956,7 +956,7 @@ label mayorspy:
 
     scene bg_spymer_3 with dissolve
 
-    "Вы ехали позади машины мэра Минина и он кажется вас не замечал."
+    "Вы ехали позади машины мэра Минина и он кажется Вас не замечал."
 
     scene bg_spymer_4 with dissolve
 
@@ -979,7 +979,7 @@ label mayorspy:
     mc "Если я расскажу об этом в Минине, то его точно прогонят с управляющего поста. Если не хуже."
     mc "И работники могут захотеть работать!"
 
-    "С этой мыслью вы аккуратно покидаете место событий и уезжаете обратно в Минин."
+    "С этой мыслью Вы аккуратно покидаете место событий и уезжаете обратно в Минин."
 
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')
@@ -990,7 +990,7 @@ label mayorspy:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_17
 
     jump minin4th_nl
@@ -1002,9 +1002,9 @@ label minin4th_nl:
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
 
-    "Вернувшись в Минин вы спешно ищете Шарки."
+    "Вернувшись в Минин Вы спешно ищете Шарки."
 
-    "Ему сразу понятно, что вам есть о чём рассказать."
+    "Ему сразу понятно, что Вам есть о чём рассказать."
 
     show mworker at right, stretch_in
 
@@ -1019,13 +1019,13 @@ label minin4th_nl:
 
     sharki "Я же говорил! Не быть ему больше главой! Увижу - морду начищу."
 
-    mc "Раз вы теперь сами себе хозяева, будете работать?"
+    mc "Раз Вы теперь сами себе хозяева, будете работать?"
 
     sharki "Не вопрос."
 
     mc "Тогда полезайте в кузов."
 
-    "Шарки и рабочие залезают в ваш грузовик и вы направляетесь на нефтяную вышку."
+    "Шарки и рабочие залезают в ваш грузовик и Вы направляетесь на нефтяную вышку."
 
     $ player_config.town_type = "NotInCity"
 
@@ -1038,7 +1038,7 @@ label minin4th_nl:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_18
 
     jump oilmine2nd
@@ -1072,7 +1072,7 @@ label oilmine2nd:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_19
 
     jump minin5th_nl
@@ -1084,7 +1084,7 @@ label minin5th_nl:
     play music "music/town3.ogg" fadeout 1.0
     scene bg_minin with fade
 
-    "Приехав в Минин вы выгружаете бочку."
+    "Приехав в Минин Вы выгружаете бочку."
 
     show MininWorker2 at left with dissolve
     show mchar at right with dissolve
@@ -1118,7 +1118,7 @@ label minin5th_nl:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_20
 
     scene black with fade
@@ -1142,7 +1142,7 @@ label r1m3withlisa:
 
     $ player_config.update_town_info("City", "Пешт", "free_traders_alliance")
 
-    "Приехав в Пешт вы подходите к одному из местных жителей."
+    "Приехав в Пешт Вы подходите к одному из местных жителей."
 
     show pguard at left with dissolve
 
@@ -1195,7 +1195,7 @@ label r1m3withlisa:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_34
 
     jump base51lisa
@@ -1207,7 +1207,7 @@ label base51lisa:
 
     $ player_config.update_town_info("Village", "База 51", "brigade")
 
-    "Приехав на бандитскую базу на вас бросаются взгляды едва ли не всех, кто там находится."
+    "Приехав на бандитскую базу на Вас бросаются взгляды едва ли не всех, кто там находится."
 
     show bobbase51 at right, stretch_in
 
@@ -1233,7 +1233,7 @@ label base51lisa:
     $ renpy.notify("Игра сохранена в слот 6.")
     $ renpy.save("checkpoint-6")
 
-    "После этого вы начинаете бой."
+    "После этого Вы начинаете бой."
 
     $ player_config.town_type = "NotInCity"
 
@@ -1345,7 +1345,7 @@ label base51afterfight:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_35
     
     scene black with fade
@@ -1391,7 +1391,7 @@ label asgardtunnel:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_1
 
     $ player_config.update_town_info("City", "Асгард", "free_traders_alliance")
@@ -1399,7 +1399,7 @@ label asgardtunnel:
     play music "music/town1.ogg" fadeout 1.0
     scene bg_asgard with fade
 
-    "Приехав в Асгард вы подходите к местному бармену."
+    "Приехав в Асгард Вы подходите к местному бармену."
 
     show pablo at right with dissolve
 
@@ -1428,7 +1428,7 @@ label asgardtunnel:
 
     mc "Что ты, я и не думал даже!"
 
-    "Бармен делает отметку на вашей карте и после этого вы отправляетесь к туннелю."
+    "Бармен делает отметку на вашей карте и после этого Вы отправляетесь к туннелю."
 
     hide pablo
     hide mc_2
@@ -1444,7 +1444,7 @@ label asgardtunnel:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_36
 
     jump tunnelfirst
@@ -1454,7 +1454,7 @@ label tunnelfirst:
     play music "music/bio07unloop.ogg" fadeout 1.0
     scene bg_tunnel with fade
 
-    "Приехав к тоннелю вы замечаете, что он наглухо закрыт."
+    "Приехав к тоннелю Вы замечаете, что он наглухо закрыт."
 
     mc "И как же открыть эти громадные ворота?"
     mc "Бармен не так прост, как я думал."
@@ -1571,7 +1571,7 @@ label gotthekey:
     play music "music/bio07unloop.ogg" fadeout 1.0
     scene bg_tunnel with fade
     
-    "После этого вы вернулись к тоннелю, открыли ворота и отправились в соседний регион."
+    "После этого Вы вернулись к тоннелю, открыли ворота и отправились в соседний регион."
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -1623,7 +1623,7 @@ label tunnelfollow:
     show mcsurp at right, stretch_in
 
     unknown "Да я вас!.."
-    unknown "Да вы все… вы ещё не знаете… меня…"
+    unknown "Да вы все… Вы ещё не знаете… меня…"
     unknown "Хр-р-р-р-р."
 
     hide mcsurp
@@ -1649,13 +1649,13 @@ label tunnelfollow:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_37
 
     play music "music/bio07unloop.ogg" fadeout 1.0
     scene bg_tunnel with fade
 
-    "Вернувшись к тоннелю - вы открыли ворота и отправились в соседний регион."
+    "Вернувшись к тоннелю - Вы открыли ворота и отправились в соседний регион."
 
     $ _window_hide()
     $ _game_menu_screen = None

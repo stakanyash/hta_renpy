@@ -33,18 +33,18 @@ label arrivetor1m2:
     
     scene bg_ridzin with fade
 
-    "Приехав в соседний регион вы оказались в замешательстве."
+    "Приехав в соседний регион Вы оказались в замешательстве."
     mc "А где тут вообще находится Восточное?.."
     mc "Поеду дальше по дороге, надеюсь сориентируюсь."
     scene bg_razvyazka with dissolve
     "Вы доехали до первой развязки и вновь задумались."
-    mc "Так. А здесь то куда?"
+    mc "Так. А здесь-то куда?"
     mc "Прямо вроде \"тупик\". Значит нужно поехать направо."
 
     scene bg_loot with dissolve
     $ renpy.music.play(f"audio/music/alarm2.ogg", channel='music')
 
-    "Однако впереди вы замечаете лежащий в развалинах ящик."
+    "Однако впереди Вы замечаете лежащий в развалинах ящик."
     mc "Там может быть что-то полезное..."
     mc "Однако он охраняется..."
 
@@ -167,14 +167,14 @@ label movetovostochnoe:
     play music "music/bar.ogg" fadeout 1.0
     scene bg_vostochnoe with fade
 
-    "Приехав в Восточное вы не знаете к кому обратиться."
+    "Приехав в Восточное, Вы не знаете к кому обратиться."
     show hose at left with dissolve
     "Однако замечаете человека, похожего на фермера и решаете подойти к нему."
-    "Но он с ходу на вас бросается..."
+    "Но он с ходу на Вас бросается..."
 
     unknown "Сразу видать, нездешний."
 
-    "Поняв, что \"дружеского\" приветствия не получится вы решаете сразу перейти к делу."
+    "Поняв, что \"дружеского\" приветствия не получится Вы решаете сразу перейти к делу."
 
     show mchar at right, stretch_in
 
@@ -227,7 +227,7 @@ label movetovostochnoe:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_11
 
     jump tolocus
@@ -239,7 +239,7 @@ label tolocus:
     scene bg_locus with fade
     play music "music/town2.ogg" fadeout 1.0
 
-    "Приехав в Локус и узнав о том, где искать загадочную женщину вы подходите к её двери и стучите."
+    "Приехав в Локус и узнав о том, где искать загадочную женщину Вы подходите к её двери и стучите."
     "Спустя несколько секунд дверь открывается."
 
     show oldwoman at right with dissolve
@@ -292,7 +292,7 @@ label tolocus:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_12
 
     jump tomidgard
@@ -304,7 +304,7 @@ label tomidgard:
     scene bg_midgard with fade
     play music "music/town3.ogg" fadeout 1.0
 
-    "Заехав в Мидгард вы стокнулись с явным негостеприимством..."
+    "Заехав в Мидгард Вы стокнулись с явным негостеприимством..."
 
     show scientist at left with dissolve
 
@@ -391,7 +391,7 @@ label toportoe1:
     $ renpy.notify("Игра сохранена в слот 3.")
     $ renpy.save("checkpoint-3")
 
-    "Однако вы замечаете бандитскую машину."
+    "Однако Вы замечаете бандитскую машину."
     "Вам ничего не остаётся, кроме как начать с ней бой."
 
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
@@ -472,7 +472,7 @@ label portoa:
 
     scene bg_porto with fade
 
-    "Далее по пути вам больше никого не встретилось и вы спокойно доехали до Порто."
+    "Далее по пути Вам больше никого не встретилось и Вы спокойно доехали до Порто."
 
     show shon at right with dissolve
 
@@ -502,7 +502,7 @@ label portoa:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_13
 
     jump backtomidgard
@@ -515,7 +515,7 @@ label backtomidgard:
 
     play music "music/town3.ogg" fadeout 1.0
 
-    "Обратно до Мидгарда вы добрались без каких-либо проишествий."
+    "Обратно до Мидгарда Вы добрались без каких-либо проишествий."
 
     show scientist at left with dissolve
 
@@ -549,7 +549,7 @@ label firstmeetben:
     play music "music/bio07unloop.ogg" fadeout 1.0
     scene bg_ben1 with fade
 
-    "Приехав к дому Бена вы заметили старика на балконе."
+    "Приехав к дому Бена Вы заметили старика на балконе."
 
     mc "Это явно Бен..."
 
@@ -660,7 +660,7 @@ label firstmeetben:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_14
 
     scene black with fade
@@ -733,7 +733,7 @@ label r1m2withlisa:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_31
 
     jump portolisa
@@ -744,11 +744,11 @@ label portolisa:
     play music "music/bar.ogg" fadeout 1.0
     $ player_config.update_town_info("City", "Порто", "technicians")
 
-    "Вам эти поиски уже кажутся нескончаемыми. Но делать нечего - вы подходите к одному из местных жителей в Порто."
+    "Вам эти поиски уже кажутся нескончаемыми. Но делать нечего - Вы подходите к одному из местных жителей в Порто."
 
     show kane at left with dissolve
 
-    kane "Если вы ко мне обращаетесь, то я вас внимательно слушаю."
+    kane "Если Вы ко мне обращаетесь, то я Вас внимательно слушаю."
 
     show mcsurp at right, stretch_in
 
@@ -770,7 +770,7 @@ label portolisa:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_32
 
     jump lisanearporto
@@ -785,7 +785,7 @@ label lisanearporto:
     $ renpy.notify("Игра сохранена в слот 5.")
     $ renpy.save("checkpoint-5")
 
-    "Прямо недалеко от Порто вы заметили что-то странное..."
+    "Прямо недалеко от Порто Вы заметили что-то странное..."
 
     if player_config.car == "Van":
         scene bg_lisarescue1_van with dissolve
@@ -962,7 +962,7 @@ label lisasavedporto:
     $ renpy.notify("Игра сохранена в слот 6.")
     $ renpy.save("checkpoint-6")
 
-    "После этого вы направились в Асгард."
+    "После этого Вы направились в Асгард."
 
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')
@@ -973,7 +973,7 @@ label lisasavedporto:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_33
 
     scene black with fade

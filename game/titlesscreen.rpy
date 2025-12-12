@@ -26,7 +26,7 @@
 
     disclaimer_text = ""
     try:
-        with open("docs/DISCLAIMER.md", "r", encoding="utf-8") as f:
+        with open("game/docs/DISCLAIMER.md", "r", encoding="utf-8") as f:
             disclaimer_text = f.read()
     except Exception as e:
         disclaimer_text = (
@@ -55,7 +55,7 @@ screen license_prompt():
 
             null height 20
 
-            text "Для использования требуется лицензия на оригинальную игру Hard Truck Apocalypse/Ex Machina. Нажимая «Принимаю», вы подтверждаете, что у вас есть такая лицензия." at fadeinout:
+            text "Для использования требуется лицензия на оригинальную игру Hard Truck Apocalypse/Ex Machina. Нажимая «Принимаю», Вы подтверждаете, что у Вас есть такая лицензия." at fadeinout:
                 size 25
                 color "#ffffff"
                 line_spacing 5
@@ -89,33 +89,30 @@ screen disclaimer_screen():
         yalign 0.5
         padding (30, 30, 30, 30)
         background Solid("#1a1a1a")
-        xsize 1000  # Ширина основного окна
-        ysize 890   # Высота основного окна
+        xsize 1000
+        ysize 890
         vbox:
             spacing 25
-            xsize 950   # Ширина внутреннего контейнера
-            ysize 840   # Высота внутреннего контейнера
+            xsize 950
+            ysize 840
 
-            # Заголовок
             text "Дисклеймер" at fadeinout size 44 xalign 0.5 color "#FFFFFF"
 
-            # Поле для текста дисклеймера
             viewport:
                 id "vp"
                 draggable True
                 mousewheel True
-                xsize 950   # Ширина области текста
-                ysize 650   # Высота области текста
+                xsize 950
+                ysize 650
                 vbox:
                     xalign 0.5
                     spacing 12
                     text "[disclaimer_text]" at fadeinout size 24 color "#FFFFFF" xsize 900
 
-            # Кнопки
             hbox:
                 spacing 100
                 xalign 0.5
-                yalign 0.95  # Расположение кнопок ближе к низу
+                yalign 0.95
                 textbutton "Принять" at fadeinout:
                     xminimum 250
                     yminimum 60

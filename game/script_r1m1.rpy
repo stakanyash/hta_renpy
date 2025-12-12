@@ -39,7 +39,7 @@ label main_game:
 
     "{cps=20}Но человек остаётся человеком во все времена. Остались те, кто сохранял мудрость веков, чтобы делиться ею с миром.{/cps} {cps=10}Были и те, кто предпочёл созиданию разрушение.{/cps}"
 
-    "Вы тихо и мирно спали, как вдруг вас разбудил отец..."
+    "Вы тихо и мирно спали, как вдруг Вас разбудил отец..."
 
     play music "music/quietdialogue01.ogg" fadeout 1.0
 
@@ -110,7 +110,7 @@ label main_game:
     $ renpy.notify("Игра сохранена в слот 2.")
     $ renpy.save("checkpoint-2")
 
-    "Однако вы замечаете на своём пути явно недружественный автомобиль."
+    "Однако Вы замечаете на своём пути явно недружественный автомобиль."
 
     jump firstenemyfight
 
@@ -193,7 +193,7 @@ label firstenemyfight:
 
             $ randommus = random.randint(1, 2)
             $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-            "На вас нападают!"
+            "На Вас нападают!"
             call randomfight from _call_randomfight
 
         jump afterfirstattack
@@ -203,7 +203,7 @@ label afterfirstattack:
     scene bg_sowth with fade
     play music "music/passage01unloop.ogg" fadeout 0.5
 
-    "По пути вы разделались ещё с парой бандитов, однако у Южного вам повстречалась очень интересная персона..."
+    "По пути Вы разделались ещё с парой бандитов, однако у Южного Вам повстречалась очень интересная персона..."
 
     show lisa2 with dissolve
 
@@ -214,7 +214,7 @@ label afterfirstattack:
     show lisa2 at right with dissolve
     show mc_2 at left with dissolve
 
-    mc "Это вы мне?"
+    mc "Это Вы мне?"
 
     lisa "Я смотрю, ты крутой водила, наверное, всю округу исколесил? Мне бы один груз помочь довезти, а я плохо знаю местность. Не съездишь со мной по окрестным деревням?"
 
@@ -282,7 +282,7 @@ label secondenemy:
     $ randommus = random.randint(1, 2)
     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
 
-    "Однако не успели вы отъехать от Южного как на вас снова нападает бандит. Только в этот раз он уже чутка серьёзнее Клопа."
+    "Однако не успели Вы отъехать от Южного как на Вас снова нападает бандит. Только в этот раз он уже чутка серьёзнее Клопа."
 
     $ renpy.notify("Игра сохранена в слот 4.")
     $ renpy.save("checkpoint-4")
@@ -370,7 +370,7 @@ label tozaimka:
 
     scene bg_zaimka with fade
 
-    "Вы приехали в Заимку. Остановившись вы услышали от Лисы..."
+    "Вы приехали в Заимку. Остановившись Вы услышали от Лисы..."
 
     show lisa2 at right with dissolve
 
@@ -391,7 +391,7 @@ label tozaimka:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_2
 
     scene bg_gugulino with dissolve
@@ -466,7 +466,7 @@ label tozaimka:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_3
 
     play music "music/town1.ogg" fadeout 1.0
@@ -479,9 +479,9 @@ label sergo:
     scene bg_insowth with fade
 
     if LisaAgreed == "True":
-        "Вы добрались до Южного и заехали в город. Спустя несколько секунд поисков вы находите Серго."
+        "Вы добрались до Южного и заехали в город. Спустя несколько секунд поисков Вы находите Серго."
     elif LisaAgreed == "False":
-        "Вы заехали в город и усердно ищете Серго. Спустя несколько секунд вы его находите."
+        "Вы заехали в город и усердно ищете Серго. Спустя несколько секунд Вы его находите."
 
     show sergo at left with dissolve
 
@@ -489,7 +489,7 @@ label sergo:
 
     show mchar at right with dissolve
 
-    mc "День добрый! Вы Серго? Я приехал из Глухого и привёз вам этот пакет."
+    mc "День добрый! Вы Серго? Я приехал из Глухого и привёз Вам этот пакет."
 
     sergo "Да, это я! А ты, видимо, сын Петра. Совсем уже взрослый, ездишь в одиночку…"
 
@@ -499,7 +499,7 @@ label sergo:
 
     sergo "Опасные нынче времена: совсем бандиты распоясались. Еле добрался до Южного, двух охранников загубил. Наверное, это будет моя последняя поездка сюда."
 
-    "В глубине души вы расстроились от этой новости, но не проявили этого на лице."
+    "В глубине души Вы расстроились от этой новости, но не проявили этого на лице."
 
     hide mchar
 
@@ -528,11 +528,11 @@ label sergo:
 
     hide sergo3 with dissolve
 
-    "Вы уже собирались ехать домой, как тут вас подзывает странный тип."
+    "Вы уже собирались ехать домой, как тут Вас подзывает странный тип."
 
     show farmerdi at left with dissolve
 
-    unknown "Я вижу, у вас влиятельные знакомые, молодой человек. Не окажете ли Вы мне небольшую услугу?"
+    unknown "Я вижу, у Вас влиятельные знакомые, молодой человек. Не окажете ли Вы мне небольшую услугу?"
 
     mc "Посмотрим, а в чём, собственно, дело? И кто ты вообще такой?"
 
@@ -557,7 +557,7 @@ label sergo:
             mc "Садись, показывай дорогу…"
             hide farmerdi with dissolve
             hide mcsurp with dissolve
-            "Фермер сел в вашу машину и вы поехали в сторону заправки по его наводке."
+            "Фермер сел в вашу машину и Вы поехали в сторону заправки по его наводке."
 
             if LisaAgreed == "False":
                 $ player_config.town_type = "NotInCity"
@@ -572,7 +572,7 @@ label sergo:
                         $ persistent._prebattle_music = None
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                    "На вас нападают!"
+                    "На Вас нападают!"
                     call randomfight from _call_randomfight_4
                 
                 $ player_config.town_type = "NotInCity"
@@ -590,7 +590,7 @@ label sergo:
             hide farmerdi with dissolve
             hide mcsurp with dissolve
 
-            "Вы спокойно уходите, а Фермер продолжает ругаться на вас в след."
+            "Вы спокойно уходите, а Фермер продолжает ругаться на Вас в след."
             mc "\"Странный какой-то тип. Не зря я ему отказал.\""
             if LisaAgreed == "True":
                 $ player_config.town_type = "NotInCity"
@@ -647,7 +647,7 @@ label felixmeet:
 
     play music "audio/music/intensedialogue01.ogg" fadeout 1.0
 
-    "Вы возвращались домой, как вдруг вам встретился странный персонаж..."
+    "Вы возвращались домой, как вдруг Вам встретился странный персонаж..."
 
     show felix with dissolve
 
@@ -754,8 +754,8 @@ label felixbeforefight:
         "Попытаться уехать":
             scene bg_felixrun with dissolve
             $ RunFromFelix = "True"
-            "Вы пытаетесь уехать под шквалом огня. На удивление бандиты не бросаются за вами в погоню и спустя несколько секунд огонь прекращается."
-            "Однако по рации вы слышите следующее..."
+            "Вы пытаетесь уехать под шквалом огня. На удивление бандиты не бросаются за Вами в погоню и спустя несколько секунд огонь прекращается."
+            "Однако по рации Вы слышите следующее..."
             jump felixafterfight
 
 label felixafterfight:
@@ -774,7 +774,7 @@ label felixafterfight:
     if RunFromFelix == "True":
         "Вы починились на ближайшей заправке и продолжили путь до дома."
     elif RunFromFelix == "False":
-        "Феликс со своей охраной поспешно удаляется, а вы поехали дальше домой."
+        "Феликс со своей охраной поспешно удаляется, а Вы поехали дальше домой."
 
     jump glukhoeburn
 
@@ -786,21 +786,21 @@ label glukhoeburn:
     stop music fadeout 1.0
 
     if LisaAgreed == "False":
-        "Вы спокойно возвращались домой, гадая о чём же с вами хотел поговорить отец."
+        "Вы спокойно возвращались домой, гадая о чём же с Вами хотел поговорить отец."
     elif LisaAgreed == "True":
-        "Вы возвращались домой одновременно не понимая - что за чертовщина с вами произошла за столь короткое время. Но больше вас волновало о чём же хотел поговорить отец."
+        "Вы возвращались домой одновременно не понимая - что за чертовщина с Вами произошла за столь короткое время. Но больше Вас волновало о чём же хотел поговорить отец."
 
     scene bg_glburnaway with dissolve
 
-    "Однако при подъезде к Глухому вы замечаете дым."
+    "Однако при подъезде к Глухому Вы замечаете дым."
 
-    "Понимая что что-то не так - вы жмёте газ в пол."
+    "Понимая что что-то не так - Вы жмёте газ в пол."
 
     scene bg_glburning with dissolve
 
     play sound "audio/sfx/burning.wav" channel "sfx2"
 
-    "Оказавшись ближе у родной деревни вы видите, как она полностью охвачена огнём."
+    "Оказавшись ближе у родной деревни Вы видите, как она полностью охвачена огнём."
 
     if LisaAgreed == "True":
         jump deadfather
@@ -848,7 +848,7 @@ label deadfather:
 
     hide mc3 with dissolve
 
-    "Полностью раздосадованный вы уезжаете обратно в Южный."
+    "Полностью раздосадованный Вы уезжаете обратно в Южный."
 
     if random.random() <= 0.5:
         $ current_music = renpy.music.get_playing(channel='music')
@@ -859,7 +859,7 @@ label deadfather:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_5
 
     jump sowthagain
@@ -933,7 +933,7 @@ label dyingfather:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_6
 
     jump sowthagain
@@ -977,7 +977,7 @@ label sowthagain:
 
         mc "Думай, что говоришь! Это же мой отец! И десятки невинных людей! Убийцы будут наказаны любой ценой!"
 
-        "Бармен пытается вас успокоить."
+        "Бармен пытается Вас успокоить."
 
         hide dronn
         show dronn at left, stretch_in
@@ -1017,7 +1017,7 @@ label sowthagain:
         hide dronn with dissolve
         hide mc3 with dissolve
 
-        "Вы собираетесь ехать в Заимку, но тут у вас возникает мысль."
+        "Вы собираетесь ехать в Заимку, но тут у Вас возникает мысль."
 
         mc "А точно ли мне нужно это \"более\" мощное вооружение? Неужели моего недостаточно?"
 
@@ -1036,7 +1036,7 @@ label sowthagain:
                         $ persistent._prebattle_music = None
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                    "На вас нападают!"
+                    "На Вас нападают!"
                     call randomfight from _call_randomfight_7
                 play music "music/town2.ogg" fadeout 1.0
                 jump KventinZaimka
@@ -1055,7 +1055,7 @@ label sowthagain:
                         $ persistent._prebattle_music = None
                     $ randommus = random.randint(1, 2)
                     $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                    "На вас нападают!"
+                    "На Вас нападают!"
                     call randomfight from _call_randomfight_8
                 jump felixbase
 
@@ -1083,7 +1083,7 @@ label sowthagain:
 
         dronn "Попытай счастья в Восточном. Там вроде торговые пути сходятся, может, и узнаешь чего."
 
-        "Вы не обрадованы этим ответом, но кажется сейчас это единственное, за что вы можете зацепиться."
+        "Вы не обрадованы этим ответом, но кажется сейчас это единственное, за что Вы можете зацепиться."
 
         mc "Прощайте! Я отправляюсь искать свою судьбу."
 
@@ -1103,7 +1103,7 @@ label sowthagain:
                 $ persistent._prebattle_music = None
             $ randommus = random.randint(1, 2)
             $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-            "На вас нападают!"
+            "На Вас нападают!"
             call randomfight from _call_randomfight_9
 
         scene black with fade
@@ -1116,7 +1116,7 @@ label KventinZaimka:
 
     scene bg_zaimka with fade
 
-    "Приехав в Заимку вы ищете того, о ком говорил Дронн."
+    "Приехав в Заимку Вы ищете того, о ком говорил Дронн."
 
     show kventin at left with dissolve
 
@@ -1168,7 +1168,7 @@ label felixbase:
     $ renpy.notify("Игра сохранена в слот 3.")
     $ renpy.save("checkpoint-3")
 
-    "Приехав на базу Феликса вы видите множество машин, но вас это нисколько не пугает."
+    "Приехав на базу Феликса Вы видите множество машин, но Вас это нисколько не пугает."
 
     mc "Я отомщу за смерть отца!"
 
@@ -1195,9 +1195,9 @@ label felixbase:
 
     if TakeGunFromZaimka == "True":
         scene bg_felixbasestorm
-        "Но поскольку вы обзавелись более мощным оружием для вас не составляет труда расправиться с ними."
+        "Но поскольку Вы обзавелись более мощным оружием для Вас не составляет труда расправиться с ними."
     elif TakeGunFromZaimka == "False":
-        "Поскольку вы не забрали оружие из Заимки - вы с трудом расправляетесь с ними и чувствуете как тяжело вашему грузовику."
+        "Поскольку Вы не забрали оружие из Заимки - Вы с трудом расправляетесь с ними и чувствуете как тяжело вашему грузовику."
 
     play music "music/passage03.ogg" fadeout 1.0
 
@@ -1373,7 +1373,7 @@ label felixdefeated:
             $ persistent._prebattle_music = None
         $ randommus = random.randint(1, 2)
         $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На вас нападают!"
+        "На Вас нападают!"
         call randomfight from _call_randomfight_10
 
     jump leaver1m1tovaterland
@@ -1385,7 +1385,7 @@ label leaver1m1tovaterland:
 
     scene bg_insowth with fade
 
-    "Перед тем, как ехать искать Лису вы решили заехать в Южный, чтобы рассказать Дронну, как всё прошло."
+    "Перед тем, как ехать искать Лису Вы решили заехать в Южный, чтобы рассказать Дронну, как всё прошло."
 
     show dronn at left with dissolve
 
@@ -1393,7 +1393,7 @@ label leaver1m1tovaterland:
 
     show mchar at right with dissolve
 
-    mc "Больше Феликс вас не побеспокоит. Я прогнал его."
+    mc "Больше Феликс Вас не побеспокоит. Я прогнал его."
 
     dronn "За это прими наше большое человеческое спасибо."
     $ player_config.add_money(250)
