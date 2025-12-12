@@ -1182,22 +1182,79 @@ label felixbase:
 
     felix "Покажите этому наглецу!"
 
-    hide felix
-
-    play music "music/battle2.ogg"
-
-    if TakeGunFromZaimka == "True":
-        scene bg_felixbaseeasy
-    elif TakeGunFromZaimka == "False":
-        scene bg_felba_hornet
-
     "Начинается бойня с охраной Феликса."
 
-    if TakeGunFromZaimka == "True":
-        scene bg_felixbasestorm
-        "Но поскольку Вы обзавелись более мощным оружием для Вас не составляет труда расправиться с ними."
-    elif TakeGunFromZaimka == "False":
-        "Поскольку Вы не забрали оружие из Заимки - Вы с трудом расправляетесь с ними и чувствуете как тяжело вашему грузовику."
+    hide felix
+
+    scene bg_felixbase_fight with fade
+
+    pause 0.5
+
+    $ randommus = random.randint(1,2)
+
+    $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
+
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+    $ enemy_image = "felixbandits"
+    $ player_hp = player_config.hp
+    $ player_max_hp = player_config.max_hp
+    $ enemy_hp = 300
+    $ bgname = "bg_felixbase_fight"
+    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
+    $ max_heals = player_config.heals 
+    $ turn_count = 0
+    $ enemy_max_hp = enemy_hp
+    $ heal_count = 0
+    $ remainheals = max_heals - heal_count
+    $ attack_locked = False
+    $ enemy_name = "Бандиты Феликса"
+    $ EnemyType = "Regular"
+    $ enemy_damage_multiplier = 1.2
+
+    scene bg_felixbase_fight
+    show felixbandits at center
+
+    while enemy_hp > 0 and player_hp > 0:
+        call screen enemy_ui
+
+    if player_hp <= 0:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
+        
+        hide felixbandits
+        play sound "sfx/explosion04.wav"
+        jump fightlost
+    else:
+        $ _game_menu_screen = "save_screen"
+        $ _menu = True
+        $ config.keymap['save'] = ['save']
+        $ config.keymap['load'] = ['load']
+        $ config.keymap['game_menu'] = ['game_menu']
+        $ persistent._in_battle = False
+        $ renpy.sound.stop(channel="shoot")
+        $ player_config.hp = player_hp
+        $ player_config.heals = remainheals
+
+        play sound "sfx/explosion04.wav"
+        hide felixbandits with dissolve
+
+    scene bg_thisisallyougot with fade
 
     play music "music/passage03.ogg" fadeout 1.0
 
@@ -1205,8 +1262,7 @@ label felixbase:
 
     felix "А парень не промах..."
 
-    if TakeGunFromZaimka == "True":
-        felix "Где он взял такое вооружение?"
+    felix "Где он взял такое вооружение?"
 
     felix "Ладно, хочешь сделать что-то хорошо - делай это сам. Посторонись!"
 
@@ -1214,6 +1270,10 @@ label felixbase:
     $ renpy.notify("Игра сохранена в слот 4.")
 
     "Вы снова начинаете бой с Феликсом."
+
+    scene bg_felixbase with fade
+
+    pause 0.5
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
 

@@ -819,7 +819,7 @@ translate None strings:
 
     # renpy/common/00sync.rpy:316
     old "Please enter the sync ID you generated.\nNever enter a sync ID you didn't create yourself."
-    new "Введите созданный вами идентификатор синхронизации.\nНикогда не вводите идентификатор синхронизации, который вы не создавали сами."
+    new "Введите созданный Вами идентификатор синхронизации.\nНикогда не вводите идентификатор синхронизации, который вы не создавали сами."
 
     # renpy/common/00sync.rpy:335
     old "The sync ID is not in the correct format."
