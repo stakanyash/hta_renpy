@@ -18,6 +18,8 @@
 
 Подробнее: **[Дисклеймер](https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md)**
 
+В проекте использованы элементы интерфейса из **[Ex Machina: Community Remaster](https://github.com/DeusExMachinaTeam/EM-CommunityPatch)**
+
 ---
 
 ### Что доступно:
