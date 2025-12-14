@@ -35,7 +35,7 @@ screen name_input_screen():
 
 # Стиль для затемнения
 style name_input_overlay is default:
-    background "#0000007e"  # Черный с прозрачностью 40%
+    background "#0000007e"
 
 style name_input_frame is default:
     background Frame("gui/frame.png", 20, 20)
