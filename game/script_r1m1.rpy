@@ -236,13 +236,13 @@ label afterfirstattack:
         "Согласиться":
             $ renpy.notify("Игра сохранена в слот 3.")
             $ renpy.save("checkpoint-3")
-            $ LisaAgreed = "True"
+            $ LisaAgreed = True
             jump lisaagree
 
         "Отказать":
             $ renpy.notify("Игра сохранена в слот 3.")
             $ renpy.save("checkpoint-3")
-            $ LisaAgreed = "False"
+            $ LisaAgreed = False
             jump lisarefuse
 
 label lisaagree:
@@ -359,9 +359,9 @@ label secondenemy:
             python:
                 process_battle_loot(drops)
 
-        if LisaAgreed == "True":
+        if LisaAgreed == True:
             jump tozaimka
-        elif LisaAgreed == "False":
+        elif LisaAgreed == False:
             jump dickzapravka
 
 label tozaimka:
@@ -479,9 +479,9 @@ label sergo:
 
     scene bg_insowth with fade
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
         "Вы добрались до Южного и заехали в город. Спустя несколько секунд поисков Вы находите Серго."
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         "Вы заехали в город и усердно ищете Серго. Спустя несколько секунд Вы его находите."
 
     show sergo at left with dissolve
@@ -560,10 +560,10 @@ label sergo:
             hide mcsurp with dissolve
             "Фермер сел в вашу машину и Вы поехали в сторону заправки по его наводке."
 
-            if LisaAgreed == "False":
+            if LisaAgreed == False:
                 $ player_config.town_type = "NotInCity"
                 jump secondenemy
-            elif LisaAgreed == "True":
+            elif LisaAgreed == True:
                 if random.random() <= 0.5:
                     $ current_music = renpy.music.get_playing(channel='music')
 
@@ -593,10 +593,10 @@ label sergo:
 
             "Вы спокойно уходите, а Фермер продолжает ругаться на Вас в след."
             mc "\"Странный какой-то тип. Не зря я ему отказал.\""
-            if LisaAgreed == "True":
+            if LisaAgreed == True:
                 $ player_config.town_type = "NotInCity"
                 jump felixmeet
-            elif LisaAgreed == "False":
+            elif LisaAgreed == False:
                 $ player_config.town_type = "NotInCity"
                 jump glukhoeburn
 
@@ -637,9 +637,9 @@ label dickzapravka:
 
     hide mc3 with dissolve
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
         jump felixmeet
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         jump glukhoeburn
 
 label felixmeet:
@@ -702,7 +702,7 @@ label felixbeforefight:
             $ config.keymap['load'] = []
             $ config.keymap['game_menu'] = []
             $ persistent._in_battle = True
-            $ RunFromFelix = "False"
+            $ RunFromFelix = False
             $ enemy_image = "felixteam"
             $ player_hp = player_config.hp
             $ player_max_hp = player_config.max_hp
@@ -754,27 +754,27 @@ label felixbeforefight:
 
         "Попытаться уехать":
             scene bg_felixrun with dissolve
-            $ RunFromFelix = "True"
+            $ RunFromFelix = True
             "Вы пытаетесь уехать под шквалом огня. На удивление бандиты не бросаются за Вами в погоню и спустя несколько секунд огонь прекращается."
             "Однако по рации Вы слышите следующее..."
             jump felixafterfight
 
 label felixafterfight:
 
-    if RunFromFelix == "False":
+    if RunFromFelix == False:
         show felix2 with dissolve
 
     unknown "Мы ещё встретимся, щенок! Попомни мои слова, ты пожалеешь, что связался с Феликсом!"
 
-    if RunFromFelix == "False":
+    if RunFromFelix == False:
         felix "Уходим!"
         hide felix2 with dissolve
 
     mc "Обязательно встретимся, Феликс..."
 
-    if RunFromFelix == "True":
+    if RunFromFelix == True:
         "Вы починились на ближайшей заправке и продолжили путь до дома."
-    elif RunFromFelix == "False":
+    elif RunFromFelix == False:
         "Феликс со своей охраной поспешно удаляется, а Вы поехали дальше домой."
 
     jump glukhoeburn
@@ -786,9 +786,9 @@ label glukhoeburn:
 
     stop music fadeout 1.0
 
-    if LisaAgreed == "False":
+    if LisaAgreed == False:
         "Вы спокойно возвращались домой, гадая о чём же с Вами хотел поговорить отец."
-    elif LisaAgreed == "True":
+    elif LisaAgreed == True:
         "Вы возвращались домой одновременно не понимая - что за чертовщина с Вами произошла за столь короткое время. Но больше Вас волновало о чём же хотел поговорить отец."
 
     scene bg_glburnaway with dissolve
@@ -803,9 +803,9 @@ label glukhoeburn:
 
     "Оказавшись ближе у родной деревни Вы видите, как она полностью охвачена огнём."
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
         jump deadfather
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         jump dyingfather
 
 label deadfather:
@@ -948,7 +948,7 @@ label sowthagain:
     scene bg_insowth with fade
     play music "music/town1.ogg" fadeout 1.0
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
 
         "Вы приехали в Южный и встретили местного бармена."
 
@@ -1004,7 +1004,7 @@ label sowthagain:
 
         mc "Уничтожение Глухого перечёркивает все соглашения! Я убью его!"
 
-        if RunFromFelix == "False":
+        if RunFromFelix == False:
             mc "Я уже встречался с ним на поле боя и победил."
 
         dronn "Но теперь ты хочешь напасть на укреплённую базу. Не подумай, что я тебя отговариваю!"
@@ -1026,7 +1026,7 @@ label sowthagain:
             "Ехать в Заимку":
                 $ renpy.notify("Игра сохранена в слот 2.")
                 $ renpy.save("checkpoint-2")
-                $ TakeGunFromZaimka = "True"
+                $ TakeGunFromZaimka = True
                 $ player_config.town_type = "NotInCity"
                 if random.random() <= 0.5:
                     $ current_music = renpy.music.get_playing(channel='music')
@@ -1045,7 +1045,7 @@ label sowthagain:
             "Ехать сразу к Феликсу":
                 $ renpy.notify("Игра сохранена в слот 2.")
                 $ renpy.save("checkpoint-2")
-                $ TakeGunFromZaimka = "False"
+                $ TakeGunFromZaimka = False
                 $ player_config.town_type = "NotInCity"
                 if random.random() <= 0.5:
                     $ current_music = renpy.music.get_playing(channel='music')
@@ -1060,7 +1060,7 @@ label sowthagain:
                     call randomfight from _call_randomfight_8
                 jump felixbase
 
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
 
         "Вы приехали в Южный и встретили местного бармена. Бармен начинает диалог сам."
 

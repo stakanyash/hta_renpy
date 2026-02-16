@@ -1,5 +1,3 @@
-# TODO: Make a video cutscene when leaving to r1m1 and to r1m3
-
 # Without Lisa route
 
 label arrivetor1m2:
@@ -27,7 +25,7 @@ label arrivetor1m2:
 
     play music "music/driving2.ogg" fadeout 1.0
 
-    $ TakeGunFromZaimka = "False"
+    $ TakeGunFromZaimka = False
 
     $ player_config.current_region = "r1m2"
     

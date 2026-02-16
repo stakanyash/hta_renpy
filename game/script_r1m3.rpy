@@ -21,9 +21,9 @@ label vaterlandfirst:
 
     $ player_config.current_region = "r1m3"
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
         jump r1m3withlisa
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         jump r1m3nolisa
 
 # Without Lisa route
@@ -1555,6 +1555,7 @@ label tunnelfirst:
                     python:
                         process_battle_loot(drops)
 
+                $ GotTheKeyByKill = True
                 jump gotthekey
 
         "Проследить":
@@ -1564,28 +1565,6 @@ label tunnelfirst:
             "Вы решили проследить за машиной."
 
             jump tunnelfollow
-
-label gotthekey:
-    mc "Прости, что так нехорошо получилось, но мне необходим этот ключ."
-
-    play music "music/bio07unloop.ogg" fadeout 1.0
-    scene bg_tunnel with fade
-    
-    "После этого Вы вернулись к тоннелю, открыли ворота и отправились в соседний регион."
-
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-
-    scene black with fade
-
-    pause 1.0
-
-    jump demofinished
 
 label tunnelfollow:
 
@@ -1652,10 +1631,19 @@ label tunnelfollow:
         "На Вас нападают!"
         call randomfight from _call_randomfight_37
 
+    jump gotthekey
+
+label gotthekey:
+    if GotTheKeyByKill == True:
+        mc "Прости, что так нехорошо получилось, но мне необходим этот ключ."
+
     play music "music/bio07unloop.ogg" fadeout 1.0
     scene bg_tunnel with fade
-
-    "Вернувшись к тоннелю - Вы открыли ворота и отправились в соседний регион."
+    
+    if GotTheKeyByKill == True:
+        "После этого Вы вернулись к тоннелю, открыли ворота и отправились в соседний регион."
+    else:
+        "Вернувшись к тоннелю - Вы открыли ворота и отправились в соседний регион."
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -1665,8 +1653,4 @@ label tunnelfollow:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
 
-    scene black with fade
-
-    pause 1.0
-
-    jump demofinished
+    jump arrivetor2m1

@@ -34,7 +34,7 @@ label r1m4start:
 
     if player_config.r1m4_side_quest == "CanBeGiven":
         jump galdenquest
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         jump homersearch
 
 # Without Lisa route

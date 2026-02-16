@@ -8,13 +8,16 @@ default battle_tracks = [
     "audio/music/battle1.ogg",
     "audio/music/battle02.ogg",
     "audio/music/battle2.ogg",
-    "audio/music/battle7.ogg"
+    "audio/music/battle7.ogg",
+    "audio/music/battle3.ogg",
+    "audio/music/battle6.ogg"
 ]
 default driving_tracks_by_region = {
     "r1m1": ["driving1", "driving2"],
     "r1m2": ["driving1", "driving2"],
     "r1m3": ["driving1", "driving2"],
     "r1m4": ["driving1", "driving2", "driving7"],
+    "r2m1": ["driving3", "driving6"]
 }
 
 init python:
