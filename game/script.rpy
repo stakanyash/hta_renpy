@@ -637,14 +637,13 @@ transform stretch_in:
     linear 0.1 yzoom 1.0
 
 label start:
-    if not config.developer:
-        $ _window_hide()
-        $ _game_menu_screen = None
-        $ _menu = False
-        $ config.keymap['save'] = []
-        $ config.keymap['load'] = []
-        $ config.keymap['game_menu'] = []
-        $ persistent._in_battle = True
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
 
     jump tutorial_check
 
@@ -772,14 +771,13 @@ label fightlost:
 label demofinished:
     call screen onebuttonpopup("Демо-версия завершена.\nСпасибо за игру!")
 
-    if not config.developer:
-        pause 1.0
+    pause 1.0
 
-        $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
-        python:
-            for i in range(len(slides)):
-                renpy.show(slides[i])
-                renpy.pause(pauses[i], hard=True)
-                renpy.hide(slides[i])
+    $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
+    python:
+        for i in range(len(slides)):
+            renpy.show(slides[i])
+            renpy.pause(pauses[i], hard=True)
+            renpy.hide(slides[i])
 
     return

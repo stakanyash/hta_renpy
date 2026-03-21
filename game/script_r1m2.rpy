@@ -1,17 +1,16 @@
 # Without Lisa route
 
 label arrivetor1m2:
-    
-    if not config.developer:
-        pause 0.5
 
-        show bg_r1m2load at truecenter
+    pause 0.5
 
-        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+    show bg_r1m2load at truecenter
 
-        call show_loading(level_slides) from _call_show_loading_1
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-        scene black
+    call show_loading(level_slides) from _call_show_loading_1
+
+    scene black
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True
@@ -677,16 +676,15 @@ label firstmeetben:
 
 label r1m2withlisa:
 
-    if not config.developer:
-        pause 0.5
+    pause 0.5
 
-        show bg_r1m2load at truecenter
+    show bg_r1m2load at truecenter
 
-        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-        call show_loading(level_slides) from _call_show_loading_2
+    call show_loading(level_slides) from _call_show_loading_2
 
-        scene black
+    scene black
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True

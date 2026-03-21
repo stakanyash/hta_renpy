@@ -1,15 +1,14 @@
 label main_game:
 
-    if not config.developer:
-        pause 0.5
+    pause 0.5
 
-        show bg_r1m1load at truecenter
+    show bg_r1m1load at truecenter
 
-        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-        call show_loading(level_slides) from _call_show_loading
+    call show_loading(level_slides) from _call_show_loading
 
-        hide bg_r1m1load
+    hide bg_r1m1load
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True

@@ -1,8 +1,7 @@
 screen difficulty_select():
     zorder 100
     modal True
-    
-    # Затемнение фона
+
     add "#0000007e"
 
     frame:
@@ -25,21 +24,25 @@ screen difficulty_select():
             textbutton "Новичок" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button" action [
                 SetVariable("difficulty", "easy"),
                 SetVariable("difficulty_base_multiplier", 0.02),
+                Function(profile_save_difficulty, "easy", 0.02),
                 Start()
             ]
             textbutton "Бывалый" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button" action [
                 SetVariable("difficulty", "normal"),
                 SetVariable("difficulty_base_multiplier", 0.03),
+                Function(profile_save_difficulty, "normal", 0.03),
                 Start()
             ]
             textbutton "Профессионал" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button" action [
                 SetVariable("difficulty", "hard"),
                 SetVariable("difficulty_base_multiplier", 0.04),
+                Function(profile_save_difficulty, "hard", 0.04),
                 Start()
             ]
             textbutton "Мастер" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button" action [
                 SetVariable("difficulty", "expert"),
                 SetVariable("difficulty_base_multiplier", 0.055),
+                Function(profile_save_difficulty, "expert", 0.055),
                 Start()
             ]
 

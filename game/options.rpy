@@ -25,6 +25,10 @@ init python:
     style.say_dialogue.outlines = [(2, "#858585", 0, 0), (1, "#404040", 0, 0)]
     style.say_label.outlines = [(2, "#836d14", 0, 0)]
 
+init -2 python:
+    import os
+    config.savedir = os.path.join(config.gamedir, "profiles")
+
 ## Определяет, показывать ли заголовок, данный выше, на экране главного меню.
 ## Установите на False, чтобы спрятать заголовок.
 

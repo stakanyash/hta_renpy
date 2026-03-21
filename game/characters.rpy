@@ -1,7 +1,7 @@
 # characters.rpy - file for define characters
 
 # Main character
-define mc = Character("[player_name]", color="#FED11B")
+define mc = Character("[current_profile_name()]", color="#FED11B")
 
 # Characters that used across all storyline
 define lisa = Character('Лиса', color="#FED11B")

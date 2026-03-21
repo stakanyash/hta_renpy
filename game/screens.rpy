@@ -11,10 +11,18 @@ init python:
         persistent.difficulty = mode
         persistent.difficulty_multiplier = multiplier
 
+        profile_save_difficulty(mode, multiplier)
+
     def load_difficulty():
-        if hasattr(persistent, "difficulty"):
-            store.difficulty = persistent.difficulty
-            store.difficulty_base_multiplier = persistent.difficulty_multiplier
+        name = getattr(persistent, "current_profile", None)
+        if name:
+            data = _profile_read_json(name)
+            set_difficulty(
+                data.get("difficulty", "normal"),
+                data.get("difficulty_base_multiplier", 0.03)
+            )
+        elif hasattr(persistent, "difficulty"):
+            set_difficulty(persistent.difficulty, persistent.difficulty_multiplier)
         else:
             set_difficulty("normal", 0.03)
 
@@ -488,21 +496,23 @@ screen navigation_main_menu():
         style_prefix "navigationmm"
         xpos 50
         yalign 0.5
-        spacing 9
+        spacing 4
 
-        textbutton _("Новая игра") activate_sound "audio/sfx/click.wav" action Show("name_input_screen")
+        textbutton _("Новая игра")  activate_sound "audio/sfx/click.wav" action Show("difficulty_select")
 
-        textbutton _("Загрузить") activate_sound "audio/sfx/click.wav" action ShowMenu("load")
+        textbutton _("Загрузить")   activate_sound "audio/sfx/click.wav" action ShowMenu("load")
 
-        textbutton _("Настройки") activate_sound "audio/sfx/click.wav" action ShowMenu("preferences")
+        textbutton _("Профили")     activate_sound "audio/sfx/click.wav" action ShowMenu("profiles_screen")
 
-        textbutton _("Об игре") activate_sound "audio/sfx/click.wav" action ShowMenu("about")
+        textbutton _("Настройки")   activate_sound "audio/sfx/click.wav" action ShowMenu("preferences")
+
+        textbutton _("Об игре")     activate_sound "audio/sfx/click.wav" action ShowMenu("about")
 
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
-            textbutton _("Помощь") activate_sound "audio/sfx/click.wav" action ShowMenu("help")
+            textbutton _("Помощь")  activate_sound "audio/sfx/click.wav" action ShowMenu("help")
 
         if renpy.variant("pc"):
-            textbutton _("Выход") activate_sound "audio/sfx/click.wav" action Quit(confirm=True)
+            textbutton _("Выход")   activate_sound "audio/sfx/click.wav" action Quit(confirm=True)
 
 screen navigation_in_game():
 
@@ -603,6 +613,11 @@ screen main_menu():
     else:
         text "Ex Machina Ren'Py - demo version [config.version!t] ([hta_build!t])" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
+    text "{color=#ffffff}Профиль:{/color} {color=#ffcc00}[current_profile_name()]{/color}":
+        size 25
+        align((0.5, 0.96))
+
+
 style main_menu_frame is empty
 style main_menu_vbox is vbox
 style main_menu_text is gui_text
@@ -630,7 +645,6 @@ style main_menu_title:
 
 style main_menu_version:
     properties gui.text_properties("version")
-
 
 ## Game stats screen
 

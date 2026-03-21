@@ -1,7 +1,7 @@
 ﻿init python:
     import os, json, random
 
-    FLAGS_FILE = "hta.json"
+    FLAGS_FILE = os.path.join(config.basedir, "hta.json")
 
     def load_flags():
         if os.path.exists(FLAGS_FILE):
@@ -14,7 +14,7 @@
 
     def save_flags(flags):
         with open(FLAGS_FILE, "w", encoding="utf-8") as f:
-            json.dump(flags, f)
+            json.dump(flags, f, ensure_ascii=False, indent=2)
 
     slide_count = 6
     total_time = random.uniform(3.0, 7.0)
@@ -136,6 +136,17 @@ label splashscreen:
         $ renpy.call_screen("license_prompt")
         $ flags["license"] = True
         $ save_flags(flags)
+
+    if not flags.get("current_profile"):
+        $ renpy.show_screen("profiles_create_screen")
+        python:
+            while not persistent.current_profile:
+                renpy.pause(0.1, hard=True)
+        $ renpy.hide_screen("profiles_create_screen")
+        $ flags["current_profile"] = persistent.current_profile
+        $ save_flags(flags)
+    else:
+        $ profile_activate(flags["current_profile"])
 
     $ renpy.movie_cutscene("movies/disclaimer.avi")
 
