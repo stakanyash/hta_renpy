@@ -475,6 +475,34 @@ init python:
         else:
             renpy.show_screen("profiles_error_popup", msg)
 
+style name_input_overlay is default:
+    background "#0000007e"
+
+style name_input_frame is default:
+    background Frame("gui/frame.png", 20, 20)
+    xsize 600
+    ysize 300
+
+style centered_input is input:
+    xalign 0.5
+    textalign 0.5
+    size 28
+    color "#404040"
+    padding (10, 10)
+
+style smaller_button is button:
+    size_group "name_button"
+    xpadding 30
+    ypadding 40
+    color "#404040"
+
+style smaller_button_text is button_text:
+    size 22
+    xalign 0.5
+    textalign 0.5
+    color "#404040"
+    hover_color "#6d6d6d"
+
 style profiles_action_btn is smaller_button:
     xpadding 30
     ypadding 14
