@@ -63,6 +63,7 @@ init -1500:
     style _console_input_text is _console_text:
         color "#ffffff"
         adjust_spacing False
+        font_features { "liga": False, "clig" : False }
 
     style _console_history is _default:
         xfill True
@@ -125,10 +126,12 @@ default persistent._console_traced_short = True
 default persistent._console_unicode_escaping = False
 
 init -1500 python in _console:
-    from store import config, persistent, NoRollback
+    from store import config, persistent, NoRollback, _ExceptionPrintContext
+    from renpy.error import TracebackException
+
     import io
+    import re
     import sys
-    import traceback
     import store
     try:
         import pydoc
@@ -158,12 +161,8 @@ init -1500 python in _console:
                 s = s[:i] + self._ellipsis + s[len(s) - i:]
             return s
 
-        if PY2:
-            repr_str = _repr_bytes
-            repr_unicode = _repr_string
-        else:
-            repr_bytes = _repr_bytes
-            repr_str = _repr_string
+        repr_bytes = _repr_bytes
+        repr_str = _repr_string
 
         def repr_tuple(self, x, level):
             if not x: return "()"
@@ -214,7 +213,7 @@ init -1500 python in _console:
 
             if level <= 0: return "{...}"
 
-            iter_keys = self._to_shorted_list(x, self.maxdict, sort=PY2)
+            iter_keys = self._to_shorted_list(x, self.maxdict, sort=False)
             iter_x = self._make_pretty_items(x, iter_keys, '{', '}')
             return self._repr_iterable(iter_x, level, '{', '}')
 
@@ -229,7 +228,7 @@ init -1500 python in _console:
 
             if level <= 0: return left + "...})"
 
-            iter_keys = self._to_shorted_list(x, self.maxdict, sort=PY2)
+            iter_keys = self._to_shorted_list(x, self.maxdict, sort=False)
             iter_x = self._make_pretty_items(x, iter_keys, left, '})')
             return self._repr_iterable(iter_x, level, left, '})')
 
@@ -459,14 +458,29 @@ init -1500 python in _console:
 
     HistoryEntry = ConsoleHistoryEntry
 
-
     stdio_lines = _list()
+
+    def _strip_ansi(s):
+        # 7-bit C1 ANSI sequences
+        ansi_escape = re.compile(r'''
+            \x1B  # ESC
+            (?:   # 7-bit C1 Fe (except CSI)
+                [@-Z\\-_]
+            |     # or [ for CSI, followed by a control sequence
+                \[
+                [0-?]*  # Parameter bytes
+                [ -/]*  # Intermediate bytes
+                [@-~]   # Final byte
+            )
+        ''', re.VERBOSE)
+
+        return ansi_escape.sub('', s)
 
     def stdout_line(l):
         if not (config.console or config.developer):
             return
 
-        stdio_lines.append((False, l))
+        stdio_lines.append((False, _strip_ansi(l)))
 
         while len(stdio_lines) > config.console_history_lines:
             stdio_lines.pop(0)
@@ -475,7 +489,7 @@ init -1500 python in _console:
         if not (config.console or config.developer):
             return
 
-        stdio_lines.append((True, l))
+        stdio_lines.append((True, _strip_ansi(l)))
 
         while len(stdio_lines) > config.console_history_lines:
             stdio_lines.pop(0)
@@ -485,7 +499,7 @@ init -1500 python in _console:
     config.stderr_callbacks.append(stderr_line)
 
 
-    class ScriptErrorHandler(object):
+    class ScriptErrorHandler:
         """
         Handles error in Ren'Py script.
         """
@@ -493,9 +507,9 @@ init -1500 python in _console:
         def __init__(self):
             self.target_depth = renpy.call_stack_depth()
 
-        def __call__(self, short, full, traceback_fn):
+        def __call__(self, traceback_exception):
             he = console.history[-1]
-            he.result = short.split("\n")[-2]
+            he.result = traceback_exception.format_exception_only(_ExceptionPrintContext(filter_private=False))
             he.is_error = True
 
             while renpy.call_stack_depth() > self.target_depth:
@@ -669,9 +683,11 @@ init -1500 python in _console:
 
             return renpy.game.context().rollback
 
-        def format_exception(self):
-            etype, evalue, etb = sys.exc_info()
-            return traceback.format_exception_only(etype, evalue)[-1]
+        def format_exception_only(self, e):
+            return TracebackException(e).format_exception_only(_ExceptionPrintContext(filter_private=False))
+
+        def format_exception(self, e):
+            return TracebackException(e).format(_ExceptionPrintContext(filter_private=False))
 
         def run(self, lines):
 
@@ -734,26 +750,26 @@ init -1500 python in _console:
                 # Try to exec it.
                 try:
                     renpy.python.py_compile(code, "exec")
-                except Exception:
+                except Exception as e:
                     if error is None:
-                        error = self.format_exception()
+                        error = self.format_exception_only(e)
                 else:
                     renpy.python.py_exec(code)
                     return
 
                 if error is not None:
-                    he.result = error
+                    error_lines = error.split("\n")
+                    error_lines = [ l for l in error_lines if not l or l.strip(" ~^") ] # remove ^/~ only lines.
+
+                    he.result = "\n".join(error_lines).replace("{", "{{")
                     he.update_lines()
                     he.is_error = True
 
             except renpy.game.CONTROL_EXCEPTIONS:
                 raise
 
-            except Exception:
-                import traceback
-                traceback.print_exc()
-
-                he.result = self.format_exception().rstrip()
+            except Exception as e:
+                he.result = self.format_exception(e)
                 he.update_lines()
                 he.is_error = True
 
@@ -800,7 +816,7 @@ init -1500 python in _console:
     def help(l, doc_generate=False):
 
         if l is not None:
-            rest = l.rest_statement()
+            rest = l.rest()
         else:
             rest = None
 
@@ -871,11 +887,9 @@ init -1500 python in _console:
             return "Usage: car <number>\n1=Van, 2=Molokovoz, 3=Ural\nCurrent: {}".format(store.player_config.car)
         
         try:
-            # Убираем скобки если есть и преобразуем в число
             val_str = val_str.strip('()')
             val = int(val_str)
             
-            # Словарь соответствия номеров машинам
             car_map = {
                 1: "Van",
                 2: "Molokovoz", 
@@ -888,7 +902,6 @@ init -1500 python in _console:
             car_name = car_map[val]
             store.player_config.car = car_name
             
-            # Обновляем HP и хилы как в buy_car_with_exchange
             new_max_hp = store.CarHP.get(car_name, 850)
             store.player_config.max_hp = new_max_hp
             store.player_config.hp = new_max_hp
@@ -897,7 +910,6 @@ init -1500 python in _console:
             store.player_config.max_heals = new_max_heal
             store.player_config.heals = new_max_heal
             
-            # Обновляем возможность установки большой пушки
             if car_name == "Ural":
                 store.player_config.big_gun_install = "Possible"
             elif car_name in ["Molokovoz", "Van"]:
@@ -922,14 +934,11 @@ init -1500 python in _console:
             return "Usage: additem <item_id> or additem(\"item_id\")\nAvailable: Hornet, Specter, PKT, Kord, Storm, Vector, Vulcan, KPVT, Bumblebee, Hurricane, Flag, Rapier, Rainmetal, Omega, Elephant, Maxim, Fagot, Potato, Wood, ScrapMetal, Oil, Fuel"
         
         try:
-            # Убираем кавычки и скобки если есть
             item_str = item_str.strip('()"\'')
             
-            # Проверяем существует ли предмет
             if item_str not in store.ItemDatabase:
                 return "Error: item '{}' not found in database".format(item_str)
             
-            # Пытаемся добавить предмет
             if store.player_config.try_add_item(item_str):
                 item_name = store.ItemDatabase[item_str].get("name", item_str)
                 current_inv_size = len(store.player_config.inventory)
@@ -954,23 +963,18 @@ init -1500 python in _console:
         try:
             import random
             
-            # Получаем список доступного оружия
             available_weapons = list(store.smallweapon_prices.keys())
             
-            # Если машина поддерживает большое оружие, добавляем его в список
             if store.player_config.big_gun_install == "Possible":
                 available_weapons += list(store.bigweapon_prices.keys())
             
             if not available_weapons:
                 return "Error: no weapons available"
             
-            # Выбираем случайное оружие
             weapon = random.choice(available_weapons)
             
-            # Устанавливаем оружие
             store.player_config.current_gun = weapon
             
-            # Обновляем тип оружия
             weapon_data = store.GunDatabase.get(weapon)
             if weapon_data:
                 store.player_config.gun_type = weapon_data.get("type")
@@ -1230,15 +1234,15 @@ screen _console:
                     if he.command is not None:
                         frame style "_console_command":
                             xfill True
-                            text "[he.command!q]" style "_console_command_text"
+                            text "[he.command!q]" style "_console_command_text" safe True
 
                     if he.result is not None:
 
                         frame style "_console_result":
                             if he.is_error:
-                                text "[he.result!q]" style "_console_error_text"
+                                text "[he.result]" style "_console_error_text" safe True
                             else:
-                                text "[he.result!q]" style "_console_result_text"
+                                text "[he.result!q]" style "_console_result_text" safe True
 
         # Draw the current input.
         frame style "_console_input":
@@ -1270,7 +1274,6 @@ screen _console:
 
                 input default default style "_console_input_text" exclude "" copypaste True
 
-    text "Ex Machina Ren'Py - demo version [config.version!t] ([hta_build!t])" yalign 0.99 xalign 0.975 color "#fff" size gui._scale(12) outlines [(2, "#505050", 0, 0)]
 
     key "console_exit" action Jump("_console_return")
     key "console_older" action _console.console.older
