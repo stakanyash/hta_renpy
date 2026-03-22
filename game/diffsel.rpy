@@ -13,7 +13,7 @@ screen difficulty_select():
         ysize 550
 
         vbox:
-            spacing 20
+            spacing 10
             xalign 0.5
             yalign 0.5
 
@@ -46,8 +46,17 @@ screen difficulty_select():
                 Start()
             ]
 
+            null height 25
+
+            textbutton "Вернуться" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button_back" action Hide("difficulty_select")
+
 style diff_button_text is default:
     color "#404040"
     hover_color "#ffcc00"
     selected_color "#404040"
     selected_hover_color "#ffcc00"
+
+style diff_button_back is diff_button
+
+style diff_button_back_text is diff_button_text:
+    size 20

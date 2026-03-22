@@ -196,8 +196,9 @@ init -1 python:
         flags["sound_volume"]   = round(renpy.game.preferences.volumes.get("sfx", 1.0), 2)
         flags["mute_music"]     = renpy.game.preferences.mute.get("music", False)
         flags["mute_sfx"]       = renpy.game.preferences.mute.get("sfx", False)
-        flags["text_speed"] = round(renpy.game.preferences.text_cps, 2)
-        flags["afm_time"]   = round(renpy.game.preferences.afm_time, 2)
+        flags["fullscreen"]     = renpy.game.preferences.fullscreen
+        flags["text_speed"]     = round(renpy.game.preferences.text_cps, 2)
+        flags["afm_time"]       = round(renpy.game.preferences.afm_time, 2)
         save_flags(flags)
 
     def load_audio_prefs():
@@ -216,6 +217,8 @@ init -1 python:
             p.text_cps          = flags["text_speed"]
         if "afm_time" in flags:
             p.afm_time          = flags["afm_time"]
+        if "fullscreen" in flags:
+            p.fullscreen        = flags["fullscreen"]
 
 init python:
     config.start_callbacks.append(_profile_system_init)

@@ -607,34 +607,7 @@ label felixbeforefight:
 
     menu:
         "Атаковать":
-            $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
-            if player_config.hp is None:
-                $ player_config.hp = player_config.max_hp
-            
-            $ _window_hide()
-            $ _game_menu_screen = None
-            $ _menu = False
-            $ config.keymap['save'] = []
-            $ config.keymap['load'] = []
-            $ config.keymap['game_menu'] = []
-            $ persistent._in_battle = True
-            $ RunFromFelix = False
-            $ enemy_image = "felixteam"
-            $ player_hp = player_config.hp
-            $ player_max_hp = player_config.max_hp
-            $ max_heals = player_config.heals
-            $ enemy_hp = 225
-            $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-            $ turn_count = 0
-            $ enemy_max_hp = enemy_hp
-            $ heal_count = 0
-            $ remainheals = max_heals - heal_count
-            $ attack_locked = False
-            $ enemy_name = "Бандиты"
-            $ bgname = "bg_felix_nocars"
-            $ EnemyType = "Regular"
-            $ enemy_damage_multiplier = 1.2
+            $ battle_setup("felixteam", 225, "bg_felix_nocars", "Бандит", "Regular", 1.2)
 
             scene bg_felix_nocars
             show felixteam at center
@@ -643,28 +616,12 @@ label felixbeforefight:
                 call screen enemy_ui
 
             if player_hp <= 0:
-                $ _game_menu_screen = "save_screen"
-                $ _menu = True
-                $ config.keymap['save'] = ['save']
-                $ config.keymap['load'] = ['load']
-                $ config.keymap['game_menu'] = ['game_menu']
-                $ persistent._in_battle = False
-                $ renpy.sound.stop(channel="shoot")
-                
+                $ battle_end_lose()
                 hide felixteam
                 play sound "sfx/explosion04.wav"
                 jump fightlost
             else:
-                $ _game_menu_screen = "save_screen"
-                $ _menu = True
-                $ config.keymap['save'] = ['save']
-                $ config.keymap['load'] = ['load']
-                $ config.keymap['game_menu'] = ['game_menu']
-                $ persistent._in_battle = False
-                $ renpy.sound.stop(channel="shoot")
-                $ player_config.hp = player_hp
-                $ player_config.heals = remainheals
-
+                $ battle_end_win()
                 hide felixteam with dissolve
 
                 jump felixafterfight
@@ -1113,32 +1070,10 @@ label felixbase:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "felixbandits"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 300
-    $ bgname = "bg_felixbase_fight"
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals 
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандиты Феликса"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.2
+    $ battle_setup("felixbandits", 300, "bg_felixbase_fight", "Бандиты Феликса", "Regular", 1.2)
 
     scene bg_felixbase_fight
     show felixbandits at center
@@ -1147,28 +1082,12 @@ label felixbase:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
-        hide felixbandits
+        $ battle_end_lose()
+        hide secenemy
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide felixbandits with dissolve
 
@@ -1209,22 +1128,11 @@ label felixbase:
     jump felix_battle
 
 label felix_battle:
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ max_heals = player_config.heals
-    $ enemy_hp = 200
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals 
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Феликс"
-    $ enemy_image = "felixcar"
-    $ bgname = "bg_felixbase"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.0
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
+
+    $ battle_setup("felixcar", 200, "bg_felixbase", "Феликс")
 
     scene bg_felixbase
     show felixcar at center
@@ -1233,28 +1141,12 @@ label felix_battle:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
-        hide felixcar
+        $ battle_end_lose()
+        hide secenemy
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         hide felixcar with dissolve
 
         play music "music/intensedialogue03.ogg" fadeout 1.0
