@@ -120,6 +120,7 @@ init -1 python:
         _sl.init()
         _ls.init()
         _ls.clear_cache()
+        renpy.persistent.update()
 
     def profile_save_difficulty(difficulty, multiplier):
         name = getattr(persistent, "current_profile", None)
@@ -168,6 +169,7 @@ init -1 python:
             data = _profile_read_json(name)
             renpy.store.difficulty                 = data.get("difficulty", "normal")
             renpy.store.difficulty_base_multiplier = data.get("difficulty_base_multiplier", 0.03)
+            load_audio_prefs()
             return
 
         flags["current_profile"] = None
@@ -184,8 +186,36 @@ init -1 python:
             data = _profile_read_json(first)
             renpy.store.difficulty                 = data.get("difficulty", "normal")
             renpy.store.difficulty_base_multiplier = data.get("difficulty_base_multiplier", 0.03)
+            load_audio_prefs()
         else:
             config.savedir = _BASE_SAVEDIR
+
+    def save_audio_prefs():
+        flags = load_flags()
+        flags["music_volume"]   = round(renpy.game.preferences.volumes.get("music", 1.0), 2)
+        flags["sound_volume"]   = round(renpy.game.preferences.volumes.get("sfx", 1.0), 2)
+        flags["mute_music"]     = renpy.game.preferences.mute.get("music", False)
+        flags["mute_sfx"]       = renpy.game.preferences.mute.get("sfx", False)
+        flags["text_speed"] = round(renpy.game.preferences.text_cps, 2)
+        flags["afm_time"]   = round(renpy.game.preferences.afm_time, 2)
+        save_flags(flags)
+
+    def load_audio_prefs():
+        flags = load_flags()
+        p = renpy.game.preferences
+
+        if "music_volume" in flags:
+            p.volumes["music"]  = flags["music_volume"]
+        if "sound_volume" in flags:
+            p.volumes["sfx"]    = flags["sound_volume"]
+        if "mute_music" in flags:
+            p.mute["music"]     = flags["mute_music"]
+        if "mute_sfx" in flags:
+            p.mute["sfx"]       = flags["mute_sfx"]
+        if "text_speed" in flags:
+            p.text_cps          = flags["text_speed"]
+        if "afm_time" in flags:
+            p.afm_time          = flags["afm_time"]
 
 init python:
     config.start_callbacks.append(_profile_system_init)

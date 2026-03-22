@@ -1,7 +1,7 @@
 ﻿init python:
     import os, json, random
 
-    FLAGS_FILE = os.path.join(config.basedir, "hta.json")
+    FLAGS_FILE = os.path.join(config.basedir, "config.json")
 
     def load_flags():
         if os.path.exists(FLAGS_FILE):
@@ -17,7 +17,7 @@
             json.dump(flags, f, ensure_ascii=False, indent=2)
 
     slide_count = 6
-    total_time = random.uniform(3.0, 7.0)
+    total_time = random.uniform(2.0, 5.0)
 
     weights = [random.random() for _ in range(slide_count)]
     weight_sum = sum(weights)

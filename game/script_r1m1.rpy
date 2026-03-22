@@ -115,32 +115,10 @@ label main_game:
 
 label firstenemyfight:
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "firsteverenemy"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 80
-    $ bgname = "bg_firsteverenemy"
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандит"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.0
+    $ battle_setup("firsteverenemy", 80, "bg_firsteverenemy", "Бандит")
 
     scene bg_firsteverenemy
     show firsteverenemy at center
@@ -149,35 +127,16 @@ label firstenemyfight:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide firsteverenemy
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide firsteverenemy with dissolve
-
         play music "music/driving1.ogg" fadeout 1.0
-
         $ drops = player_config.get_random_drops()
-
         if drops:
             python:
                 process_battle_loot(drops)
@@ -291,32 +250,10 @@ label secondenemy:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "secenemy"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 125
-    $ bgname = "bg_secondenemy"
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals 
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандит"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.0
+    $ battle_setup("secenemy", 125, "bg_secondenemy", "Бандит")
 
     scene bg_secondenemy
     show secenemy at center
@@ -325,39 +262,20 @@ label secondenemy:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide secenemy
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide secenemy with dissolve
-
         play music "music/driving2.ogg" fadeout 1.0
-
         $ drops = player_config.get_random_drops()
-
         if drops:
             python:
                 process_battle_loot(drops)
-
+                
         if LisaAgreed == True:
             jump tozaimka
         elif LisaAgreed == False:

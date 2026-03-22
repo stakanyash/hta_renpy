@@ -896,7 +896,6 @@ screen about():
     modal True
     zorder 200
 
-    # Затемнение фона
     button:
         style "empty"
         xfill True
@@ -904,7 +903,6 @@ screen about():
         action NullAction()
         background "#000000cc"
 
-    # Статическое изображение меню поверх видео (если нужно)
     add "gui/settings_menu.png"
 
     # Основное окно с контентом
@@ -919,7 +917,6 @@ screen about():
         vbox:
             spacing 20
 
-            # Заголовок
             hbox:
                 xfill True
                 text "Об игре" size 60 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 20 xpos 5
@@ -935,7 +932,6 @@ screen about():
 
             null height 1
 
-            # Основной контент
             viewport:
                 scrollbars "vertical"
                 mousewheel True
@@ -983,7 +979,6 @@ screen save_hta(title="Сохранить", is_load=False):
     modal True
     zorder 200
 
-    # Затемнение фона
     button:
         style "empty"
         xfill True
@@ -991,7 +986,6 @@ screen save_hta(title="Сохранить", is_load=False):
         action NullAction()
         background "#000000cc"
 
-    # Статическое изображение меню поверх видео (если нужно)
     add "gui/settings_menu.png"
 
     default page_name_value = FilePageNameInputValue(
@@ -1003,7 +997,6 @@ screen save_hta(title="Сохранить", is_load=False):
 
     $ current_page = FileCurrentPage()
 
-    # Основное окно с контентом
     frame:
         xalign 0.5
         yalign 0.5
@@ -1015,12 +1008,10 @@ screen save_hta(title="Сохранить", is_load=False):
         vbox:
             spacing 20
 
-            # Заголовок
             hbox:
                 xfill True
                 text title size 50 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
 
-                # Кнопка закрытия
                 imagebutton:
                     idle "gui/townmenu/close_e.png"
                     hover "gui/townmenu/close_h.png"
@@ -1031,10 +1022,7 @@ screen save_hta(title="Сохранить", is_load=False):
 
             null height 1
 
-            # Контент слотов
             fixed:
-
-                # Номер страницы
                 button:
                     style "page_label"
                     key_events True
@@ -1046,7 +1034,6 @@ screen save_hta(title="Сохранить", is_load=False):
                         style "page_label_text"
                         value page_name_value
 
-                # Сетка слотов
                 grid gui.file_slot_cols gui.file_slot_rows:
                     style_prefix "slot"
                     xalign 0.5
@@ -1070,7 +1057,6 @@ screen save_hta(title="Сохранить", is_load=False):
                                 style "slot_name_text"
                             key "save_delete" action FileDelete(slot)
 
-                # Кнопки страниц
                 vbox:
                     style_prefix "page"
                     xalign 0.51
@@ -1105,7 +1091,6 @@ screen load(title="Загрузить", is_load=True):
     modal True
     zorder 200
 
-    # Затемнение фона
     button:
         style "empty"
         xfill True
@@ -1125,7 +1110,6 @@ screen load(title="Загрузить", is_load=True):
 
     $ current_page = FileCurrentPage()
 
-    # Основное окно с контентом
     frame:
         xalign 0.5
         yalign 0.5
@@ -1137,12 +1121,10 @@ screen load(title="Загрузить", is_load=True):
         vbox:
             spacing 20
 
-            # Заголовок
             hbox:
                 xfill True
                 text title size 50 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
 
-                # Кнопка закрытия
                 imagebutton:
                     idle "gui/townmenu/close_e.png"
                     hover "gui/townmenu/close_h.png"
@@ -1153,10 +1135,7 @@ screen load(title="Загрузить", is_load=True):
 
             null height 1
 
-            # Контент слотов
             fixed:
-
-                # Номер страницы
                 button:
                     style "page_label"
                     key_events True
@@ -1168,7 +1147,6 @@ screen load(title="Загрузить", is_load=True):
                         style "page_label_text"
                         value page_name_value
 
-                # Сетка слотов
                 grid gui.file_slot_cols gui.file_slot_rows:
                     style_prefix "slot"
                     xalign 0.5
@@ -1192,7 +1170,6 @@ screen load(title="Загрузить", is_load=True):
                                 style "slot_name_text"
                             key "save_delete" action FileDelete(slot)
 
-                # Кнопки страниц
                 vbox:
                     style_prefix "page"
                     xalign 0.51
@@ -1391,7 +1368,7 @@ screen preferences():
                 imagebutton:
                     idle "gui/townmenu/close_e.png"
                     hover "gui/townmenu/close_h.png"
-                    action Hide("preferences")
+                    action [Function(save_audio_prefs), Hide("preferences")]
                     xalign 1.0
                     yalign 0.0
                     activate_sound "audio/sfx/click.wav"
@@ -1430,7 +1407,7 @@ screen preferences():
                     scrollbars "vertical"
                     mousewheel True
                     xsize 800
-                    ysize 800
+                    ysize 600
 
                     if current_tab == "sound":
                         vbox:

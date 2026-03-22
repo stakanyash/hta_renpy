@@ -632,6 +632,53 @@ init python:
 
 default player_config = PlayerConfig()
 
+init python:
+    def battle_setup(enemy_image, enemy_hp, bgname, enemy_name, enemy_type="Regular", damage_multiplier=1.0):
+        store.enemy_image = enemy_image
+        store.enemy_hp = enemy_hp
+        store.enemy_max_hp = enemy_hp
+        store.bgname = bgname
+        store.enemy_name = enemy_name
+        store.EnemyType = enemy_type
+        store.enemy_damage_multiplier = damage_multiplier
+
+        store.player_hp = player_config.hp
+        store.player_max_hp = player_config.max_hp
+        store.damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
+        store.max_heals = player_config.heals
+        store.heal_count = 0
+        store.turn_count = 0
+        store.remainheals = store.max_heals
+        store.attack_locked = False
+
+        _window_hide()
+        renpy.store._game_menu_screen = None
+        renpy.store._menu = False
+        config.keymap['save'] = []
+        config.keymap['load'] = []
+        config.keymap['game_menu'] = []
+        persistent._in_battle = True
+
+    def battle_end_win():
+        renpy.store._game_menu_screen = "save_screen"
+        renpy.store._menu = True
+        config.keymap['save'] = ['save']
+        config.keymap['load'] = ['load']
+        config.keymap['game_menu'] = ['game_menu']
+        persistent._in_battle = False
+        renpy.sound.stop(channel="shoot")
+        player_config.hp = store.player_hp
+        player_config.heals = store.remainheals
+
+    def battle_end_lose():
+        renpy.store._game_menu_screen = "save_screen"
+        renpy.store._menu = True
+        config.keymap['save'] = ['save']
+        config.keymap['load'] = ['load']
+        config.keymap['game_menu'] = ['game_menu']
+        persistent._in_battle = False
+        renpy.sound.stop(channel="shoot")
+
 transform stretch_in:
     yzoom 0.95
     linear 0.1 yzoom 1.0
@@ -651,7 +698,7 @@ label show_loading(load_slides):
     python:
         import random
 
-        total_time = random.uniform(4.0, 7.0)
+        total_time = random.uniform(3.0, 5.0)
         num_slides = len(load_slides)
 
         weights = [random.random() for _ in range(num_slides)]

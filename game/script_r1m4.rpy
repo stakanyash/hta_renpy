@@ -318,7 +318,7 @@ label tokranfight:
     $ bgname = "bg_kranfight"
     $ EnemyType = "Boss"
     $ BossIcon = "boss1.png"
-    $ enemy_damage_multiplier = 2.0
+    $ enemy_damage_multiplier = 2.5
     show kranboss at center
 
     while enemy_hp > 0 and player_hp > 0:
