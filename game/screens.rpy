@@ -269,7 +269,7 @@ screen tutorial_prompt_call():
             spacing 20
             xalign 0.5
             yalign 0.5
-            text "Кажется, Вы в первый раз играете в\nEx Machina RenPy.\n\nХотите пройти обучение?" size 36 textalign 0.5
+            text "Кажется, Вы в первый раз играете в\nEx Machina Ren'Py.\n\nХотите пройти обучение?" size 36 textalign 0.5
 
             hbox:
                 spacing 200
@@ -936,7 +936,7 @@ screen about():
                 scrollbars "vertical"
                 mousewheel True
                 ypos 100
-                xsize 1350
+                xsize 1300
                 ysize 585
 
                 vbox:
@@ -945,7 +945,7 @@ screen about():
                     label "[config.name!t]"
                     text _("Версия [config.version!t] [[[hta_build!t]]\n")
 
-                    text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл RenPy.\n")
+                    text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл Ren'Py.\n")
                     text _("Посвящен 20-летию оригинальной Ex Machina/Hard Truck Apocalypse.\n")
                     text _("Данная версия является демонстрационной, её разработка не завершена!\n")
                     text _("GitHub репозиторий проекта доступен {a=https://github.com/stakanyash/hta_renpy}здесь{/a}.")
@@ -1847,14 +1847,14 @@ screen help():
                 #textbutton _("Клавиатура") activate_sound "audio/sfx/click.wav" action SetScreenVariable("device", "keyboard")
                 #textbutton _("Мышь") activate_sound "audio/sfx/click.wav" action SetScreenVariable("device", "mouse")
 
-            null height 20
+            null height 0
 
             # Контент с прокруткой
             viewport:
                 scrollbars "vertical"
                 mousewheel True
-                xsize 1350
-                ysize 700
+                xsize 1300
+                ysize 550
 
                 vbox:
                     spacing 15

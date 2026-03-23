@@ -718,21 +718,8 @@ label randomfight:
     $ enemyint = random.randint(1, 4)
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
-
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = f"randomenemy{enemyint}"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_damage_multiplier = 1.0
 
     if player_config.current_region == "r1m1":
         $ enemy_hp = random.randint(80, 150)
@@ -741,16 +728,7 @@ label randomfight:
     elif player_config.current_region == "r1m4":
         $ enemy_hp = random.randint(180, 300)
 
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандит"
-    $ bgname = f"bg_{player_config.current_region}_randomfight"
-    $ EnemyType = "Regular"
+    $ battle_setup(f"randomenemy{enemyint}", enemy_hp, f"bg_{player_config.current_region}_randomfight", "Бандит")
 
     $ renpy.scene()
     $ renpy.show(bgname, at_list=[center], what=None)
@@ -760,28 +738,12 @@ label randomfight:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         $ renpy.hide(enemy_image)
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         $ renpy.hide(enemy_image) 
         with dissolve
@@ -797,7 +759,7 @@ label randomfight:
             else:
                 $ allowed_tracks = get_region_driving_tracks()
                 $ renpy.music.play(renpy.random.choice(allowed_tracks), channel="music", fadeout=1.0)
-                
+        
         return
 
 label fightlost:

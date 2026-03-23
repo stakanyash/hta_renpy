@@ -312,7 +312,7 @@ image tr_carshop_desc = "images/tutorial/tr_carshop_desc.jpg"
 
 image damage = "images/effects/damage.png"
 
-image mainmenu_loop = Movie(play="movies/mainmenu_loop1.avi")
+image mainmenu_loop = Movie(play="movies/mainmenu_loop.webm")
 
 image scrach_anim_24fps:
     blend "multiply"

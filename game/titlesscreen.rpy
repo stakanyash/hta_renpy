@@ -148,7 +148,7 @@ label splashscreen:
     else:
         $ profile_activate(flags["current_profile"])
 
-    $ renpy.movie_cutscene("movies/disclaimer.avi")
+    $ renpy.movie_cutscene("movies/disclaimer.webm")
 
     pause 0.5
 
