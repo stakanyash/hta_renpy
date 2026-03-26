@@ -35,7 +35,7 @@ screen InGameMenu():
             text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
         elif player_config.money >= 1000000:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         frame:
             background None
@@ -127,28 +127,45 @@ screen Selling_Menu():
                 player_config.inventory.remove(item_key)
         
         def install_weapon(weapon_key):
-            if weapon_key is None or weapon_key not in player_config.inventory:
-                return
-            
             if weapon_key not in GunDatabase:
                 return
 
             gun_data = GunDatabase[weapon_key]
-            gun_type = gun_data.get("type", "")
-            gun_size = gun_data.get("size", "Small")
+            gun_size = gun_data["size"]
 
-            if gun_size == "Big" and player_config.big_gun_install != "Possible":
-                renpy.notify("Невозможно установить это оружие в данный слот.")
-                return
-            
-            old_gun = player_config.current_gun
-            
-            player_config.inventory.remove(weapon_key)
-            
-            player_config.current_gun = weapon_key
-            player_config.gun_type = GunDatabase[weapon_key]["type"]
-            
-            player_config.inventory.append(old_gun)
+            if player_config.big_gun_install != "Possible":
+                if gun_size == "Big":
+                    renpy.notify("Нельзя установить крупное оружие.")
+                    return
+
+                old = player_config.current_gun
+
+                player_config.inventory.remove(weapon_key)
+                player_config.current_gun = weapon_key
+                player_config.gun_type = gun_data["type"]
+
+                if old:
+                    player_config.inventory.append(old)
+            else:
+                if gun_size == "Big":
+                    old = player_config.current_gun
+
+                    player_config.inventory.remove(weapon_key)
+                    player_config.current_gun = weapon_key
+                    player_config.gun_type = gun_data["type"]
+
+                    if old:
+                        player_config.inventory.append(old)
+
+                else:
+                    old = player_config.second_gun
+
+                    player_config.inventory.remove(weapon_key)
+                    player_config.second_gun = weapon_key
+                    player_config.second_gun_type = gun_data["type"]
+
+                    if old:
+                        player_config.inventory.append(old)
         
         def is_weapon(item_key):
             return item_key in GunDatabase
@@ -180,7 +197,7 @@ screen Selling_Menu():
             text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
         elif player_config.money >= 1000000:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
@@ -228,18 +245,29 @@ screen Selling_Menu():
             text "[len(player_config.inventory)]/[CarInventoryLimits.get(player_config.car, 0)]" xalign 0.5 yalign 0.5 color "#404040"
 
         if selected_item and is_weapon(selected_item):
-            textbutton _("Установить") activate_sound "audio/sfx/click.wav" action [Function(install_weapon, selected_item), SetScreenVariable("selected_item", None)] xpos 1500 yalign 0.702 sensitive selected_item != player_config.current_gun
+            textbutton _("Установить") activate_sound "audio/sfx/click.wav" action [Function(install_weapon, selected_item), SetScreenVariable("selected_item", None)] xpos 1500 yalign 0.702 sensitive (selected_item is not None and selected_item != player_config.current_gun and selected_item != player_config.second_gun)
 
         textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
         textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action [Confirm("Вы действительно хотите удалить этот предмет?\nВНИМАНИЕ: Действие необратимо!", yes=Function(delete_item, selected_item), no=None), SetScreenVariable("selected_item", None)] xpos 1193 yalign 0.859 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
 
         if selected_item:
             $ item_data = ItemDatabase[selected_item]
+            
+            python:
+                if player_config.town_type == "City":
+                    price = ItemPricesCity.get(selected_item)
+                elif player_config.town_type == "Village":
+                    price = ItemPricesVillage.get(selected_item)
+                else:
+                    price = None
 
-            if player_config.town_type in ["City", "Village"]:
-                $ price = ItemPricesVillage.get(selected_item, 0) if player_config.town_type == "Village" else ItemPricesCity.get(selected_item, 0)
-            else:
-                $ price = 0
+                if price is None:
+                    if selected_item in smallweapon_prices:
+                        price = smallweapon_prices[selected_item]
+                    elif selected_item in bigweapon_prices:
+                        price = bigweapon_prices[selected_item]
+                    else:
+                        price = 0
         
             frame:
                 xpos 1230
@@ -349,7 +377,7 @@ screen Gun_Shop_Menu():
             text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
         elif player_config.money >= 1000000:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
@@ -521,7 +549,7 @@ screen Car_Shop():
             text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
         elif player_config.money >= 1000000:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         text "Сравнение:" size 22 color "#404040" font "fonts/ARIALBD.ttf" xpos 1138 ypos 871
 

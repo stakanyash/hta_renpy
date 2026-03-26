@@ -365,7 +365,7 @@ screen profiles_create_screen():
 
             input:
                 value ScreenVariableInputValue("_inp_name")
-                length 40
+                length 10
                 style "centered_input"
                 pixel_width 500
                 xalign 0.5
@@ -403,7 +403,7 @@ screen profiles_rename_screen():
 
             input:
                 value ScreenVariableInputValue("_inp_new")
-                length 40
+                length 10
                 style "centered_input"
                 pixel_width 500
                 xalign 0.5

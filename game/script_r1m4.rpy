@@ -851,3 +851,31 @@ label r1m4SideQuest_finish:
     hide mcsurp
 
     jump homersearch
+
+# Alla encounter (during warehouse sidequest)
+
+label r1m4SideQuest_FindHusband_start:
+    if player_config.SideQuest_FindHusband == "CanBeTaken":
+        "Вы ехали в направлении склада, но тут вас останавливают..."
+
+        #show alla
+        #show mc
+
+        alla "Ох, молодой человек, беда у меня."
+        mc "Что у Вас случилось?"
+        alla "Муж мой поехал на рынок и пропал. Наверное, продал товар и запил. Вот я и пошла на его поиски."
+
+        menu:
+            "Помочь":
+                $ player_config.SideQuest_FindHusband = "Taken"
+                mc "Я могу Вам помочь в его поисках."
+                alla "Спасибо тебе молодой человек, ты меня сможешь найти в деревне Перчь."
+                mc "Скажите хоть, как зовут Вашего мужа? И опишите внешность."
+                alla "Ох, конечно! Зовут его Филимон. Кудрявый, с повязкой на лбу. Любит говорить \"встала и пошла\", а также неравнодушен к розовым кофточкам."
+                mc "Я всё понял. Проедусь по местным барам, поищу."
+                jump r1m4SideQuest_FindHusband_searches
+            "Отказать":
+                $ player_config.SideQuest_FindHusband = "Failed"
+                mc "Это твои проблемы, решай их сама."
+                "После этого вы поехали дальше к складу."
+                #jump

@@ -1559,6 +1559,7 @@ label tunnelfirst:
                 jump gotthekey
 
         "Проследить":
+            $ GotTheKeyByKill = False
             $ renpy.notify("Игра сохранена в слот 1.")
             $ renpy.save("checkpoint-1")
 
@@ -1568,6 +1569,14 @@ label tunnelfirst:
 
 label tunnelfollow:
 
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+
     scene bg_followkeyman_1 with fade
     pause 1.5
     scene bg_followkeyman_2 with dissolve
@@ -1576,6 +1585,13 @@ label tunnelfollow:
     pause 1.5
     scene bg_followkeyman_4 with dissolve
     pause 1.5
+
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
 
     mc "Ага, он поехал развлечься в бар. Мне точно нужно последовать за ним."
 
@@ -1645,6 +1661,8 @@ label gotthekey:
     else:
         "Вернувшись к тоннелю - Вы открыли ворота и отправились в соседний регион."
 
+    scene black with fade
+
     $ _window_hide()
     $ _game_menu_screen = None
     $ _menu = False
@@ -1653,4 +1671,8 @@ label gotthekey:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
 
-    jump arrivetor2m1
+    pause 1.0
+
+    jump demofinished
+
+    #jump arrivetor2m1

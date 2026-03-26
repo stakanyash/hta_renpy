@@ -1,5 +1,3 @@
-default temp_name = ""
-default player_name = "Игрок"
 default difficulty = "normal"
 default difficulty_base_multiplier = 0.03
 default selected_shop_item = None
@@ -32,6 +30,7 @@ init python:
         car: str = "Van"
         current_region: str = "r1m1"
         gun_type: str = "Firearm"
+        second_gun_type: str = None
         max_hp: int = 0
         hp: int = 0
         max_heals: int = 0
@@ -414,46 +413,67 @@ init python:
     }
 
     def buy_weapon_with_old_handling(weapon_name):
-        addedg = None
-        sell_price = 0
-
         if weapon_name in smallweapon_prices:
             price = smallweapon_prices[weapon_name]
+            gun_size = "Small"
         elif weapon_name in bigweapon_prices:
             price = bigweapon_prices[weapon_name]
+            gun_size = "Big"
         else:
             renpy.notify("Ошибка: цена оружия не найдена.")
             return
 
-        if player_config.money >= price:
-            player_config.money -= price
+        if not player_config.spend_money(price):
+            return
 
-            if player_config.current_gun not in player_config.inventory:
-                addedg = player_config.try_add_item(player_config.current_gun)
-            
-                if not addedg:
-                    if player_config.town_type == "City":
-                        sell_price = ItemPricesCity.get(player_config.current_gun, 0)
-                    else:
-                        sell_price = ItemPricesVillage.get(player_config.current_gun, 0)
+        weapon_data = GunDatabase.get(weapon_name)
+        gun_type = weapon_data.get("type") if weapon_data else None
 
-                    player_config.add_money(sell_price)
+        if player_config.big_gun_install != "Possible":
+
+            if gun_size == "Big":
+                renpy.notify("Эта машина не поддерживает крупное оружие.")
+                return
+
+            old = player_config.current_gun
 
             player_config.current_gun = weapon_name
+            player_config.gun_type = gun_type
 
-            weapon_data = GunDatabase.get(weapon_name)
-            if weapon_data:
-                player_config.gun_type = weapon_data.get("type")
-            else:
-                player_config.gun_type = None
+            if old:
+                if not player_config.try_add_item(old):
+                    sell_price = ItemPricesCity.get(old, 0) if player_config.town_type == "City" else ItemPricesVillage.get(old, 0)
+                    player_config.add_money(sell_price)
 
-            renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
-            if not addedg:
-                renpy.notify(f"Вы купили {gun_names.get(weapon_name, weapon_name)} за {price} монет.\nИнвентарь полон. Старое оружие было продано за {sell_price} монет.")
-            else:
-                renpy.notify(f"Вы купили {gun_names.get(weapon_name, weapon_name)} за {price} монет.")
+            renpy.notify(f"Установлено оружие: {gun_names.get(weapon_name, weapon_name)}")
         else:
-            renpy.notify("Недостаточно денег!")
+            if gun_size == "Big":
+                old = player_config.current_gun
+
+                player_config.current_gun = weapon_name
+                player_config.gun_type = gun_type
+
+                if old:
+                    if not player_config.try_add_item(old):
+                        sell_price = ItemPricesCity.get(old, 0) if player_config.town_type == "City" else ItemPricesVillage.get(old, 0)
+                        player_config.add_money(sell_price)
+
+                renpy.notify(f"Установлено основное оружие: {gun_names.get(weapon_name, weapon_name)}")
+
+            else:
+                old = player_config.second_gun
+
+                player_config.second_gun = weapon_name
+                player_config.second_gun_type = gun_type
+
+                if old:
+                    if not player_config.try_add_item(old):
+                        sell_price = ItemPricesCity.get(old, 0) if player_config.town_type == "City" else ItemPricesVillage.get(old, 0)
+                        player_config.add_money(sell_price)
+
+                renpy.notify(f"Установлено второе оружие: {gun_names.get(weapon_name, weapon_name)}")
+
+        renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
 
     def buy_car_with_exchange(car_name):
         car_price = CarPrices.get(car_name, 0)
@@ -645,6 +665,12 @@ init python:
         store.player_hp = player_config.hp
         store.player_max_hp = player_config.max_hp
         store.damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
+
+        if player_config.second_gun:
+            store.secondary_damage_range = gun_stats.get(player_config.second_gun, None)
+        else:
+            store.secondary_damage_range = None
+
         store.max_heals = player_config.heals
         store.heal_count = 0
         store.turn_count = 0
@@ -714,6 +740,8 @@ label show_loading(load_slides):
 
 label randomfight:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
+
+    stop sfx2
 
     $ enemyint = random.randint(1, 4)
 

@@ -46,7 +46,8 @@ screen difficulty_select():
                 Start()
             ]
 
-            null height 25
+            null height 20
+            null height 20
 
             textbutton "Вернуться" activate_sound "audio/sfx/click.wav" xalign 0.5 style "diff_button_back" action Hide("difficulty_select")
 

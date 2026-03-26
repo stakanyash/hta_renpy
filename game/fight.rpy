@@ -93,6 +93,26 @@ init python:
 
             renpy.timeout(0.3)
 
+        if player_config.second_gun and secondary_damage_range:
+            random_hit2 = random.random()
+            sec_type = player_config.second_gun_type
+
+            if sec_type == "Firearm":
+                attack_chances2 = 0.7
+            elif sec_type == "Plasma":
+                attack_chances2 = 0.5
+            elif sec_type == "Energy":
+                attack_chances2 = 0.6
+            else:
+                attack_chances2 = 0.75
+
+            if random_hit2 <= attack_chances2:
+                sec_damage = int(random.randint(*secondary_damage_range) * 0.45)
+                enemy_hp = max(0, enemy_hp - sec_damage)
+                renpy.sound.play(f"audio/sfx/shoot/{player_config.second_gun}_shoot.wav")
+                renpy.show(enemy_image, at_list=[center, stretch_in], what=None)
+            renpy.timeout(0.15)
+
         apply_enemy_attack()
 
         renpy.restart_interaction()

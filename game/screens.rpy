@@ -240,7 +240,14 @@ screen enemy_ui():
                 "Rocket": 1.1,
                 "Explosive": 1.0
             }
-            reload_time = reload_times.get(player_config.gun_type, 0.5)
+            primary_reload = reload_times.get(player_config.gun_type, 0.5)
+
+            if player_config.second_gun and player_config.second_gun_type:
+                secondary_reload = reload_times.get(player_config.second_gun_type, 0.5)
+                reload_time = max(primary_reload, secondary_reload)
+            else:
+                reload_time = primary_reload
+            #reload_time = reload_times.get(player_config.gun_type, 0.5)
     
         timer reload_time action SetVariable("attack_locked", False)
 
@@ -684,7 +691,7 @@ screen statistics_screen():
             text "[player_config.money] монет" size 19 xpos 115 ypos 20 textalign 0.5 color "#404040"
         elif player_config.money >= 1000000:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
-            text "[format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
+            text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/close_e.png" 
@@ -699,11 +706,12 @@ screen statistics_screen():
         vbox:
             spacing 20
             xalign 0.645
-            yalign 0.455
+            yalign 0.495
             text "Имя" size 24 color "#2a2a2a"
             text "Оружие" size 24 color "#2a2a2a"
             text "Тип оружия" size 24 color "#2a2a2a"
             text "Второе оружие" size 24 color "#2a2a2a"
+            text "Тип второго оружия" size 24 color "#2a2a2a"
             text "Машина" size 24 color "#2a2a2a"
             text "Сложность" size 24 color "#2a2a2a"
             text "Регион" size 24 color "#2a2a2a"
@@ -714,11 +722,12 @@ screen statistics_screen():
         vbox:
             spacing 20
             xalign 0.85
-            yalign 0.455
-            text "[player_name]" size 24 color "#2a2a2a"
+            yalign 0.495
+            text "[current_profile_name()]" size 24 color "#2a2a2a"
             text "[gun_names.get(player_config.current_gun, '—')]" size 24 color "#2a2a2a"
             text "[GunTypeName.get(player_config.gun_type, '—')]" size 24 color "#2a2a2a"
             text "[gun_names.get(player_config.second_gun, '—')]" size 24 color "#2a2a2a"
+            text "[GunTypeName.get(player_config.second_gun_type, '—')]" size 24 color "#2a2a2a"
             text "[car_names.get(player_config.car, '—')]" size 24 color "#2a2a2a"
             text "[DifficultyNames.get(difficulty, '—')]" size 24 color "#2a2a2a"
             text "[region_names.get(player_config.current_region, '—')]" size 24 color "#2a2a2a"
@@ -1701,7 +1710,7 @@ screen history():
                 scrollbars "vertical"
                 mousewheel True
                 ypos 100
-                xsize 1350
+                xsize 1300
                 ysize 585
 
                 vbox:

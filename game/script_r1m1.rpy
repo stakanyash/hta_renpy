@@ -607,6 +607,8 @@ label felixbeforefight:
 
     menu:
         "Атаковать":
+            $ RunFromFelix = False
+
             $ battle_setup("felixteam", 225, "bg_felix_nocars", "Бандит", "Regular", 1.2)
 
             scene bg_felix_nocars
