@@ -78,17 +78,7 @@ label homersearch:
 
     "Вы начали искать Гомера в рыбацких посёлках."
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_21
+    $ CheckForRandomBattle()
 
     play music "music/driving7.ogg" fadeout 1.0
     scene bg_lauka with fade
@@ -105,17 +95,7 @@ label homersearch:
 
     mc "Мне что, придётся весь регион объездить в его поисках?!"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_22
+    $ CheckForRandomBattle()
 
     scene bg_kordan with fade
 
@@ -150,17 +130,7 @@ label homersearch:
 
     hide mcsurp
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])   
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_23
+    $ CheckForRandomBattle()
 
     $ player_config.update_town_info("Village", "Салиниом", "free_traders_alliance")
     
@@ -237,17 +207,7 @@ label homersearch:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_24
+    $ CheckForRandomBattle()
 
     jump tokranfight
 
@@ -467,19 +427,13 @@ label galdenquest:
             $ player_config.town_type = "NotInCity"
             hide mcsurp
 
-            if random.random() <= 0.5:
-                $ current_music = renpy.music.get_playing(channel='music')
-
-                if current_music and current_music not in battle_tracks:
-                    $ persistent._prebattle_music = current_music
-                else:
-                    $ persistent._prebattle_music = None
-                $ randommus = random.choice([1, 2, 7])
-                $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                "На Вас нападают!"
-                call randomfight from _call_randomfight_25
+            $ CheckForRandomBattle()
             
-            jump r1m4SideQuest_start
+            if random.random() <= 0.7:
+                if player_config.sidequest_findhusband == "CanBeTaken":
+                    jump r1m4SideQuest_FindHusband_start
+            else:
+                jump r1m4SideQuest_start
 
         "Отказать":
             $ renpy.notify("Игра сохранена в слот 5.")
@@ -533,17 +487,7 @@ label r1m4SideQuest_start:
             hide wsecurity
             hide mc6
 
-            if random.random() <= 0.5:
-                $ current_music = renpy.music.get_playing(channel='music')
-
-                if current_music and current_music not in battle_tracks:
-                    $ persistent._prebattle_music = current_music
-                else:
-                    $ persistent._prebattle_music = None
-                $ randommus = random.choice([1, 2, 7])
-                $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                "На Вас нападают!"
-                call randomfight from _call_randomfight_26
+            $ CheckForRandomBattle()
             
             jump r1m4SideQuest_whereisleader
 
@@ -759,17 +703,7 @@ label r1m4SideQuest_leaderisfree:
     mc "Я заключил договор с твоими бойцами, что освобожу тебя в обмен на одну нужную мне вещь."
     mc "И лучше бы им выполнить свою часть сделки!"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_27
+    $ CheckForRandomBattle()
 
     jump r1m4SideQuest_leaderisback
 
@@ -801,17 +735,7 @@ label r1m4SideQuest_leaderisback:
 
     $ r1m4SideQuestLeaderSaved = True
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_28
+    $ CheckForRandomBattle()
 
     jump r1m4SideQuest_finish
 
@@ -855,7 +779,7 @@ label r1m4SideQuest_finish:
 # Alla encounter (during warehouse sidequest)
 
 label r1m4SideQuest_FindHusband_start:
-    if player_config.SideQuest_FindHusband == "CanBeTaken":
+    if player_config.sidequest_findhusband == "CanBeTaken":
         "Вы ехали в направлении склада, но тут вас останавливают..."
 
         #show alla
@@ -878,4 +802,7 @@ label r1m4SideQuest_FindHusband_start:
                 $ player_config.SideQuest_FindHusband = "Failed"
                 mc "Это твои проблемы, решай их сама."
                 "После этого вы поехали дальше к складу."
-                #jump
+
+                $ CheckForRandomBattle()
+                    
+                jump r1m4SideQuest_start

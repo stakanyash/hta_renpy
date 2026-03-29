@@ -126,9 +126,7 @@ style atk_button_text:
 
 transform fadeinout:
     alpha 0.0
-    linear 1.5 alpha 1.0
-    on hide:
-        linear 1.5 alpha 0.0
+    linear 1 alpha 1.0
 
 style button_text_center is default:
     xalign 0.5
@@ -501,25 +499,88 @@ screen navigation_main_menu():
 
     vbox:
         style_prefix "navigationmm"
-        xpos 50
+        xalign 0.897
         yalign 0.5
-        spacing 4
+        spacing 40
 
-        textbutton _("Новая игра")  activate_sound "audio/sfx/click.wav" action Show("difficulty_select")
+        fixed:
+            xysize (355, 50)
+            yoffset -2
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/mm_button_idle.png",
+                    hover_image="gui/htabuttons/mm_button_hover.png",
+                    activate_image="gui/htabuttons/mm_button_activate.png",
+                    clicked=renpy.curry(renpy.show_screen)("difficulty_select"),
+                    activate_sound="audio/sfx/click.wav"
+                )
+            text "Новая игра" xalign 0.5 yalign 0.4 size 24 color "#fed11b"
 
-        textbutton _("Загрузить")   activate_sound "audio/sfx/click.wav" action ShowMenu("load")
+        fixed:
+            xysize (355, 50)
+            yoffset -2
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/mm_button_idle.png",
+                    hover_image="gui/htabuttons/mm_button_hover.png",
+                    activate_image="gui/htabuttons/mm_button_activate.png",
+                    clicked=renpy.store.ShowMenu("load"),
+                    activate_sound="audio/sfx/click.wav"
+                )
+            text "Загрузить" xalign 0.5 yalign 0.4 size 24 color "#fed11b"
 
-        textbutton _("Профили")     activate_sound "audio/sfx/click.wav" action ShowMenu("profiles_screen")
+        fixed:
+            xysize (355, 50)
+            yoffset -2
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/mm_button_idle.png",
+                    hover_image="gui/htabuttons/mm_button_hover.png",
+                    activate_image="gui/htabuttons/mm_button_activate.png",
+                    clicked=renpy.store.ShowMenu("profiles_screen"),
+                    activate_sound="audio/sfx/click.wav"
+                )
+            text "Профили" xalign 0.5 yalign 0.4 size 24 color "#fed11b"
 
-        textbutton _("Настройки")   activate_sound "audio/sfx/click.wav" action ShowMenu("preferences")
+        fixed:
+            xysize (355, 50)
+            yoffset -2
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/mm_button_idle.png",
+                    hover_image="gui/htabuttons/mm_button_hover.png",
+                    activate_image="gui/htabuttons/mm_button_activate.png",
+                    clicked=renpy.store.ShowMenu("preferences"),
+                    activate_sound="audio/sfx/click.wav"
+                )
+            text "Настройки" xalign 0.5 yalign 0.4 size 24 color "#fed11b"
 
-        textbutton _("Об игре")     activate_sound "audio/sfx/click.wav" action ShowMenu("about")
-
-        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
-            textbutton _("Помощь")  activate_sound "audio/sfx/click.wav" action ShowMenu("help")
+        fixed:
+            xysize (355, 50)
+            yoffset -2
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/mm_button_idle.png",
+                    hover_image="gui/htabuttons/mm_button_hover.png",
+                    activate_image="gui/htabuttons/mm_button_activate.png",
+                    clicked=renpy.store.ShowMenu("about"),
+                    activate_sound="audio/sfx/click.wav"
+                )
+            text "Об игре" xalign 0.5 yalign 0.4 size 24 color "#fed11b"
 
         if renpy.variant("pc"):
-            textbutton _("Выход")   activate_sound "audio/sfx/click.wav" action Quit(confirm=True)
+            fixed:
+                xysize (355, 50)
+                yoffset -2
+                python:
+                    ui.imagebutton(
+                        idle_image="gui/htabuttons/mm_button_idle.png",
+                        hover_image="gui/htabuttons/mm_button_hover.png",
+                        activate_image="gui/htabuttons/mm_button_activate.png",
+                        clicked=renpy.store.Quit(confirm=True),
+                        activate_sound="audio/sfx/click.wav"
+                    )
+                text "Выход" xalign 0.5 yalign 0.4 size 24 color "#fed11b"
 
 screen navigation_in_game():
 
@@ -693,13 +754,28 @@ screen statistics_screen():
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
             text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/close_e.png" 
-            hover "gui/townmenu/close_h.png"
-            action Return()
+        frame:
+            background None
             xalign 0.99
-            yalign 0.0
-            focus_mask True 
+            yalign 0
+
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/close_idle.png",
+                    hover_image="gui/htabuttons/close_hover.png",
+                    activate_image="gui/htabuttons/close_activate.png",
+                    clicked=renpy.store.Return(),
+                    activate_sound="audio/sfx/click.wav",
+                    focus_mask=True
+                )
+        
+        #imagebutton activate_sound "audio/sfx/click.wav":
+        #    idle "gui/townmenu/close_e.png" 
+        #    hover "gui/townmenu/close_h.png"
+        #    action Return()
+        #    xalign 0.99
+        #    yalign 0.0
+        #    focus_mask True 
 
         text "Молодой человек, только вступивший во взрослую жизнь, которая\nготовит ему массу неприятных сюрпризов." size 22 xalign 0.145 yalign 0.715 color "#404040"
 
@@ -905,6 +981,8 @@ screen about():
     modal True
     zorder 200
 
+    default tab = "about"
+
     button:
         style "empty"
         xfill True
@@ -914,7 +992,6 @@ screen about():
 
     add "gui/settings_menu.png"
 
-    # Основное окно с контентом
     frame:
         xalign 0.5
         yalign 0.5
@@ -926,40 +1003,101 @@ screen about():
         vbox:
             spacing 20
 
+            # Заголовок + кнопка закрытия
             hbox:
                 xfill True
                 text "Об игре" size 60 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 20 xpos 5
 
-                # Кнопка закрытия
-                imagebutton:
-                    idle "gui/townmenu/close_e.png"
-                    hover "gui/townmenu/close_h.png"
-                    action Hide("about")
+                frame:
+                    background None
                     xalign 1.0
-                    yalign 0.0
-                    activate_sound "audio/sfx/click.wav"
+                    yalign 0
+
+                    python:
+                        ui.imagebutton(
+                            idle_image="gui/htabuttons/close_idle.png",
+                            hover_image="gui/htabuttons/close_hover.png",
+                            activate_image="gui/htabuttons/close_activate.png",
+                            clicked=renpy.store.Hide("about"),
+                            activate_sound="audio/sfx/click.wav"
+                        )
+
+            # Вкладки
+            hbox:
+                spacing 20
+                yoffset 10
+
+                fixed:
+                    xysize (180, 90)
+                    imagebutton auto "gui/htabuttons/b_opts_%s.png":
+                        action SetScreenVariable("tab", "about")
+                        activate_sound "audio/sfx/click.wav"
+                    text "Об игре" xalign 0.5 yalign 0.4 size 24 color "#fed11b"
+
+                fixed:
+                    xysize (180, 90)
+                    imagebutton auto "gui/htabuttons/b_opts_%s.png":
+                        action SetScreenVariable("tab", "help")
+                        activate_sound "audio/sfx/click.wav"
+                    text "Помощь" xalign 0.5 yalign 0.4 size 24 color "#fed11b"
 
             null height 1
 
+            # Контент
             viewport:
                 scrollbars "vertical"
                 mousewheel True
-                ypos 100
                 xsize 1300
-                ysize 585
+                ysize 550
 
                 vbox:
                     spacing 20
 
-                    label "[config.name!t]"
-                    text _("Версия [config.version!t] [[[hta_build!t]]\n")
+                    if tab == "about":
+                        label "[config.name!t]"
+                        text _("Версия [config.version!t] [[[hta_build!t]]\n")
+                        text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл Ren'Py.\n")
+                        text _("Посвящен 20-летию оригинальной Ex Machina/Hard Truck Apocalypse.\n")
+                        text _("Данная версия является демонстрационной, её разработка не завершена!\n")
+                        text _("GitHub репозиторий проекта доступен {a=https://github.com/stakanyash/hta_renpy}здесь{/a}.")
+                        text _("{a=https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md}Дисклеймер{/a}\n")
+                        text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
 
-                    text _("Данный продукт является фанатской адаптацией игры\nEx Machina/Hard Truck Apocalypse на движок для визуальных новелл Ren'Py.\n")
-                    text _("Посвящен 20-летию оригинальной Ex Machina/Hard Truck Apocalypse.\n")
-                    text _("Данная версия является демонстрационной, её разработка не завершена!\n")
-                    text _("GitHub репозиторий проекта доступен {a=https://github.com/stakanyash/hta_renpy}здесь{/a}.")
-                    text _("{a=https://github.com/stakanyash/hta_renpy/blob/main/DISCLAIMER.md}Дисклеймер{/a}\n")
-                    text _("Сделано с помощью {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].")
+                    elif tab == "help":
+                        label _("Клавиатура")
+
+                        hbox:
+                            label _("Enter")
+                            text _("Прохождение диалогов, активация интерфейса.") xpos 30
+                        hbox:
+                            label _("Пробел")
+                            text _("Прохождение диалогов без возможности делать выбор.") xpos 30
+                        hbox:
+                            label _("Стрелки")
+                            text _("Навигация по интерфейсу.") xpos 30
+                        hbox:
+                            label _("Esc")
+                            text _("Вход в игровое меню.") xpos 30
+                        hbox:
+                            label "H"
+                            text _("Скрывает интерфейс пользователя.") xpos 30
+                        hbox:
+                            label "S"
+                            text _("Делает снимок экрана.") xpos 30
+
+                        null height 10
+
+                        label _("Мышь")
+
+                        hbox:
+                            label _("Левый клик")
+                            text _("Прохождение диалогов, активация интерфейса.") xpos 30
+                        hbox:
+                            label _("Клик колёсиком")
+                            text _("Скрывает интерфейс пользователя.") xpos 30
+                        hbox:
+                            label _("Правый клик")
+                            text _("Вход в игровое меню.") xpos 30
 
 
 style about_label is gui_label
@@ -1021,13 +1159,19 @@ screen save_hta(title="Сохранить", is_load=False):
                 xfill True
                 text title size 50 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
 
-                imagebutton:
-                    idle "gui/townmenu/close_e.png"
-                    hover "gui/townmenu/close_h.png"
-                    action Hide("save_hta")
+                frame:
+                    background None
                     xalign 1.0
-                    yalign 0.0
-                    activate_sound "audio/sfx/click.wav"
+                    yalign 0
+
+                    python:
+                        ui.imagebutton(
+                            idle_image="gui/htabuttons/close_idle.png",
+                            hover_image="gui/htabuttons/close_hover.png",
+                            activate_image="gui/htabuttons/close_activate.png",
+                            clicked=renpy.store.Hide("save_hta"),
+                            activate_sound="audio/sfx/click.wav"
+                        )
 
             null height 1
 
@@ -1134,13 +1278,19 @@ screen load(title="Загрузить", is_load=True):
                 xfill True
                 text title size 50 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
 
-                imagebutton:
-                    idle "gui/townmenu/close_e.png"
-                    hover "gui/townmenu/close_h.png"
-                    action Hide("load")
+                frame:
+                    background None
                     xalign 1.0
-                    yalign 0.0
-                    activate_sound "audio/sfx/click.wav"
+                    yalign 0
+
+                    python:
+                        ui.imagebutton(
+                            idle_image="gui/htabuttons/close_idle.png",
+                            hover_image="gui/htabuttons/close_hover.png",
+                            activate_image="gui/htabuttons/close_activate.png",
+                            clicked=renpy.store.Hide("load"),
+                            activate_sound="audio/sfx/click.wav"
+                        )
 
             null height 1
 
@@ -1374,13 +1524,27 @@ screen preferences():
                 xfill True
                 text "Настройки" size 50 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
                 
-                imagebutton:
-                    idle "gui/townmenu/close_e.png"
-                    hover "gui/townmenu/close_h.png"
-                    action [Function(save_audio_prefs), Hide("preferences")]
+                #imagebutton:
+                #    idle "gui/townmenu/close_e.png"
+                #    hover "gui/townmenu/close_h.png"
+                #    action [Function(save_audio_prefs), Hide("preferences")]
+                #    xalign 1.0
+                #    yalign 0.0
+                #    activate_sound "audio/sfx/click.wav"
+
+                frame:
+                    background None
                     xalign 1.0
-                    yalign 0.0
-                    activate_sound "audio/sfx/click.wav"
+                    yalign 0
+
+                    python:
+                        ui.imagebutton(
+                            idle_image="gui/htabuttons/close_idle.png",
+                            hover_image="gui/htabuttons/close_hover.png",
+                            activate_image="gui/htabuttons/close_activate.png",
+                            clicked=[renpy.store.Function(save_audio_prefs), renpy.store.Hide("preferences")],
+                            activate_sound="audio/sfx/click.wav"
+                        )
 
             null height 1
 
@@ -1393,7 +1557,7 @@ screen preferences():
                     
                     fixed:
                         xysize (180, 90)
-                        imagebutton auto "gui/test/b_opts_%s.png":
+                        imagebutton auto "gui/htabuttons/b_opts_%s.png":
                             selected (current_tab == "sound")
                             action SetScreenVariable("current_tab", "sound")
                             activate_sound "audio/sfx/click.wav"
@@ -1402,7 +1566,7 @@ screen preferences():
 
                     fixed:
                         xysize (180, 90)
-                        imagebutton auto "gui/test/b_opts_%s.png":
+                        imagebutton auto "gui/htabuttons/b_opts_%s.png":
                             selected (current_tab == "game")
                             action SetScreenVariable("current_tab", "game")
                             activate_sound "audio/sfx/click.wav"
@@ -1696,13 +1860,19 @@ screen history():
                 xfill True
                 text "История" size 60 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 20 xpos 5
 
-                imagebutton:
-                    idle "gui/townmenu/close_e.png"
-                    hover "gui/townmenu/close_h.png"
-                    action Hide("history")
+                frame:
+                    background None
                     xalign 1.0
-                    yalign 0.0
-                    activate_sound "audio/sfx/click.wav"
+                    yalign 0
+
+                    python:
+                        ui.imagebutton(
+                            idle_image="gui/htabuttons/close_idle.png",
+                            hover_image="gui/htabuttons/close_hover.png",
+                            activate_image="gui/htabuttons/close_activate.png",
+                            clicked=renpy.store.Hide("history"),
+                            activate_sound="audio/sfx/click.wav"
+                        )
 
             null height 1
 
@@ -1821,14 +1991,19 @@ screen help():
                 xfill True
                 text _("Помощь") size 60 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 10 xpos 5
 
-                # Кнопка закрытия
-                imagebutton:
-                    idle "gui/townmenu/close_e.png"
-                    hover "gui/townmenu/close_h.png"
-                    action Hide("help")
+                frame:
+                    background None
                     xalign 1.0
-                    yalign 0.0
-                    activate_sound "audio/sfx/click.wav"
+                    yalign 0
+
+                    python:
+                        ui.imagebutton(
+                            idle_image="gui/htabuttons/close_idle.png",
+                            hover_image="gui/htabuttons/close_hover.png",
+                            activate_image="gui/htabuttons/close_activate.png",
+                            clicked=renpy.store.Hide("help"),
+                            activate_sound="audio/sfx/click.wav"
+                        )
 
             null height 1
 
@@ -1839,7 +2014,7 @@ screen help():
 
                 fixed:
                     xysize (180, 90)
-                    imagebutton auto "gui/test/b_opts_%s.png":
+                    imagebutton auto "gui/htabuttons/b_opts_%s.png":
                         action SetScreenVariable("device", "keyboard")
                         activate_sound "audio/sfx/click.wav"
                     
@@ -1847,7 +2022,7 @@ screen help():
 
                 fixed:
                     xysize (180, 90)
-                    imagebutton auto "gui/test/b_opts_%s.png":
+                    imagebutton auto "gui/htabuttons/b_opts_%s.png":
                         action SetScreenVariable("device", "mouse")
                         activate_sound "audio/sfx/click.wav"
                     

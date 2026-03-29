@@ -1,6 +1,6 @@
-init python:
-    import renpy.loadsave as _loadsave
-    _loadsave.sync = lambda *args, **kwargs: None
+#init python:
+#    import renpy.loadsave as _loadsave
+#    _loadsave.sync = lambda *args, **kwargs: None
 
 init -1 python:
     import os, json, shutil, re as _re
@@ -221,7 +221,15 @@ init -1 python:
             p.fullscreen        = flags["fullscreen"]
 
 init python:
+    def _profile_after_load():
+        flags = load_flags()
+        name = flags.get("current_profile", None)
+        if name and os.path.isdir(_profile_saves_dir(name)):
+            config.savedir = _profile_saves_dir(name)
+            persistent.current_profile = name
+
     config.start_callbacks.append(_profile_system_init)
+    config.after_load_callbacks.append(_profile_after_load)
 
 default persistent.current_profile = None
 default _sel_profile = None
@@ -254,13 +262,19 @@ screen profiles_screen():
                 xfill True
                 text u"Профили" size 60 color "#fed11b" font "fonts/ARIALBD.ttf" ypos 20 xpos 5
 
-                imagebutton:
-                    idle "gui/townmenu/close_e.png"
-                    hover "gui/townmenu/close_h.png"
-                    action Hide("profiles_screen")
+                frame:
+                    background None
                     xalign 1.0
-                    yalign 0.0
-                    activate_sound "audio/sfx/click.wav"
+                    yalign 0
+
+                    python:
+                        ui.imagebutton(
+                            idle_image="gui/htabuttons/close_idle.png",
+                            hover_image="gui/htabuttons/close_hover.png",
+                            activate_image="gui/htabuttons/close_activate.png",
+                            clicked=renpy.store.Hide("profiles_screen"),
+                            activate_sound="audio/sfx/click.wav"
+                        )
 
             null height 90
 
@@ -326,16 +340,16 @@ screen profiles_screen():
                         spacing 20
                         xfill True
 
-                        textbutton u"Создать":
+                        textbutton u"Создать" activate_sound "audio/sfx/click.wav":
                             style "settings_text_button"
                             action Show("profiles_create_screen")
 
-                        textbutton u"Изменить":
+                        textbutton u"Изменить" activate_sound "audio/sfx/click.wav":
                             style "settings_text_button"
                             sensitive (_sel_profile is not None)
                             action Show("profiles_rename_screen")
 
-                        textbutton u"Удалить":
+                        textbutton u"Удалить" activate_sound "audio/sfx/click.wav":
                             style "settings_text_button"
                             sensitive (_sel_profile is not None)
                             action Show("profiles_delete_screen")
@@ -468,7 +482,7 @@ screen profiles_error_popup(message):
                 text_align 0.5
                 color "#404040"
 
-            textbutton "OK":
+            textbutton "OK" activate_sound "audio/sfx/click.wav":
                 xalign 0.5
                 action Hide("profiles_error_popup")
                 style "confirm_button"

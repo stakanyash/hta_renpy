@@ -7,12 +7,20 @@
 
 ## Основное ####################################################################
 
+## Версия игры.
+
+define config.version = "0.6.0"
+define hta_build = "260329a"
+
 ## Читаемое название игры. Используется при установке стандартного заголовка
 ## окна, показывается в интерфейсе и отчётах об ошибках.
 ##
 ## Символы "_()", окружающие название, отмечают его как пригодное для перевода.
 
-define config.name = _("Hard Truck Apocalypse")
+if config.developer:
+    define config.name = _(f"Ex Machina: Ren'Py - developer version {config.version}")
+else:
+    define config.name = _(f"Ex Machina: Ren'Py - demo version {config.version}")
 
 define config.mouse = { 
     "default": [("gui/cursor.png", 0, 0)]
@@ -33,13 +41,6 @@ init -2 python:
 ## Установите на False, чтобы спрятать заголовок.
 
 define gui.show_name = False
-
-
-## Версия игры.
-
-define config.version = "0.6.0"
-define hta_build = "260323a"
-
 
 ## Текст, помещённый в экран "Об игре". Поместите текст между тройными скобками.
 ## Для отделения абзацев оставляйте между ними пустую строку.

@@ -42,13 +42,27 @@ screen InGameMenu():
             xalign 0.5
             yalign 0.5
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/close_e.png" 
-            hover "gui/townmenu/close_h.png"
-            action Return()
+        #imagebutton activate_sound "audio/sfx/click.wav":
+        #    idle "gui/townmenu/close_e.png" 
+        #    hover "gui/townmenu/close_h.png"
+        #    action Return()
+        #    xalign 0.99
+        #    yalign 0.0
+        #    focus_mask True 
+
+        frame:
+            background None
             xalign 0.99
-            yalign 0.0
-            focus_mask True 
+            yalign 0
+
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/close_idle.png",
+                    hover_image="gui/htabuttons/close_hover.png",
+                    activate_image="gui/htabuttons/close_activate.png",
+                    clicked=renpy.store.Return(),
+                    activate_sound="audio/sfx/click.wav"
+                )
 
         imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/buttons/tab_stats_e.png" 
@@ -199,13 +213,28 @@ screen Selling_Menu():
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
             text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/close_e.png" 
-            hover "gui/townmenu/close_h.png"
-            action Return()
+        frame:
+            background None
             xalign 0.99
-            yalign 0.0
-            focus_mask True 
+            yalign 0
+
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/close_idle.png",
+                    hover_image="gui/htabuttons/close_hover.png",
+                    activate_image="gui/htabuttons/close_activate.png",
+                    clicked=renpy.store.Return(),
+                    activate_sound="audio/sfx/click.wav",
+                    focus_mask=True
+                )
+
+        #imagebutton activate_sound "audio/sfx/click.wav":
+        #    idle "gui/townmenu/close_e.png" 
+        #    hover "gui/townmenu/close_h.png"
+        #    action Return()
+        #    xalign 0.99
+        #    yalign 0.0
+        #    focus_mask True 
 
         viewport:
             xpos 230
@@ -379,13 +408,28 @@ screen Gun_Shop_Menu():
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
             text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/close_e.png" 
-            hover "gui/townmenu/close_h.png"
-            action [Hide("Gun_Shop_Menu"), Show("InGameMenu")]
+        #imagebutton activate_sound "audio/sfx/click.wav":
+        #    idle "gui/townmenu/close_e.png" 
+        #    hover "gui/townmenu/close_h.png"
+        #    action [Hide("Gun_Shop_Menu"), Show("InGameMenu")]
+        #    xalign 0.99
+        #    yalign 0.0
+        #    focus_mask True 
+
+        frame:
+            background None
             xalign 0.99
-            yalign 0.0
-            focus_mask True 
+            yalign 0
+
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/close_idle.png",
+                    hover_image="gui/htabuttons/close_hover.png",
+                    activate_image="gui/htabuttons/close_activate.png",
+                    clicked=[renpy.store.Hide("Gun_Shop_Menu"), renpy.store.Show("InGameMenu")],
+                    activate_sound="audio/sfx/click.wav",
+                    focus_mask=True
+                )
 
         viewport:
             xpos 245
@@ -426,7 +470,7 @@ screen Gun_Shop_Menu():
                                 spacing 15
                                 yalign 0.5
 
-                                imagebutton:
+                                imagebutton activate_sound "audio/sfx/click.wav":
                                     idle im.Scale(icon_path, 90, 90)
                                     hover im.Scale(icon_path, 90, 90)
                                     action NullAction()
@@ -465,7 +509,7 @@ screen Gun_Shop_Menu():
 
                 text full_desc size 25 color "#353535"
 
-        textbutton _("Купить") xpos 1190 yalign 0.788 sensitive selected_shop_item is not None action Confirm(
+        textbutton _("Купить") activate_sound "audio/sfx/click.wav" xpos 1190 yalign 0.788 sensitive selected_shop_item is not None action Confirm(
             _("Вы уверены, что хотите купить это оружие?"),
             yes=Function(buy_weapon_with_old_handling, selected_shop_item),
             no=NullAction()
@@ -553,13 +597,28 @@ screen Car_Shop():
 
         text "Сравнение:" size 22 color "#404040" font "fonts/ARIALBD.ttf" xpos 1138 ypos 871
 
-        imagebutton activate_sound "audio/sfx/click.wav":
-            idle "gui/townmenu/close_e.png" 
-            hover "gui/townmenu/close_h.png"
-            action [Hide("Car_Shop"), Show("InGameMenu")]
+        #imagebutton activate_sound "audio/sfx/click.wav":
+        #    idle "gui/townmenu/close_e.png" 
+        #    hover "gui/townmenu/close_h.png"
+        #    action [Hide("Car_Shop"), Show("InGameMenu")]
+        #    xalign 0.99
+        #    yalign 0.0
+        #    focus_mask True 
+
+        frame:
+            background None
             xalign 0.99
-            yalign 0.0
-            focus_mask True 
+            yalign 0
+
+            python:
+                ui.imagebutton(
+                    idle_image="gui/htabuttons/close_idle.png",
+                    hover_image="gui/htabuttons/close_hover.png",
+                    activate_image="gui/htabuttons/close_activate.png",
+                    clicked=[renpy.store.Hide("Car_Shop"), renpy.store.Show("InGameMenu")],
+                    activate_sound="audio/sfx/click.wav",
+                    focus_mask=True
+                )
 
         if player_config.town_type == "City":
             viewport:
@@ -840,7 +899,7 @@ screen Car_Shop():
         focus_mask True 
 
     if player_config.town_type == "City":
-        imagebutton:
+        imagebutton activate_sound "audio/sfx/click.wav":
             idle "gui/townmenu/buttons/tab_weapon_e.png" 
             hover "gui/townmenu/buttons/tab_weapon_s.png"
             action [Hide("Car_Shop"), Show("Gun_Shop_Menu")]

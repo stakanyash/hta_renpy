@@ -141,18 +141,7 @@ label firstenemyfight:
             python:
                 process_battle_loot(drops)
 
-        if random.random() <= 0.5:
-            $ current_music = renpy.music.get_playing(channel='music')
-
-            if current_music and current_music not in battle_tracks:
-                $ persistent._prebattle_music = current_music
-            else:
-                $ persistent._prebattle_music = None
-
-            $ randommus = random.randint(1, 2)
-            $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-            "На Вас нападают!"
-            call randomfight from _call_randomfight
+        $ CheckForRandomBattle()
 
         jump afterfirstattack
 
@@ -299,17 +288,7 @@ label tozaimka:
 
     hide lisa2 with dissolve
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_2
+    $ CheckForRandomBattle()
 
     scene bg_gugulino with dissolve
 
@@ -375,17 +354,7 @@ label tozaimka:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_3
+    $ CheckForRandomBattle()
 
     play music "music/town1.ogg" fadeout 1.0
 
@@ -481,17 +450,7 @@ label sergo:
                 $ player_config.town_type = "NotInCity"
                 jump secondenemy
             elif LisaAgreed == True:
-                if random.random() <= 0.5:
-                    $ current_music = renpy.music.get_playing(channel='music')
-
-                    if current_music and current_music not in battle_tracks:
-                        $ persistent._prebattle_music = current_music
-                    else:
-                        $ persistent._prebattle_music = None
-                    $ randommus = random.randint(1, 2)
-                    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                    "На Вас нападают!"
-                    call randomfight from _call_randomfight_4
+                $ CheckForRandomBattle()
                 
                 $ player_config.town_type = "NotInCity"
                 jump dickzapravka
@@ -727,17 +686,7 @@ label deadfather:
 
     "Полностью раздосадованный Вы уезжаете обратно в Южный."
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_5
+    $ CheckForRandomBattle()
 
     jump sowthagain
 
@@ -801,17 +750,7 @@ label dyingfather:
 
     mc "Может быть, в Южном слышали о нём?"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_6
+    $ CheckForRandomBattle()
 
     jump sowthagain
 
@@ -904,17 +843,7 @@ label sowthagain:
                 $ renpy.save("checkpoint-2")
                 $ TakeGunFromZaimka = True
                 $ player_config.town_type = "NotInCity"
-                if random.random() <= 0.5:
-                    $ current_music = renpy.music.get_playing(channel='music')
-
-                    if current_music and current_music not in battle_tracks:
-                        $ persistent._prebattle_music = current_music
-                    else:
-                        $ persistent._prebattle_music = None
-                    $ randommus = random.randint(1, 2)
-                    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                    "На Вас нападают!"
-                    call randomfight from _call_randomfight_7
+                $ CheckForRandomBattle()
                 play music "music/town2.ogg" fadeout 1.0
                 jump KventinZaimka
 
@@ -923,17 +852,7 @@ label sowthagain:
                 $ renpy.save("checkpoint-2")
                 $ TakeGunFromZaimka = False
                 $ player_config.town_type = "NotInCity"
-                if random.random() <= 0.5:
-                    $ current_music = renpy.music.get_playing(channel='music')
-
-                    if current_music and current_music not in battle_tracks:
-                        $ persistent._prebattle_music = current_music
-                    else:
-                        $ persistent._prebattle_music = None
-                    $ randommus = random.randint(1, 2)
-                    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                    "На Вас нападают!"
-                    call randomfight from _call_randomfight_8
+                $ CheckForRandomBattle()
                 jump felixbase
 
     elif LisaAgreed == False:
@@ -971,17 +890,7 @@ label sowthagain:
 
         $ player_config.town_type = "NotInCity"
 
-        if random.random() <= 0.5:
-            $ current_music = renpy.music.get_playing(channel='music')
-
-            if current_music and current_music not in battle_tracks:
-                $ persistent._prebattle_music = current_music
-            else:
-                $ persistent._prebattle_music = None
-            $ randommus = random.randint(1, 2)
-            $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-            "На Вас нападают!"
-            call randomfight from _call_randomfight_9
+        $ CheckForRandomBattle()
 
         scene black with fade
 
@@ -1236,17 +1145,7 @@ label felixdefeated:
     hide felix with dissolve
     hide mcsurp with dissolve
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_10
+    $ CheckForRandomBattle()
 
     jump leaver1m1tovaterland
 

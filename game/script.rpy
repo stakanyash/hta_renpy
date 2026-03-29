@@ -7,15 +7,15 @@ default battle_tracks = [
     "audio/music/battle02.ogg",
     "audio/music/battle2.ogg",
     "audio/music/battle7.ogg",
-    "audio/music/battle3.ogg",
-    "audio/music/battle6.ogg"
+#   "audio/music/battle3.ogg",
+#   "audio/music/battle6.ogg"
 ]
 default driving_tracks_by_region = {
     "r1m1": ["driving1", "driving2"],
     "r1m2": ["driving1", "driving2"],
     "r1m3": ["driving1", "driving2"],
     "r1m4": ["driving1", "driving2", "driving7"],
-    "r2m1": ["driving3", "driving6"]
+#   "r2m1": ["driving3", "driving6"]
 }
 
 init python:
@@ -23,7 +23,7 @@ init python:
     import random
 
     @dataclass
-    class PlayerConfig:
+    class PlayerConfig(renpy.store.NoRollback):
         current_gun: str = "Hornet"
         second_gun: str = None
         money: int = 100
@@ -45,6 +45,7 @@ init python:
         big_gun_install: str = None
         r1m3_farm_count: int = 0
         r1m4_side_quest: str = "CanBeGiven"
+        sidequest_findhusband: str = "CanBeGiven"
 
         def update_town_info(self, town_type, town_name, group_logo):
             self.town_type = town_type
@@ -539,7 +540,7 @@ init python:
             if player_config.money >= repair_cost:
                 player_config.spend_money(repair_cost)
                 player_config.hp = player_config.max_hp
-                renpy.notify(f"Вы отдали {repair_cost} монет")
+                renpy.notify(f"Вы отдали {repair_cost} монет.")
                 renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
             else:
                 renpy.notify("Недостаточно денег для ремонта!")
@@ -561,7 +562,7 @@ init python:
             return
 
         player_config.spend_money(heal_cost)
-        renpy.notify(f"Вы отдали {heal_cost} монет")
+        renpy.notify(f"Вы отдали {heal_cost} монет.")
         player_config.heals = player_config.max_heals
         renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
 
@@ -653,6 +654,14 @@ init python:
 default player_config = PlayerConfig()
 
 init python:
+    BATTLE_MUSIC_CONFIG = {
+        "r1m4": [1, 2, 7],
+#       "r2m1": [3, 6],
+#       "r2m2": [3, 6],
+    }
+    
+    DEFAULT_BATTLE_MUSIC = [1, 2]
+
     def battle_setup(enemy_image, enemy_hp, bgname, enemy_name, enemy_type="Regular", damage_multiplier=1.0):
         store.enemy_image = enemy_image
         store.enemy_hp = enemy_hp
@@ -704,6 +713,22 @@ init python:
         config.keymap['game_menu'] = ['game_menu']
         persistent._in_battle = False
         renpy.sound.stop(channel="shoot")
+
+    def CheckForRandomBattle():
+        global randommus
+        if random.random() <= 0.5:
+            current_music = renpy.music.get_playing(channel='music')
+            if current_music and current_music not in battle_tracks:
+                persistent._prebattle_music = current_music
+            else:
+                persistent._prebattle_music = None
+
+            tracks = BATTLE_MUSIC_CONFIG.get(player_config.current_region, DEFAULT_BATTLE_MUSIC)
+            randommus = random.choice(tracks)
+
+            renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+            renpy.say(None, "На Вас нападают!")
+            renpy.call("randomfight")
 
 transform stretch_in:
     yzoom 0.95
