@@ -227,6 +227,12 @@ init python:
         if name and os.path.isdir(_profile_saves_dir(name)):
             config.savedir = _profile_saves_dir(name)
             persistent.current_profile = name
+            import renpy.savelocation as _sl
+            import renpy.loadsave as _ls
+            _sl.init()
+            _ls.init()
+            _ls.clear_cache()
+            renpy.persistent.update()
 
     config.start_callbacks.append(_profile_system_init)
     config.after_load_callbacks.append(_profile_after_load)

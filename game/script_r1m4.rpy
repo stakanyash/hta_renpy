@@ -31,7 +31,7 @@ label r1m4start:
     play music "music/town1.ogg" fadeout 1.0
     scene bg_olm with dissolve
 
-    if player_config.r1m4_side_quest == "CanBeGiven":
+    if player_config.r1m4warehouse_side_quest == "Q_CANBEGIVEN":
         jump galdenquest
     elif LisaAgreed == False:
         jump homersearch
@@ -420,7 +420,8 @@ label galdenquest:
         "Согласиться":
             $ renpy.notify("Игра сохранена в слот 5.")
             $ renpy.save("checkpoint-5")
-            $ r1m4SideQuest = "Taken"
+            $ player_config.r1m4warehouse_side_quest = "Q_TAKEN"
+            $ player_config.r1m4warehouse_side_quest_status = "Accepted"
             mc "Хорошо, я попробую разобраться."
             hide galden with dissolve
             "Вы уезжаете на склад."
@@ -430,15 +431,18 @@ label galdenquest:
             $ CheckForRandomBattle()
             
             if random.random() <= 0.7:
-                if player_config.sidequest_findhusband == "CanBeTaken":
+                if player_config.sidequest_findhusband == "Q_CANBETAKEN":
                     jump r1m4SideQuest_FindHusband_start
+                else:
+                    jump r1m4SideQuest_start
             else:
                 jump r1m4SideQuest_start
 
         "Отказать":
             $ renpy.notify("Игра сохранена в слот 5.")
             $ renpy.save("checkpoint-5")
-            $ r1m4SideQuest = "Failed"
+            $ player_config.r1m4warehouse_side_quest = "Q_FAILED"
+            $ player_config.r1m4warehouse_side_quest_status = "Declined"
             mc "Мне это неинтересно."
             hide galden with dissolve
             "Вы спокойно уходите. Незнакомец ничего не говорит Вам в след."
@@ -479,6 +483,7 @@ label r1m4SideQuest_start:
 
     menu:
         "Освободить лидера":
+            $ player_config.r1m4warehouse_side_quest_status = "GoingForLeaderSave"
             $ renpy.notify("Игра сохранена в слот 6.")
             $ renpy.save("checkpoint-6")
             mc "Хорошо, я помогу вам. Где ваш лидер?"
@@ -492,6 +497,7 @@ label r1m4SideQuest_start:
             jump r1m4SideQuest_whereisleader
 
         "Отбить склад силой":
+            $ player_config.r1m4warehouse_side_quest_status = "LeaderIsNotSaved"
             $ renpy.notify("Игра сохранена в слот 6.")
             $ renpy.save("checkpoint-6")
             mc "Слишком это хлопотно, проще убить вас всех."
@@ -696,6 +702,8 @@ label r1m4SideQuest_leaderisfree:
     play music "music/intensedialogue03.ogg" fadeout 1.0
     scene bg_leaderisfree with fade
 
+    $ player_config.r1m4warehouse_side_quest_status = "LeaderSaved"
+
     mc "Чего ждёшь? Садись в мою машину. Торопись, они могли вызвать подмогу!"
 
     extleader "Спасибо, что освободил меня, незнакомец. Но каковы твои мотивы? Я не уверен, могу ли тебе доверять."
@@ -705,7 +713,13 @@ label r1m4SideQuest_leaderisfree:
 
     $ CheckForRandomBattle()
 
-    jump r1m4SideQuest_leaderisback
+    if random.random() <= 0.7:
+        if player_config.sidequest_findhusband == "Q_CANBEGIVEN":
+            jump r1m4SideQuest_FindHusband_start
+        else:
+            jump r1m4SideQuest_leaderisback
+    else:
+        jump r1m4SideQuest_leaderisback
 
 label r1m4SideQuest_leaderisback:
 
@@ -761,6 +775,9 @@ label r1m4SideQuest_finish:
     $ player_config.add_money(1000)
     $ renpy.notify("Вы получили 1000 монет.")
 
+    $ player_config.r1m4warehouse_side_quest = "Q_COMPLETED"
+    $ player_config.r1m4warehouse_side_quest_status = "Completed"
+
     galden "Отлично! Вот тебе награда."
 
     mc "Супер!"
@@ -779,30 +796,182 @@ label r1m4SideQuest_finish:
 # Alla encounter (during warehouse sidequest)
 
 label r1m4SideQuest_FindHusband_start:
-    if player_config.sidequest_findhusband == "CanBeTaken":
-        "Вы ехали в направлении склада, но тут вас останавливают..."
+    scene bg_allaencounter with fade
 
-        #show alla
-        #show mc
+    play music "music/driving7.ogg" fadeout 1.0
 
-        alla "Ох, молодой человек, беда у меня."
-        mc "Что у Вас случилось?"
-        alla "Муж мой поехал на рынок и пропал. Наверное, продал товар и запил. Вот я и пошла на его поиски."
+    "Вы ехали в направлении склада, но тут вас останавливают..."
 
-        menu:
-            "Помочь":
-                $ player_config.SideQuest_FindHusband = "Taken"
-                mc "Я могу Вам помочь в его поисках."
-                alla "Спасибо тебе молодой человек, ты меня сможешь найти в деревне Перчь."
-                mc "Скажите хоть, как зовут Вашего мужа? И опишите внешность."
-                alla "Ох, конечно! Зовут его Филимон. Кудрявый, с повязкой на лбу. Любит говорить \"встала и пошла\", а также неравнодушен к розовым кофточкам."
-                mc "Я всё понял. Проедусь по местным барам, поищу."
-                jump r1m4SideQuest_FindHusband_searches
-            "Отказать":
-                $ player_config.SideQuest_FindHusband = "Failed"
-                mc "Это твои проблемы, решай их сама."
-                "После этого вы поехали дальше к складу."
+    show alla at right, stretch_in
 
-                $ CheckForRandomBattle()
-                    
+    alla "Ох, молодой человек, беда у меня."
+
+    show mc_2 at left, stretch_in
+
+    mc "Что у Вас случилось?"
+
+    hide alla
+    show alla at right, stretch_in
+
+    alla "Муж мой поехал на рынок и пропал. Наверное, продал товар и запил. Вот я и пошла на его поиски."
+
+    menu:
+        "Помочь":
+            $ player_config.SideQuest_FindHusband = "Q_TAKEN"
+            mc "Я могу Вам помочь в его поисках."
+            alla "Спасибо тебе молодой человек, ты меня сможешь найти в деревне Перчь."
+            mc "Скажите хоть, как зовут Вашего мужа? И опишите внешность."
+            hide alla
+            show alla at right, stretch_in
+            alla "Ох, конечно! Зовут его Филимон. Кудрявый, с повязкой на лбу. Любит говорить \"встала и пошла\", а также неравнодушен к розовым кофточкам."
+            mc "Я всё понял. Проедусь по местным барам, поищу."
+
+            hide alla with dissolve
+            hide mc with dissolve
+
+            $ CheckForRandomBattle()
+
+            jump r1m4SideQuest_FindHusband_searches
+        "Отказать":
+            $ player_config.SideQuest_FindHusband = "Q_FAILED"
+            mc "Это твои проблемы, решай их сама."
+
+            hide alla with dissolve
+            hide mc with dissolve
+
+            "После этого Вы поехали дальше к складу."
+
+            $ CheckForRandomBattle()
+                
+            if player_config.r1m4warehouse_side_quest_status == "Accepted":
                 jump r1m4SideQuest_start
+            elif player_config.r1m4warehouse_side_quest_status == "LeaderSaved":
+                jump r1m4SideQuest_leaderisback
+
+label r1m4SideQuest_FindHusband_searches:
+    scene bg_lauka with fade
+    $ player_config.update_town_info("Village", "Лаука", "fishermen")
+
+    "В Лауке его нет..."
+
+    $ CheckForRandomBattle()
+
+    scene bg_saliniom with fade
+    $ player_config.update_town_info("Village", "Салиниом", "fishermen")
+
+    "В Салиниоме его так-же нет..."
+
+    $ CheckForRandomBattle()
+
+    scene bg_olm with fade
+    $ player_config.update_town_info("City", "Ольм", "north_nath_traders")
+
+    "Даже в Ольме его нет..."
+    mc "Хотя казалось бы, что ему тут делать?"
+
+    $ CheckForRandomBattle()
+
+    scene bg_kordan with fade
+    $ player_config.update_town_info("Village", "Кордан", "fishermen")
+
+    mc "Да где-же искать твоего Филимона-то?!"
+    mc "Попробую поискать его в Калисе..."
+
+    $ CheckForRandomBattle()
+
+    scene bg_kalis with fade
+    $ player_config.update_town_info("Village", "Калис", "fishermen")
+
+    "В баре Калиса Вы замечаете подходящего под описание Филимона..."
+
+    #show filimon
+    #show mc
+
+    filimon "Что ты хочешь от меня, мил человек?"
+    mc "Филимон, твоя жена совсем с ног сбилась тебя искать, а ты тут по барам рассиживаешься."
+    filimon "Устал я от неё! Дай отдохнуть, с мужиками посидеть."
+    mc "Давай-ка я тебя провожу до дому."
+    filimon "Не хочу домой! И ты мне надоел, встал и пошёл отсюда."
+    mc "Лучше соглашайся по-хорошему!"
+    filimon "Слушай, давай я тебе денег дам, и ты от меня отстанешь?"
+
+    menu:
+        "Согласиться":
+            mc "Ладно, пожалею тебя. Сколько?"
+            filimon "500 монет тебя устроит?"
+            mc "Я большего от тебя и не ждал. Давай сюда."
+            $ player_config.add_money(500)
+            $ renpy.notify("Вы получили 500 монет.")
+            $ player_config.sidequest_findhusband = "Q_FAILED"
+            $ player_config.sidequest_findhusband_status = "Failed"
+
+            "После этого Вы поехали дальше к складу."
+
+            $ player_config.town_type = "NotInCity"
+
+            $ CheckForRandomBattle()
+                
+            if player_config.r1m4warehouse_side_quest_status == "Accepted":
+                jump r1m4SideQuest_start
+            elif player_config.r1m4warehouse_side_quest_status == "LeaderSaved":
+                jump r1m4SideQuest_leaderisback
+        "Отказать":
+            mc "Нет, я пообещал, что верну тебя домой!"
+            filimon "Делать нечего, поехали. Надоел ты мне уже."
+            mc "Вот и ладненько."
+
+            #hide filimon
+            #hide mc
+
+            "После этого Вы поехали в Перчь."
+
+            $ player_config.town_type = "NotInCity"
+
+            $ CheckForRandomBattle()
+
+            jump r1m4SideQuest_FindHusband_bringback
+
+label r1m4SideQuest_FindHusband_bringback:
+    scene bg_perch with fade
+    $ player_config.update_town_info("Village", "Перчь", "fishermen")
+
+    "Приехав в Перчь Вы достаточно быстро находите Аллушку."
+
+    show alla at right, stretch_in
+
+    alla "Ты привёз мне моего мужа?"
+
+    show mc6 at left, stretch_in
+
+    mc "Вон он, жив и здрав."
+
+    hide alla
+    show alla at right, stretch_in
+
+    alla "Ох, даже не знаю, как тебя отблагодарить. У меня тут есть вещи на продажу, вот я тебе их и отдам."
+
+    python:
+        if not player_config.try_add_item("Tobacco"):
+            handle_full_inventory("Tobacco", ItemPricesVillage)
+        else:
+            renpy.notify("В ваш инвентарь добавлен предмет: Табак.")
+
+        if not player_config.try_add_item("Book"):
+            handle_full_inventory("Book", ItemPricesVillage)
+        else:
+            renpy.notify("В ваш инвентарь добавлен предмет: Книги.")
+
+    mc "Спасибо. До свидания."
+
+    hide alla with dissolve
+
+    mc "Надо двигаться дальше..."
+
+    $ player_config.town_type = "NotInCity"
+
+    $ CheckForRandomBattle()
+                
+    if player_config.r1m4warehouse_side_quest_status == "Accepted":
+        jump r1m4SideQuest_start
+    elif player_config.r1m4warehouse_side_quest_status == "LeaderSaved":
+        jump r1m4SideQuest_leaderisback

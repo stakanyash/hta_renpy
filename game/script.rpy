@@ -44,8 +44,10 @@ init python:
         farm_enabled: bool = False
         big_gun_install: str = None
         r1m3_farm_count: int = 0
-        r1m4_side_quest: str = "CanBeGiven"
-        sidequest_findhusband: str = "CanBeGiven"
+        r1m4warehouse_side_quest: str = "Q_CANBEGIVEN"
+        r1m4warehouse_side_quest_status: str = "NotTaken"
+        sidequest_findhusband: str = "Q_CANBEGIVEN"
+        sidequest_findhusband_status: str = "NotTaken"
 
         def update_town_info(self, town_type, town_name, group_logo):
             self.town_type = town_type
@@ -339,6 +341,16 @@ init python:
             "desc": "Заряд плазмы, посылаемый этим оружием, летит с небольшой скоростью, но при удачном попадании может буквально испепелить противника.",
             "icon": "gui/townmenu/items/fagot.png",
         },
+        "Book": {
+            "name": "Книги",
+            "desc": "Старые книги. Сегодня немногие умеют читать, но те, кто умеет, готовы заплатить неплохие деньги за мудрость веков, сокрытую среди пожелтевших листов.",
+            "icon": "gui/townmenu/items/books.png",
+        },
+        "Tobacco": {
+            "name": "Табак",
+            "desc": "Неизвестно, что делали в прошлом при помощи этих вонючих палочек, но сегодня они активно используются в качестве ингредиента для снадобий.",
+            "icon": "gui/townmenu/items/tobacco.png",
+        },
     }
 
     car_descriptions = {
@@ -370,6 +382,8 @@ init python:
         "Fuel": 1850,
         "Maxim": 13300,
         "Fagot": 12750,
+        "Book": 25315,
+        "Tobacco": 13785,
     }
 
     ItemPricesVillage = {
@@ -395,6 +409,8 @@ init python:
         "Fuel": 900,
         "Maxim": 13300,
         "Fagot": 12750,
+        "Book": 24615,
+        "Tobacco": 13215, 
     }
 
     CarPrices = {
@@ -413,7 +429,7 @@ init python:
         "Mirotvorec": 180001,
     }
 
-    def buy_weapon_with_old_handling(weapon_name):
+    def buy_weapon_with_old_handling(weapon_name, as_second=False):
         if weapon_name in smallweapon_prices:
             price = smallweapon_prices[weapon_name]
             gun_size = "Small"
@@ -430,50 +446,34 @@ init python:
         weapon_data = GunDatabase.get(weapon_name)
         gun_type = weapon_data.get("type") if weapon_data else None
 
-        if player_config.big_gun_install != "Possible":
+        if gun_size == "Big" and player_config.big_gun_install != "Possible":
+            renpy.notify("Эта машина не поддерживает крупное оружие.")
+            player_config.add_money(price)
+            return
 
-            if gun_size == "Big":
-                renpy.notify("Эта машина не поддерживает крупное оружие.")
-                return
+        if as_second and player_config.big_gun_install != "Possible":
+            renpy.notify("Эта машина не поддерживает второй слот оружия.")
+            player_config.add_money(price)
+            return
 
+        if as_second:
+            old = player_config.second_gun
+            player_config.second_gun = weapon_name
+            player_config.second_gun_type = gun_type
+            slot_name = "второй слот"
+        else:
             old = player_config.current_gun
-
             player_config.current_gun = weapon_name
             player_config.gun_type = gun_type
+            slot_name = "первый слот"
 
-            if old:
-                if not player_config.try_add_item(old):
-                    sell_price = ItemPricesCity.get(old, 0) if player_config.town_type == "City" else ItemPricesVillage.get(old, 0)
-                    player_config.add_money(sell_price)
+        if old:
+            if not player_config.try_add_item(old):
+                sell_price = ItemPricesCity.get(old, 0) if player_config.town_type == "City" else ItemPricesVillage.get(old, 0)
+                player_config.add_money(sell_price)
+                renpy.notify(f"{gun_names.get(old, old)} продан за {sell_price} монет (нет места в инвентаре).")
 
-            renpy.notify(f"Установлено оружие: {gun_names.get(weapon_name, weapon_name)}")
-        else:
-            if gun_size == "Big":
-                old = player_config.current_gun
-
-                player_config.current_gun = weapon_name
-                player_config.gun_type = gun_type
-
-                if old:
-                    if not player_config.try_add_item(old):
-                        sell_price = ItemPricesCity.get(old, 0) if player_config.town_type == "City" else ItemPricesVillage.get(old, 0)
-                        player_config.add_money(sell_price)
-
-                renpy.notify(f"Установлено основное оружие: {gun_names.get(weapon_name, weapon_name)}")
-
-            else:
-                old = player_config.second_gun
-
-                player_config.second_gun = weapon_name
-                player_config.second_gun_type = gun_type
-
-                if old:
-                    if not player_config.try_add_item(old):
-                        sell_price = ItemPricesCity.get(old, 0) if player_config.town_type == "City" else ItemPricesVillage.get(old, 0)
-                        player_config.add_money(sell_price)
-
-                renpy.notify(f"Установлено второе оружие: {gun_names.get(weapon_name, weapon_name)}")
-
+        renpy.notify(f"Установлено в {slot_name}: {gun_names.get(weapon_name, weapon_name)}")
         renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
 
     def buy_car_with_exchange(car_name):
@@ -640,16 +640,34 @@ init python:
         if items_not_added > 0:
             compensation = items_not_added * random.randint(100, 200)
             money_drop += compensation
-            renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
 
         player_config.add_money(money_drop)
 
+        parts = []
         if dropped_something:
             drop_list = ", ".join(drop_names_text)
-            renpy.say(None, f"Найдены следующие предметы: {drop_list}.\nТакже получено {money_drop} монет.")
-        else:
-            renpy.say(None, f"Найдено: {money_drop} монет.")
+            parts.append(f"Найдены следующие предметы: {drop_list}.")
+        if items_not_added > 0:
+            parts.append(f"Не хватило места для {items_not_added} предм. - получена компенсация {compensation} монет.")
+        parts.append(f"Также получено {money_drop} монет." if dropped_something else f"Найдено: {money_drop} монет.")
 
+        renpy.say(None, "\n".join(parts))
+
+    def handle_full_inventory(item, price_map):
+        while not player_config.try_add_item(item):
+            db = ItemDatabase[item]
+            dbname = db["name"]
+            sellprice = int(price_map.get(item) / 2)
+            ntf = renpy.confirm(
+                f"В вашем инвентаре не хватает места для \"{dbname}\"! "
+                f"Хотите ли вы открыть инвентарь и продать лишние предметы?\n\n"
+                f"В случае отказа \"{dbname}\" будут проданы за 50% стоимости ({sellprice} монет)."
+            )
+            if ntf:
+                renpy.call_screen("Selling_Menu")
+            else:
+                player_config.add_money(sellprice)
+                break
 
 default player_config = PlayerConfig()
 
@@ -827,6 +845,23 @@ label fightlost:
     ]
 
     $ renpy.say(mc, random.choice(dead_msgs))
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+
+    pause 0.5
+
+    $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
+    python:
+        for i in range(len(slides)):
+            renpy.show(slides[i])
+            renpy.pause(pauses[i], hard=True)
+            renpy.hide(slides[i])
     
     return
 

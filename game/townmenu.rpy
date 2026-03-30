@@ -122,7 +122,7 @@ screen Selling_Menu():
         def sell_item_immediately(item_key):
             if item_key is None:
                 return
-
+            
             if player_config.town_type == "City":
                 price = ItemPricesCity.get(item_key)
             else:
@@ -140,46 +140,34 @@ screen Selling_Menu():
             if item_key in player_config.inventory:
                 player_config.inventory.remove(item_key)
         
-        def install_weapon(weapon_key):
+        def install_weapon(weapon_key, as_second=False):
             if weapon_key not in GunDatabase:
                 return
 
             gun_data = GunDatabase[weapon_key]
             gun_size = gun_data["size"]
 
-            if player_config.big_gun_install != "Possible":
-                if gun_size == "Big":
-                    renpy.notify("Нельзя установить крупное оружие.")
-                    return
+            if gun_size == "Big" and player_config.big_gun_install != "Possible":
+                renpy.notify("Нельзя установить крупное оружие на эту машину.")
+                return
 
+            if as_second and player_config.big_gun_install != "Possible":
+                renpy.notify("Эта машина не поддерживает второй слот оружия.")
+                return
+
+            player_config.inventory.remove(weapon_key)
+
+            if as_second:
+                old = player_config.second_gun
+                player_config.second_gun = weapon_key
+                player_config.second_gun_type = gun_data["type"]
+            else:
                 old = player_config.current_gun
-
-                player_config.inventory.remove(weapon_key)
                 player_config.current_gun = weapon_key
                 player_config.gun_type = gun_data["type"]
 
-                if old:
-                    player_config.inventory.append(old)
-            else:
-                if gun_size == "Big":
-                    old = player_config.current_gun
-
-                    player_config.inventory.remove(weapon_key)
-                    player_config.current_gun = weapon_key
-                    player_config.gun_type = gun_data["type"]
-
-                    if old:
-                        player_config.inventory.append(old)
-
-                else:
-                    old = player_config.second_gun
-
-                    player_config.inventory.remove(weapon_key)
-                    player_config.second_gun = weapon_key
-                    player_config.second_gun_type = gun_data["type"]
-
-                    if old:
-                        player_config.inventory.append(old)
+            if old:
+                player_config.inventory.append(old)
         
         def is_weapon(item_key):
             return item_key in GunDatabase
@@ -223,7 +211,7 @@ screen Selling_Menu():
                     idle_image="gui/htabuttons/close_idle.png",
                     hover_image="gui/htabuttons/close_hover.png",
                     activate_image="gui/htabuttons/close_activate.png",
-                    clicked=renpy.store.Return(),
+                    clicked=Return(),
                     activate_sound="audio/sfx/click.wav",
                     focus_mask=True
                 )
@@ -274,7 +262,10 @@ screen Selling_Menu():
             text "[len(player_config.inventory)]/[CarInventoryLimits.get(player_config.car, 0)]" xalign 0.5 yalign 0.5 color "#404040"
 
         if selected_item and is_weapon(selected_item):
-            textbutton _("Установить") activate_sound "audio/sfx/click.wav" action [Function(install_weapon, selected_item), SetScreenVariable("selected_item", None)] xpos 1500 yalign 0.702 sensitive (selected_item is not None and selected_item != player_config.current_gun and selected_item != player_config.second_gun)
+            textbutton _("Установить (осн.)") activate_sound "audio/sfx/click.wav" action [Function(install_weapon, selected_item, False), SetScreenVariable("selected_item", None)] xpos 1405 yalign 0.609 sensitive (selected_item is not None)
+
+            if player_config.big_gun_install == "Possible":
+                textbutton _("Установить (доп.)") activate_sound "audio/sfx/click.wav" action [Function(install_weapon, selected_item, True), SetScreenVariable("selected_item", None)] xpos 1405 yalign 0.702 sensitive (selected_item is not None)
 
         textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
         textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action [Confirm("Вы действительно хотите удалить этот предмет?\nВНИМАНИЕ: Действие необратимо!", yes=Function(delete_item, selected_item), no=None), SetScreenVariable("selected_item", None)] xpos 1193 yalign 0.859 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
@@ -319,8 +310,12 @@ screen Selling_Menu():
                 if is_weapon(selected_item):
                     $ min_dmg, max_dmg = gun_stats.get(selected_item, (0, 0))
                     
-                    if selected_item == player_config.current_gun:
-                        text "[item_data['desc']]\n\nНаносимый урон: от [min_dmg] до [max_dmg] единиц\n\n{color=#247724}Данное оружие является текущим установленным.{/color}" size 25 color "#353535"
+                    if selected_item == player_config.current_gun and selected_item == player_config.second_gun:
+                        text "[item_data['desc']]\n\nНаносимый урон: от [min_dmg] до [max_dmg] единиц\n\n{color=#247724}Оружие такого типа установлено в оба слота.{/color}" size 25 color "#353535"
+                    elif selected_item == player_config.current_gun:
+                        text "[item_data['desc']]\n\nНаносимый урон: от [min_dmg] до [max_dmg] единиц\n\n{color=#247724}Оружие такого типа установлено в основной слот.{/color}" size 25 color "#353535"
+                    elif selected_item == player_config.second_gun:
+                        text "[item_data['desc']]\n\nНаносимый урон: от [min_dmg] до [max_dmg] единиц\n\n{color=#247724}Оружие такого типа установлено во второй слот.{/color}" size 25 color "#353535"
                     else:
                         text "[item_data['desc']]\n\nНаносимый урон: от [min_dmg] до [max_dmg] единиц" size 25 color "#353535"
                 else:
@@ -511,11 +506,15 @@ screen Gun_Shop_Menu():
 
         textbutton _("Купить") activate_sound "audio/sfx/click.wav" xpos 1190 yalign 0.788 sensitive selected_shop_item is not None action Confirm(
             _("Вы уверены, что хотите купить это оружие?"),
-            yes=Function(buy_weapon_with_old_handling, selected_shop_item),
+            yes=Function(buy_weapon_with_old_handling, selected_shop_item, False),
             no=NullAction()
         )
 
-        textbutton _("Купить как второе оружие (недоступно)") activate_sound "audio/sfx/click.wav" text_color "#808080" action NullAction() xpos 935 yalign 0.86 sensitive False
+        textbutton _("Купить как второе оружие") activate_sound "audio/sfx/click.wav" xpos 1035 yalign 0.86 sensitive (selected_shop_item is not None and player_config.big_gun_install == "Possible") action Confirm(
+            _("Купить как второе оружие?"),
+            yes=Function(buy_weapon_with_old_handling, selected_shop_item, True),
+            no=NullAction()
+        )
 
     imagebutton activate_sound "audio/sfx/click.wav":
         idle "gui/townmenu/buttons/tab_stats_e.png" 

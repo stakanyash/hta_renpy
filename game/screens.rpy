@@ -1025,7 +1025,6 @@ screen about():
             # Вкладки
             hbox:
                 spacing 20
-                yoffset 10
 
                 fixed:
                     xysize (180, 90)
@@ -1180,7 +1179,7 @@ screen save_hta(title="Сохранить", is_load=False):
                     style "page_label"
                     key_events True
                     xalign 0.5
-                    ypos -70
+                    ypos -90
                     action page_name_value.Toggle()
 
                     input:
@@ -1213,7 +1212,7 @@ screen save_hta(title="Сохранить", is_load=False):
                 vbox:
                     style_prefix "page"
                     xalign 0.51
-                    yalign 0.01
+                    ypos -10
 
                     $ current_page = FileCurrentPage()
 
@@ -1299,7 +1298,7 @@ screen load(title="Загрузить", is_load=True):
                     style "page_label"
                     key_events True
                     xalign 0.5
-                    ypos -70
+                    ypos -90
                     action page_name_value.Toggle()
 
                     input:
@@ -1332,7 +1331,7 @@ screen load(title="Загрузить", is_load=True):
                 vbox:
                     style_prefix "page"
                     xalign 0.51
-                    yalign 0.01
+                    ypos -10
 
                     $ current_page = FileCurrentPage()
 
@@ -1550,7 +1549,7 @@ screen preferences():
 
             hbox:
                 spacing 25
-                yoffset -8
+                yoffset -20
 
                 hbox:
                     spacing 25
@@ -2270,7 +2269,6 @@ style skip_text:
 style skip_triangle:
     ## Нам надо использовать шрифт, имеющий в себе символ U+25B8 (стрелку выше).
     font "DejaVuSans.ttf"
-
 
 ## Экран уведомлений ###########################################################
 ##

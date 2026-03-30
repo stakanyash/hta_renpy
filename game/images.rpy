@@ -209,6 +209,8 @@ image bg_leaver1_ural_1 = "images/bgs/r1m4/bg_leaver1_ural_1.jpg"
 image bg_leaver1_ural_2 = "images/bgs/r1m4/bg_leaver1_ural_2.jpg"
 image bg_leaver1_ural_3 = "images/bgs/r1m4/bg_leaver1_ural_3.jpg"
 image bg_leaver1_ural_4 = "images/bgs/r1m4/bg_leaver1_ural_4.jpg"
+image bg_allaencounter = "images/bgs/r1m4/bg_allaencounter.jpg"
+image bg_perch = "images/bgs/r1m4/bg_perch.jpg"
 
 # Sprites: Characters
 
@@ -257,6 +259,7 @@ image bobbase51 = "images/sprites/chr/bob.png"
 image kane = "images/sprites/chr/kane.png"
 image pablo = "images/sprites/chr/pablo.png"
 image tunnelguy = "images/sprites/chr/tunnelguy.png"
+image alla = "images/sprites/chr/alla.png"
 
 # Sprites: Enemy's
 

@@ -10,17 +10,14 @@
 ## Версия игры.
 
 define config.version = "0.6.0"
-define hta_build = "260329a"
+define hta_build = "260330a"
 
 ## Читаемое название игры. Используется при установке стандартного заголовка
 ## окна, показывается в интерфейсе и отчётах об ошибках.
 ##
 ## Символы "_()", окружающие название, отмечают его как пригодное для перевода.
 
-if config.developer:
-    define config.name = _(f"Ex Machina: Ren'Py - developer version {config.version}")
-else:
-    define config.name = _(f"Ex Machina: Ren'Py - demo version {config.version}")
+define config.name = _(f"Ex Machina: Ren'Py")
 
 define config.mouse = { 
     "default": [("gui/cursor.png", 0, 0)]
@@ -41,12 +38,6 @@ init -2 python:
 ## Установите на False, чтобы спрятать заголовок.
 
 define gui.show_name = False
-
-## Текст, помещённый в экран "Об игре". Поместите текст между тройными скобками.
-## Для отделения абзацев оставляйте между ними пустую строку.
-
-define gui.about = _p("""
-""")
 
 ## by: stakan
 ## Disabling autosave (replaced with checkpoints)
@@ -76,7 +67,6 @@ define config.has_voice = False
 ## каналах, раскомментируйте строчку и настройте пример звука для прослушивания.
 
 define config.sample_sound = "sfx/shoot/hornet_shoot.wav"
-# define config.sample_voice = "sample-voice.ogg"
 
 
 ## Раскомментируйте следующую строчку, чтобы настроить аудиофайл, который будет
@@ -207,26 +197,8 @@ init python:
     build.classify('**/#**', None)
     build.classify('**/thumbs.db', None)
 
-    ## Чтобы архивировать файлы, классифицируйте их, например, как 'archive'.
-
-    # build.classify('game/**.png', 'archive')
-    # build.classify('game/**.jpg', 'archive')
-
     ## Файлы, соответствующие образцам документации, дублируются в приложениях
     ## Mac, чтобы они появлялись и в приложении, и в zip архиве.
 
     build.documentation('*.html')
     build.documentation('*.txt')
-
-
-## Для совершения покупок в приложении требуется лицензионный ключ Google Play.
-## Его можно найти в консоли разработчика Google Play в разделе "Монетизация" >
-## "Настройка монетизации" > "Лицензирование".
-
-# define build.google_play_key = "..."
-
-
-## Имя пользователя и название проекта, ассоциированные с проектом на itch.io,
-## разделённые дробью.
-
-# define build.itch_project = "renpytom/test-project"
