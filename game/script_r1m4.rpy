@@ -252,62 +252,24 @@ label tokranfight:
     pause 0.5
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "kranboss"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 2500
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Кран"
-    $ bgname = "bg_kranfight"
-    $ EnemyType = "Boss"
-    $ BossIcon = "boss1.png"
-    $ enemy_damage_multiplier = 2.5
+    $ battle_setup("kranboss", 2500, "bg_kranfight", "Бандит", "Boss", 2.5, "boss1")
+
+    scene bg_kranfight
     show kranboss at center
 
     while enemy_hp > 0 and player_hp > 0:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ renpy.sound.stop(channel="boss_charge")
-        
+        $ battle_end_lose()
         hide kranboss
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide kranboss with dissolve
         stop sfx2 fadeout 1.0
@@ -323,26 +285,22 @@ label tokranfight:
 
 label leaveregion1:
 
+    stop boss_charge fadeout 1.0
+
     play music "music/bio02.ogg" fadeout 1.0
 
-    if player_config.car == "Molokovoz":
-        scene bg_leaver1_cargo1_1 with dissolve
-    elif player_config.car == "Ural":
-        scene bg_leaver1_ural_1 with dissolve
-    else:
-        scene bg_leaver1_van_1 with dissolve
+    $ renpy.scene()
+    $ renpy.show(f"bg_leaver1_{player_config.car}_1")
+    $ renpy.with_statement(dissolve)
 
     mc "Это то самое место, которое указал Гомер, но я не вижу никаких врат."
     mc "Неужели всё зря?!"
 
     pause 0.5
 
-    if player_config.car == "Molokovoz":
-        scene bg_leaver1_cargo1_2 with dissolve
-    elif player_config.car == "Ural":
-        scene bg_leaver1_ural_2 with dissolve
-    else:
-        scene bg_leaver1_van_2 with dissolve
+    $ renpy.scene()
+    $ renpy.show(f"bg_leaver1_{player_config.car}_2")
+    $ renpy.with_statement(dissolve)
 
     mc "Что это лезет из-под воды? Покой нам только снится..."
     mc "Только прикончил одного монстра, как второй на подходе..."
@@ -353,24 +311,18 @@ label leaveregion1:
 
     pause 0.5
 
-    if player_config.car == "Molokovoz":
-        scene bg_leaver1_cargo1_3 with dissolve
-    elif player_config.car == "Ural":
-        scene bg_leaver1_ural_3 with dissolve
-    else:
-        scene bg_leaver1_van_3 with dissolve
+    $ renpy.scene()
+    $ renpy.show(f"bg_leaver1_{player_config.car}_3")
+    $ renpy.with_statement(dissolve)
 
     mc "Похоже, он приглашает меня к себе в пасть. Так это же и есть Морские Врата!"
     mc "В животе чудища я и доплыву до Оракула."
 
     pause 0.5
 
-    if player_config.car == "Molokovoz":
-        scene bg_leaver1_cargo1_4 with dissolve
-    elif player_config.car == "Ural":
-        scene bg_leaver1_ural_4 with dissolve
-    else:
-        scene bg_leaver1_van_4 with dissolve
+    $ renpy.scene()
+    $ renpy.show(f"bg_leaver1_{player_config.car}_4")
+    $ renpy.with_statement(dissolve)
 
     mc "Страшно, конечно..."
     mc "Ну, терять мне нечего. Только вперёд!"
@@ -513,32 +465,10 @@ label r1m4SideQuest_warehousefight:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "warehouseguard"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 2125 # 50% of 5 van hp
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Захватчики склада"
-    $ bgname = "bg_warehouse"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.5
+    $ battle_setup("warehouseguard", 2125, "bg_warehouse", "Захватчики склада", "Regular", 1.5)
 
     scene bg_warehouse
     show warehouseguard at center
@@ -547,28 +477,12 @@ label r1m4SideQuest_warehousefight:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide warehouseguard
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide warehouseguard with dissolve
 
@@ -636,32 +550,10 @@ label r1m4SideQuest_freeleader:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "leadertakers"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 2025 # 50% HP of 3 Vans and 1 Lorry
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Захватчики лидера рыбаков"
-    $ bgname = "bg_freeleaderfight"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.35
+    $ battle_setup("leadertakers", 2025, "bg_freeleaderfight", "Бандит", "Regular", 1.35)
 
     scene bg_freeleaderfight
     show leadertakers at center
@@ -670,28 +562,12 @@ label r1m4SideQuest_freeleader:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide leadertakers
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide leadertakers with dissolve
 
@@ -827,7 +703,7 @@ label r1m4SideQuest_FindHusband_start:
             mc "Я всё понял. Проедусь по местным барам, поищу."
 
             hide alla with dissolve
-            hide mc with dissolve
+            hide mc_2 with dissolve
 
             $ CheckForRandomBattle()
 
@@ -837,7 +713,7 @@ label r1m4SideQuest_FindHusband_start:
             mc "Это твои проблемы, решай их сама."
 
             hide alla with dissolve
-            hide mc with dissolve
+            hide mc_2 with dissolve
 
             "После этого Вы поехали дальше к складу."
 
@@ -884,8 +760,8 @@ label r1m4SideQuest_FindHusband_searches:
 
     "В баре Калиса Вы замечаете подходящего под описание Филимона..."
 
-    #show filimon
-    #show mc
+    show filimon at right with dissolve
+    show mc6 at left with dissolve
 
     filimon "Что ты хочешь от меня, мил человек?"
     mc "Филимон, твоя жена совсем с ног сбилась тебя искать, а ты тут по барам рассиживаешься."
@@ -905,6 +781,9 @@ label r1m4SideQuest_FindHusband_searches:
             $ player_config.sidequest_findhusband = "Q_FAILED"
             $ player_config.sidequest_findhusband_status = "Failed"
 
+            hide filimon with dissolve
+            hide mc6 with dissolve
+
             "После этого Вы поехали дальше к складу."
 
             $ player_config.town_type = "NotInCity"
@@ -920,8 +799,8 @@ label r1m4SideQuest_FindHusband_searches:
             filimon "Делать нечего, поехали. Надоел ты мне уже."
             mc "Вот и ладненько."
 
-            #hide filimon
-            #hide mc
+            hide filimon with dissolve
+            hide mc6 with dissolve
 
             "После этого Вы поехали в Перчь."
 

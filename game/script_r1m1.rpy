@@ -1,14 +1,27 @@
 label main_game:
 
-    pause 0.5
+    if TutorialAccepted == False:
+        pause 0.5
 
-    show bg_r1m1load at truecenter
+        show bg_r1m1load at truecenter
 
-    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-    call show_loading(level_slides) from _call_show_loading
+        call show_loading(level_slides) from _call_show_loading
 
-    hide bg_r1m1load
+        hide bg_r1m1load
+
+    stop music fadeout 1.0
+
+    pause 1.0
+
+    call screen crawl_text(
+        text_content="История не сохранила точных сведений о тёмных временах, наступивших сразу после Катастрофы. Доподлинно известно лишь то, что люди выжили в отравленном воздухе благодаря защитным маскам. Это творение неизвестного изобретателя уравняло всех. Тонкая преграда, вставшая на пути неминуемой смерти, стала символом нового человечества. Маски сплотили людей и придали им силы бороться за место под солнцем.\n\n    Возникли новые поселения вдали от прежних городов, ставших братскими могилами. Постепенно были налажены связи между разрозненными группами выживших. Фермеры, шахтёры, торговцы – возвращение к простым занятиям пошло только на пользу растерянным людям.\n\n    Но человек остаётся человеком во все времена. Остались те, кто сохранял мудрость веков, чтобы делиться ею с миром. Были и те, кто предпочёл созиданию разрушение.",
+        sound_file="audio/voice/r1m1/r1m1_969_narrator.ogg",
+        back_music="audio/music/bio07unloop.ogg",
+        duration=69.0,
+        scroll_speed=3.5
+    )
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True
@@ -21,30 +34,14 @@ label main_game:
     $ player_config.max_heals = CarMaxHeals.get(player_config.car, 15)
     $ player_config.heals = player_config.max_heals
 
-    $ renpy.notify("Игра сохранена в слот 1.")
-    $ renpy.save("checkpoint-1")
-
-    play music "music/bio07unloop.ogg" fadeout 1.0
-
-    scene black with fade
-
-    "{cps=20}История не сохранила точных сведений о тёмных временах, наступивших сразу после Катастрофы. Доподлинно известно лишь то, что люди выжили в отравленном воздухе благодаря защитным маскам.{/cps}"
-
-    "{cps=20}Это творение неизвестного изобретателя уравняло всех. Тонкая преграда, вставшая на пути неминуемой смерти, стала символом нового человечества. Маски сплотили людей и придали им силы бороться за место под солнцем.{/cps}"
-
-    "{cps=20}Возникли новые поселения вдали от прежних городов, ставших братскими могилами. Постепенно были налажены связи между разрозненными группами выживших.{/cps}"
-
-    "{cps=20}Фермеры, шахтёры, торговцы – возвращение к простым занятиям пошло только на пользу растерянным людям.{/cps}"
-
-    "{cps=20}Но человек остаётся человеком во все времена. Остались те, кто сохранял мудрость веков, чтобы делиться ею с миром.{/cps} {cps=10}Были и те, кто предпочёл созиданию разрушение.{/cps}"
-
-    "Вы тихо и мирно спали, как вдруг Вас разбудил отец..."
+    scene bg_glukhoe with fade
 
     play music "music/quietdialogue01.ogg" fadeout 1.0
 
-    scene bg_glukhoe with fade
-
     show fther at left with dissolve
+
+    $ renpy.notify("Игра сохранена в слот 1.")
+    $ renpy.save("checkpoint-1")
 
     father "Проснулся, лежебока! Уже битый час я жду тебя, чтобы сказать кое-что весьма важное, а ты опять спишь как сурок..."
 
@@ -469,11 +466,10 @@ label sergo:
 
             "Вы спокойно уходите, а Фермер продолжает ругаться на Вас в след."
             mc "\"Странный какой-то тип. Не зря я ему отказал.\""
+            $ player_config.town_type = "NotInCity"
             if LisaAgreed == True:
-                $ player_config.town_type = "NotInCity"
                 jump felixmeet
             elif LisaAgreed == False:
-                $ player_config.town_type = "NotInCity"
                 jump glukhoeburn
 
 label dickzapravka:
@@ -607,9 +603,7 @@ label felixafterfight:
 
     mc "Обязательно встретимся, Феликс..."
 
-    if RunFromFelix == True:
-        "Вы починились на ближайшей заправке и продолжили путь до дома."
-    elif RunFromFelix == False:
+    if RunFromFelix == False:
         "Феликс со своей охраной поспешно удаляется, а Вы поехали дальше домой."
 
     jump glukhoeburn
@@ -920,26 +914,18 @@ label KventinZaimka:
 
     kventin "Бери, конечно. Всё в отличном состоянии."
 
+    python:
+        if not player_config.try_add_item("Storm"):
+            handle_full_inventory("Storm", ItemPricesVillage)
+        else:
+            renpy.notify("В ваш инвентарь добавлен предмет: Шторм.")
+
     mc "Спасибо. Теперь можно отправляться на охоту!"
 
     hide mc3 with dissolve
     hide kventin with dissolve
 
-    python:
-        weapon_name = player_config.current_gun
-        display_name = gun_names.get(weapon_name, weapon_name)
-
-        if player_config.try_add_item(weapon_name):
-            renpy.notify(f'В ваш инвентарь добавлен "{display_name}".')
-        else:
-            price = ItemPricesCity.get(weapon_name, 65)
-            player_config.add_money(price)
-            renpy.notify(f'В вашем инвентаре недостаточно места. "{display_name}" был автоматически продан за {price} монет.')
-
-    $ player_config.current_gun = "Storm"
-    $ player_config.gun_type = "Shotgun"
-
-    "Вы ставите новое вооружение на свою машину и едете к Феликсу..."
+    "Вы едете к Феликсу..."
 
     $ player_config.town_type = "NotInCity"
 

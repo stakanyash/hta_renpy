@@ -42,14 +42,6 @@ screen InGameMenu():
             xalign 0.5
             yalign 0.5
 
-        #imagebutton activate_sound "audio/sfx/click.wav":
-        #    idle "gui/townmenu/close_e.png" 
-        #    hover "gui/townmenu/close_h.png"
-        #    action Return()
-        #    xalign 0.99
-        #    yalign 0.0
-        #    focus_mask True 
-
         frame:
             background None
             xalign 0.99
@@ -216,41 +208,56 @@ screen Selling_Menu():
                     focus_mask=True
                 )
 
-        #imagebutton activate_sound "audio/sfx/click.wav":
-        #    idle "gui/townmenu/close_e.png" 
-        #    hover "gui/townmenu/close_h.png"
-        #    action Return()
-        #    xalign 0.99
-        #    yalign 0.0
-        #    focus_mask True 
-
         viewport:
-            xpos 230
-            ypos 290
-            xsize 500
-            ysize 900
-            scrollbars None
-            mousewheel False
+            xpos 245
+            ypos 295
+            xsize 480
+            ysize 630
+            scrollbars "vertical"
+            mousewheel True
 
-            grid 3 4 spacing -15:
+            has vbox
 
-                for item_id in player_config.inventory:
+            if len(player_config.inventory) == 0:
+                text "Инвентарь пуст." size 30 font "fonts/ARIALBD.ttf" color "#353535" xpos 120 ypos 295
+            else:
+                grid 1 len(player_config.inventory) spacing 20:
 
-                    $ item_data = ItemDatabase.get(item_id)
+                    for item_id in player_config.inventory:
 
-                    if item_data:
+                        $ item_data = ItemDatabase.get(item_id)
 
-                        frame:
-                            xsize 180
-                            ysize 180
-                            background None
+                        if item_data:
 
-                            imagebutton activate_sound "audio/sfx/click.wav":
-                                idle item_data["icon"]
-                                hover item_data["icon"]
-                                hover_background Solid("#50505031")
-                                action SetScreenVariable("selected_item", item_id)
-                                focus_mask True
+                            $ icon_path = item_data["icon"]
+
+                            frame:
+                                xsize 500
+                                ysize 100
+                                background None
+
+                                button:
+                                    xsize 450
+                                    background None
+                                    action SetScreenVariable("selected_item", item_id)
+                                    hover_background Solid("#50505031")
+                                    activate_sound "audio/sfx/click.wav"
+
+                                    hbox:
+                                        spacing 15
+                                        yalign 0.5
+
+                                        imagebutton activate_sound "audio/sfx/click.wav":
+                                            idle im.Scale(icon_path, 90, 90)
+                                            hover im.Scale(icon_path, 90, 90)
+                                            action NullAction()
+                                            focus_mask True
+
+                                        vbox:
+                                            spacing 5
+                                            yalign 0.5
+                                            xpos 20
+                                            text item_data["name"] size 30 color "#353535" font "fonts/ARIALBD.ttf"
 
         frame:
             xalign 0.9
@@ -268,7 +275,7 @@ screen Selling_Menu():
                 textbutton _("Установить (доп.)") activate_sound "audio/sfx/click.wav" action [Function(install_weapon, selected_item, True), SetScreenVariable("selected_item", None)] xpos 1405 yalign 0.702 sensitive (selected_item is not None)
 
         textbutton _("Продать") activate_sound "audio/sfx/click.wav" action [Function(sell_item_immediately, selected_item), SetScreenVariable("selected_item", None)] xpos 1190 yalign 0.788 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
-        textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action [Confirm("Вы действительно хотите удалить этот предмет?\nВНИМАНИЕ: Действие необратимо!", yes=Function(delete_item, selected_item), no=None), SetScreenVariable("selected_item", None)] xpos 1193 yalign 0.859 sensitive selected_item is not None and (player_config.town_type in ["City", "Village"])
+        textbutton _("Удалить") activate_sound "audio/sfx/click.wav" action [Confirm("Вы действительно хотите удалить этот предмет?\nВНИМАНИЕ: Действие необратимо!", yes=Function(delete_item, selected_item), no=None), SetScreenVariable("selected_item", None)] xpos 1193 yalign 0.859 sensitive selected_item is not None
 
         if selected_item:
             $ item_data = ItemDatabase[selected_item]
@@ -402,14 +409,6 @@ screen Gun_Shop_Menu():
         elif player_config.money >= 1000000:
             text "Деньги:" size 19 xpos 70 ypos 20 textalign 0.5 color "#404040"
             text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
-
-        #imagebutton activate_sound "audio/sfx/click.wav":
-        #    idle "gui/townmenu/close_e.png" 
-        #    hover "gui/townmenu/close_h.png"
-        #    action [Hide("Gun_Shop_Menu"), Show("InGameMenu")]
-        #    xalign 0.99
-        #    yalign 0.0
-        #    focus_mask True 
 
         frame:
             background None
@@ -595,14 +594,6 @@ screen Car_Shop():
             text "[player_config.format_money(player_config.money)]" size 19 xpos 140 ypos 20 textalign 0.5 color "#404040"
 
         text "Сравнение:" size 22 color "#404040" font "fonts/ARIALBD.ttf" xpos 1138 ypos 871
-
-        #imagebutton activate_sound "audio/sfx/click.wav":
-        #    idle "gui/townmenu/close_e.png" 
-        #    hover "gui/townmenu/close_h.png"
-        #    action [Hide("Car_Shop"), Show("InGameMenu")]
-        #    xalign 0.99
-        #    yalign 0.0
-        #    focus_mask True 
 
         frame:
             background None

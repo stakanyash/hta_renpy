@@ -4,13 +4,27 @@
     FLAGS_FILE = os.path.join(config.basedir, "config.json")
 
     def load_flags():
+        defaults = {
+            "license": False,
+            "tutorial": False,
+            "current_profile": None,
+            "fullscreen": False,
+            "music_volume": 1.0,
+            "sound_volume": 1.0,
+            "mute_music": False,
+            "mute_sfx": False,
+            "text_speed": 0,
+            "afm_time": 0
+        }
         if os.path.exists(FLAGS_FILE):
             try:
                 with open(FLAGS_FILE, "r", encoding="utf-8") as f:
-                    return json.load(f)
+                    loaded = json.load(f)
+                    defaults.update(loaded)
+                    return defaults
             except:
                 pass
-        return {"license": False, "tutorial": False}
+        return defaults
 
     def save_flags(flags):
         with open(FLAGS_FILE, "w", encoding="utf-8") as f:
@@ -129,17 +143,11 @@ screen disclaimer_screen():
                 textbutton "Принять" activate_sound "audio/sfx/click.wav":
                     xminimum 250
                     yminimum 60
-                #   background Solid("#3a753a")
-                #   hover_background Solid("#4a954a")
-                #   text_style "button_text_center"
                     action Return()
 
                 textbutton "Отказаться" activate_sound "audio/sfx/click.wav":
                     xminimum 250
                     yminimum 60
-                #   background Solid("#b70000")
-                #   hover_background Solid("#d30101")
-                #   text_style "button_text_center"
                     action Quit()
 
 label splashscreen:

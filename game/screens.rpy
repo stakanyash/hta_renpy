@@ -168,7 +168,7 @@ screen enemy_ui():
     # Фон и иконка врага
     if EnemyType == "Boss":
         add "gui/bossbar/background.png" yalign 1.0 xalign 0.95
-        add "gui/bossbar/icons/" + BossIcon xalign 0.957 yalign 0.865
+        add "gui/bossbar/icons/" + boss_icon xalign 0.957 yalign 0.865
     else:
         add "gui/bossbar/background_noboss.png" yalign 1.0 xalign 0.95
 
@@ -677,9 +677,9 @@ screen main_menu():
                 style "main_menu_version"
 
     if config.developer:
-        text "Ex Machina Ren'Py - developer version [config.version!t] ([hta_build!t])" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina: Ren'Py - developer version [config.version!t] ([hta_build!t])" xpos 460 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
     else:
-        text "Ex Machina Ren'Py - demo version [config.version!t] ([hta_build!t])" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
+        text "Ex Machina: Ren'Py - demo version [config.version!t] ([hta_build!t])" xpos 430 ypos 0.02 yanchor 0.0 style "main_menu_text" color "#fff" xmaximum 800 size 17
 
     text "{color=#ffffff}Профиль:{/color} {color=#ffcc00}[current_profile_name()]{/color}":
         size 25
@@ -768,14 +768,6 @@ screen statistics_screen():
                     activate_sound="audio/sfx/click.wav",
                     focus_mask=True
                 )
-        
-        #imagebutton activate_sound "audio/sfx/click.wav":
-        #    idle "gui/townmenu/close_e.png" 
-        #    hover "gui/townmenu/close_h.png"
-        #    action Return()
-        #    xalign 0.99
-        #    yalign 0.0
-        #    focus_mask True 
 
         text "Молодой человек, только вступивший во взрослую жизнь, которая\nготовит ему массу неприятных сюрпризов." size 22 xalign 0.145 yalign 0.715 color "#404040"
 

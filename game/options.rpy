@@ -10,17 +10,18 @@
 ## Версия игры.
 
 define config.version = "0.6.0"
-define hta_build = "260330a"
+define hta_build = "260403a"
 
 ## Читаемое название игры. Используется при установке стандартного заголовка
 ## окна, показывается в интерфейсе и отчётах об ошибках.
 ##
 ## Символы "_()", окружающие название, отмечают его как пригодное для перевода.
 
-define config.name = _(f"Ex Machina: Ren'Py")
+define config.name = _("Ex Machina: Ren'Py")
 
 define config.mouse = { 
-    "default": [("gui/cursor.png", 0, 0)]
+    "default": [("gui/cursor.png", 0, 0)],
+    "empty": [("gui/cursor_empty.png", 0, 0)]
 }
 
 define config.rollback_enabled = config.developer
@@ -33,6 +34,20 @@ init python:
 init -2 python:
     import os
     config.savedir = os.path.join(config.gamedir, "profiles")
+
+init python:
+    _last_fullscreen_state = None
+
+    def _check_fullscreen():
+        global _last_fullscreen_state
+        current = renpy.game.preferences.fullscreen
+        if _last_fullscreen_state is None:
+            _last_fullscreen_state = current
+        elif current != _last_fullscreen_state:
+            _last_fullscreen_state = current
+            renpy.invoke_in_thread(save_audio_prefs)
+
+    config.periodic_callbacks.append(_check_fullscreen)
 
 ## Определяет, показывать ли заголовок, данный выше, на экране главного меню.
 ## Установите на False, чтобы спрятать заголовок.
@@ -49,7 +64,7 @@ define config.has_autosave = False
 ## постройке дистрибутивов. Оно должно содержать текст формата ASCII и не должно
 ## содержать пробелы, двоеточия и точки с запятой.
 
-define build.name = "HTARenPy"
+define build.name = "ExMRenPy"
 
 
 ## Звуки и музыка ##############################################################

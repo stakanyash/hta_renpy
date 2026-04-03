@@ -111,6 +111,7 @@ init python:
     renpy.music.register_channel("bossattack", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("sellitem", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("boss_charge", mixer="sfx", loop=True, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
+    renpy.music.register_channel("crawl_voice", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
 
     smallweapon_prices = {
         "Hornet": 280, "Specter": 590, "PKT": 1670, "Kord": 3680, "Storm": 3450, "Maxim": 26600, "Fagot": 25500
@@ -658,16 +659,25 @@ init python:
             db = ItemDatabase[item]
             dbname = db["name"]
             sellprice = int(price_map.get(item) / 2)
-            ntf = renpy.confirm(
-                f"В вашем инвентаре не хватает места для \"{dbname}\"! "
-                f"Хотите ли вы открыть инвентарь и продать лишние предметы?\n\n"
-                f"В случае отказа \"{dbname}\" будут проданы за 50% стоимости ({sellprice} монет)."
-            )
+            if player_config.town_type != "NotInCity":
+                ntf = renpy.confirm(
+                    f"В вашем инвентаре не хватает места для \"{dbname}\"! "
+                    f"Хотите ли вы открыть инвентарь и продать лишние предметы?\n\n"
+                    f"В случае отказа \"{dbname}\" будут проданы за 50% стоимости ({sellprice} монет)."
+                )
+            else:
+                ntf = renpy.confirm(
+                    f"В вашем инвентаре не хватает места для \"{dbname}\"! "
+                    f"Хотите ли вы открыть инвентарь и освободить место?\n\n"
+                    f"В случае отказа вам будет начислена компенсация в размере 50% стоимости \"{dbname}\" ({sellprice} монет)."
+                )
             if ntf:
                 renpy.call_screen("Selling_Menu")
             else:
                 player_config.add_money(sellprice)
                 break
+
+        renpy.notify(f"В ваш инвентарь добавлен предмет: {dbname}")
 
 default player_config = PlayerConfig()
 
@@ -680,7 +690,7 @@ init python:
     
     DEFAULT_BATTLE_MUSIC = [1, 2]
 
-    def battle_setup(enemy_image, enemy_hp, bgname, enemy_name, enemy_type="Regular", damage_multiplier=1.0):
+    def battle_setup(enemy_image, enemy_hp, bgname, enemy_name, enemy_type="Regular", damage_multiplier=1.0, boss_icon=None):
         store.enemy_image = enemy_image
         store.enemy_hp = enemy_hp
         store.enemy_max_hp = enemy_hp
@@ -688,6 +698,7 @@ init python:
         store.enemy_name = enemy_name
         store.EnemyType = enemy_type
         store.enemy_damage_multiplier = damage_multiplier
+        store.boss_icon = f"{boss_icon}.png"
 
         store.player_hp = player_config.hp
         store.player_max_hp = player_config.max_hp

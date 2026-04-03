@@ -94,25 +94,26 @@ label defeateddefender:
     mc "Посмотрим, что в этом ящике..."
     $ randomgun = random.randint(1, 9)
 
-    if player_config.try_add_item(player_config.current_gun):
-        $ renpy.notify(f"В ваш инвентарь добавлен {gun_names.get(player_config.current_gun, player_config.current_gun)}.")
-    else:
-        $ price = ItemPricesCity.get(player_config.current_gun)
-        $ player_config.add_money(price)
-        $ renpy.notify(f"В вашем инвентаре недостаточно места! {gun_names.get(player_config.current_gun, player_config.current_gun)} автоматически продан за {price} монет.")
-
     if 1 <= randomgun <= 3:
-        "Вы нашли оружие \"Корд\"!"
-        $ player_config.current_gun = "Kord"
-        $ player_config.gun_type = "Firearm"
+        python:
+            if not player_config.try_add_item("Kord"):
+                handle_full_inventory("Kord", ItemPricesCity)
+            else:
+                renpy.notify("В ваш инвентарь добавлен предмет: Корд.")
+
     elif 4 <= randomgun <= 6:
-        "Вы нашли оружие \"ПКТ\"!"
-        $ player_config.current_gun = "PKT"
-        $ player_config.gun_type = "Firearm"
+        python:
+            if not player_config.try_add_item("PKT"):
+                handle_full_inventory("PKT", ItemPricesCity)
+            else:
+                renpy.notify("В ваш инвентарь добавлен предмет: ПКТ.")
+
     else:
-        "Вы нашли оружие \"Шторм\"!"
-        $ player_config.current_gun = "Storm"
-        $ player_config.gun_type = "Shotgun"
+        python:
+            if not player_config.try_add_item("Storm"):
+                handle_full_inventory("Storm", ItemPricesCity)
+            else:
+                renpy.notify("В ваш инвентарь добавлен предмет: Шторм.")
 
     mc "О, то что нужно!"
     mc "Пора таки двигаться в Восточное."
