@@ -12,3 +12,4 @@ game/icon.png
 /game/.vscode
 *.txt
 /.vscode
+/game/profiles

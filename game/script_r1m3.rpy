@@ -1,16 +1,16 @@
 # Default start-up
 
 label vaterlandfirst:
-    if not config.developer:
-        pause 0.5
 
-        show bg_r1m3load at truecenter
+    pause 0.5
 
-        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+    show bg_r1m3load at truecenter
 
-        call show_loading(level_slides) from _call_show_loading_3
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-        scene black
+    call show_loading(level_slides) from _call_show_loading_3
+
+    scene black
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True
@@ -21,9 +21,9 @@ label vaterlandfirst:
 
     $ player_config.current_region = "r1m3"
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
         jump r1m3withlisa
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         jump r1m3nolisa
 
 # Without Lisa route
@@ -130,17 +130,7 @@ label asgardboom:
     hide seller
     hide mcsurp
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_29
+    $ CheckForRandomBattle()
 
     jump mvillage
 
@@ -188,32 +178,10 @@ label mvillage:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "minerattackers"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 500
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандиты"
-    $ bgname = "bg_mvillage_fight"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.2
+    $ battle_setup("minerattackers", 500, "bg_mvillage_fight", "Бандит", "Regular", 1.2)
 
     scene bg_mvillage_fight
     show minerattackers at center
@@ -222,28 +190,12 @@ label mvillage:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide minerattackers
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide minerattackers with dissolve
 
@@ -292,32 +244,10 @@ label brigdedestroy:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "brigde_defender"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 1000
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандиты"
-    $ bgname = "bg_nearbridge"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.1
+    $ battle_setup("brigde_defender", 1000, "bg_nearbridge", "Бандит", "Regular", 1.1)
 
     scene bg_nearbridge
     show brigde_defender at center
@@ -326,28 +256,12 @@ label brigdedestroy:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide brigde_defender
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide brigde_defender with dissolve
 
@@ -359,7 +273,6 @@ label brigdedestroy:
 
         stop music fadeout 1.0
         jump BOOOM
-
 
 label BOOOM:
     scene bg_bandbridge with fade
@@ -401,17 +314,7 @@ label peshtallow:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_30
+    $ CheckForRandomBattle()
 
     jump minin1st_nl
 
@@ -695,32 +598,10 @@ label oilmine1st:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "oilbandits"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 500
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Захватчики вышки"
-    $ bgname = "bg_oil"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.2
+    $ battle_setup("oilbandits", 500, "bg_oil", "Захватчики вышки", "Regular", 1.2)
 
     scene bg_oil
     show oilbandits at center
@@ -729,29 +610,12 @@ label oilmine1st:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide oilbandits
         play sound "sfx/explosion04.wav"
-        
-        $ renpy.sound.stop(channel="shoot")
+        jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide oilbandits with dissolve
 
@@ -797,32 +661,10 @@ label followlastone:
     mc "Всё таки заметил..."
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "banditsonbase"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 500
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals 
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандиты"
-    $ bgname = "bg_oilspy_fight"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.2
+    $ battle_setup("banditsonbase", 500, "bg_oilspy_fight", "Бандиты", "Regular", 1.2)
 
     scene bg_oilspy_fight
     show banditsonbase at center
@@ -831,28 +673,12 @@ label followlastone:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide banditsonbase
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide banditsonbase with dissolve
 
@@ -870,17 +696,7 @@ label banditbaseelim:
 
     mc "Пора ехать в Минин."
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_16
+    $ CheckForRandomBattle()
 
     jump minin3rd_nl
 
@@ -981,17 +797,7 @@ label mayorspy:
 
     "С этой мыслью Вы аккуратно покидаете место событий и уезжаете обратно в Минин."
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_17
+    $ CheckForRandomBattle()
 
     jump minin4th_nl
 
@@ -1029,17 +835,7 @@ label minin4th_nl:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_18
+    $ CheckForRandomBattle()
 
     jump oilmine2nd
 
@@ -1063,17 +859,7 @@ label oilmine2nd:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_19
+    $ CheckForRandomBattle()
 
     jump minin5th_nl
 
@@ -1109,17 +895,7 @@ label minin5th_nl:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_20
+    $ CheckForRandomBattle()
 
     scene black with fade
 
@@ -1186,17 +962,7 @@ label r1m3withlisa:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_34
+    $ CheckForRandomBattle()
 
     jump base51lisa
 
@@ -1241,32 +1007,10 @@ label base51lisa:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "base51fight"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 650
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals 
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандиты"
-    $ bgname = "bg_base51fight"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.1
+    $ battle_setup("base51fight", 650, "bg_base51fight", "Бандиты", "Regular", 1.1)
 
     scene bg_base51fight
     show base51fight at center
@@ -1275,28 +1019,12 @@ label base51lisa:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide base51fight
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide base51fight with dissolve
 
@@ -1336,17 +1064,7 @@ label base51afterfight:
 
     "Вам ничего не остаётся, кроме как отправиться в Мидгард."
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_35
+    $ CheckForRandomBattle()
     
     scene black with fade
 
@@ -1361,16 +1079,16 @@ label base51afterfight:
     jump r1m2withlisa
 
 label asgardtunnel:
-    if not config.developer:
-        pause 0.5
 
-        show bg_r1m3load at truecenter
+    pause 0.5
 
-        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+    show bg_r1m3load at truecenter
 
-        call show_loading(level_slides) from _call_show_loading_4
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-        scene black
+    call show_loading(level_slides) from _call_show_loading_4
+
+    scene black
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True
@@ -1381,18 +1099,7 @@ label asgardtunnel:
 
     $ player_config.current_region = "r1m3"
 
-    if random.random() <= 0.5:
-        scene bg_m3nolisa with fade
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_1
+    $ CheckForRandomBattle()
 
     $ player_config.update_town_info("City", "Асгард", "free_traders_alliance")
 
@@ -1435,17 +1142,7 @@ label asgardtunnel:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_36
+    $ CheckForRandomBattle()
 
     jump tunnelfirst
 
@@ -1494,28 +1191,7 @@ label tunnelfirst:
             if player_config.hp is None:
                 $ player_config.hp = player_config.max_hp
 
-            $ _window_hide()
-            $ _game_menu_screen = None
-            $ _menu = False
-            $ config.keymap['save'] = []
-            $ config.keymap['load'] = []
-            $ config.keymap['game_menu'] = []
-            $ persistent._in_battle = True
-            $ enemy_image = "keyholder"
-            $ player_hp = player_config.hp
-            $ player_max_hp = player_config.max_hp
-            $ enemy_hp = 340
-            $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-            $ max_heals = player_config.heals
-            $ turn_count = 0
-            $ enemy_max_hp = enemy_hp
-            $ heal_count = 0
-            $ remainheals = max_heals - heal_count
-            $ attack_locked = False
-            $ enemy_name = "???"
-            $ bgname = "bg_fightforkey"
-            $ EnemyType = "Regular"
-            $ enemy_damage_multiplier = 1.0
+            $ battle_setup("keyholder", 340, "bg_fightforkey", "???")
 
             scene bg_fightforkey
             show keyholder at center
@@ -1524,28 +1200,12 @@ label tunnelfirst:
                 call screen enemy_ui
 
             if player_hp <= 0:
-                $ _game_menu_screen = "save_screen"
-                $ _menu = True
-                $ config.keymap['save'] = ['save']
-                $ config.keymap['load'] = ['load']
-                $ config.keymap['game_menu'] = ['game_menu']
-                $ persistent._in_battle = False
-                $ renpy.sound.stop(channel="shoot")
-                
+                $ battle_end_lose()
                 hide keyholder
                 play sound "sfx/explosion04.wav"
                 jump fightlost
             else:
-                $ _game_menu_screen = "save_screen"
-                $ _menu = True
-                $ config.keymap['save'] = ['save']
-                $ config.keymap['load'] = ['load']
-                $ config.keymap['game_menu'] = ['game_menu']
-                $ persistent._in_battle = False
-                $ renpy.sound.stop(channel="shoot")
-                $ player_config.hp = player_hp
-                $ player_config.heals = remainheals
-
+                $ battle_end_win()
                 play sound "sfx/explosion04.wav"
                 hide keyholder with dissolve
 
@@ -1555,9 +1215,10 @@ label tunnelfirst:
                     python:
                         process_battle_loot(drops)
 
+                $ GotTheKeyByKill = True
                 jump gotthekey
-
         "Проследить":
+            $ GotTheKeyByKill = False
             $ renpy.notify("Игра сохранена в слот 1.")
             $ renpy.save("checkpoint-1")
 
@@ -1565,13 +1226,7 @@ label tunnelfirst:
 
             jump tunnelfollow
 
-label gotthekey:
-    mc "Прости, что так нехорошо получилось, но мне необходим этот ключ."
-
-    play music "music/bio07unloop.ogg" fadeout 1.0
-    scene bg_tunnel with fade
-    
-    "После этого Вы вернулись к тоннелю, открыли ворота и отправились в соседний регион."
+label tunnelfollow:
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -1581,14 +1236,6 @@ label gotthekey:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
 
-    scene black with fade
-
-    pause 1.0
-
-    jump demofinished
-
-label tunnelfollow:
-
     scene bg_followkeyman_1 with fade
     pause 1.5
     scene bg_followkeyman_2 with dissolve
@@ -1597,6 +1244,13 @@ label tunnelfollow:
     pause 1.5
     scene bg_followkeyman_4 with dissolve
     pause 1.5
+
+    $ _game_menu_screen = "save_screen"
+    $ _menu = True
+    $ config.keymap['save'] = ['save']
+    $ config.keymap['load'] = ['load']
+    $ config.keymap['game_menu'] = ['game_menu']
+    $ persistent._in_battle = False
 
     mc "Ага, он поехал развлечься в бар. Мне точно нужно последовать за ним."
 
@@ -1640,22 +1294,23 @@ label tunnelfollow:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
+    $ CheckForRandomBattle()
 
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_37
+    jump gotthekey
+
+label gotthekey:
+    if GotTheKeyByKill == True:
+        mc "Прости, что так нехорошо получилось, но мне необходим этот ключ."
 
     play music "music/bio07unloop.ogg" fadeout 1.0
     scene bg_tunnel with fade
+    
+    if GotTheKeyByKill == True:
+        "После этого Вы вернулись к тоннелю, открыли ворота и отправились в соседний регион."
+    else:
+        "Вернувшись к тоннелю - Вы открыли ворота и отправились в соседний регион."
 
-    "Вернувшись к тоннелю - Вы открыли ворота и отправились в соседний регион."
+    scene black with fade
 
     $ _window_hide()
     $ _game_menu_screen = None
@@ -1665,8 +1320,8 @@ label tunnelfollow:
     $ config.keymap['game_menu'] = []
     $ persistent._in_battle = True
 
-    scene black with fade
-
     pause 1.0
 
     jump demofinished
+
+    #jump arrivetor2m1

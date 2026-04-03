@@ -7,15 +7,21 @@
 
 ## Основное ####################################################################
 
+## Версия игры.
+
+define config.version = "0.6.0"
+define hta_build = "260403a"
+
 ## Читаемое название игры. Используется при установке стандартного заголовка
 ## окна, показывается в интерфейсе и отчётах об ошибках.
 ##
 ## Символы "_()", окружающие название, отмечают его как пригодное для перевода.
 
-define config.name = _("Hard Truck Apocalypse")
+define config.name = _("Ex Machina: Ren'Py")
 
 define config.mouse = { 
-    "default": [("gui/cursor.png", 0, 0)]
+    "default": [("gui/cursor.png", 0, 0)],
+    "empty": [("gui/cursor_empty.png", 0, 0)]
 }
 
 define config.rollback_enabled = config.developer
@@ -25,23 +31,28 @@ init python:
     style.say_dialogue.outlines = [(2, "#858585", 0, 0), (1, "#404040", 0, 0)]
     style.say_label.outlines = [(2, "#836d14", 0, 0)]
 
+init -2 python:
+    import os
+    config.savedir = os.path.join(config.gamedir, "profiles")
+
+init python:
+    _last_fullscreen_state = None
+
+    def _check_fullscreen():
+        global _last_fullscreen_state
+        current = renpy.game.preferences.fullscreen
+        if _last_fullscreen_state is None:
+            _last_fullscreen_state = current
+        elif current != _last_fullscreen_state:
+            _last_fullscreen_state = current
+            renpy.invoke_in_thread(save_audio_prefs)
+
+    config.periodic_callbacks.append(_check_fullscreen)
+
 ## Определяет, показывать ли заголовок, данный выше, на экране главного меню.
 ## Установите на False, чтобы спрятать заголовок.
 
 define gui.show_name = False
-
-
-## Версия игры.
-
-define config.version = "0.5.0"
-define hta_build = "251214a"
-
-
-## Текст, помещённый в экран "Об игре". Поместите текст между тройными скобками.
-## Для отделения абзацев оставляйте между ними пустую строку.
-
-define gui.about = _p("""
-""")
 
 ## by: stakan
 ## Disabling autosave (replaced with checkpoints)
@@ -53,7 +64,7 @@ define config.has_autosave = False
 ## постройке дистрибутивов. Оно должно содержать текст формата ASCII и не должно
 ## содержать пробелы, двоеточия и точки с запятой.
 
-define build.name = "HTARenPy"
+define build.name = "ExMRenPy"
 
 
 ## Звуки и музыка ##############################################################
@@ -71,7 +82,6 @@ define config.has_voice = False
 ## каналах, раскомментируйте строчку и настройте пример звука для прослушивания.
 
 define config.sample_sound = "sfx/shoot/hornet_shoot.wav"
-# define config.sample_voice = "sample-voice.ogg"
 
 
 ## Раскомментируйте следующую строчку, чтобы настроить аудиофайл, который будет
@@ -202,26 +212,8 @@ init python:
     build.classify('**/#**', None)
     build.classify('**/thumbs.db', None)
 
-    ## Чтобы архивировать файлы, классифицируйте их, например, как 'archive'.
-
-    # build.classify('game/**.png', 'archive')
-    # build.classify('game/**.jpg', 'archive')
-
     ## Файлы, соответствующие образцам документации, дублируются в приложениях
     ## Mac, чтобы они появлялись и в приложении, и в zip архиве.
 
     build.documentation('*.html')
     build.documentation('*.txt')
-
-
-## Для совершения покупок в приложении требуется лицензионный ключ Google Play.
-## Его можно найти в консоли разработчика Google Play в разделе "Монетизация" >
-## "Настройка монетизации" > "Лицензирование".
-
-# define build.google_play_key = "..."
-
-
-## Имя пользователя и название проекта, ассоциированные с проектом на itch.io,
-## разделённые дробью.
-
-# define build.itch_project = "renpytom/test-project"

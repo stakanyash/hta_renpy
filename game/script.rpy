@@ -1,5 +1,3 @@
-default temp_name = ""
-default player_name = "Игрок"
 default difficulty = "normal"
 default difficulty_base_multiplier = 0.03
 default selected_shop_item = None
@@ -8,13 +6,16 @@ default battle_tracks = [
     "audio/music/battle1.ogg",
     "audio/music/battle02.ogg",
     "audio/music/battle2.ogg",
-    "audio/music/battle7.ogg"
+    "audio/music/battle7.ogg",
+#   "audio/music/battle3.ogg",
+#   "audio/music/battle6.ogg"
 ]
 default driving_tracks_by_region = {
     "r1m1": ["driving1", "driving2"],
     "r1m2": ["driving1", "driving2"],
     "r1m3": ["driving1", "driving2"],
     "r1m4": ["driving1", "driving2", "driving7"],
+#   "r2m1": ["driving3", "driving6"]
 }
 
 init python:
@@ -22,13 +23,14 @@ init python:
     import random
 
     @dataclass
-    class PlayerConfig:
+    class PlayerConfig(renpy.store.NoRollback):
         current_gun: str = "Hornet"
         second_gun: str = None
         money: int = 100
         car: str = "Van"
         current_region: str = "r1m1"
         gun_type: str = "Firearm"
+        second_gun_type: str = None
         max_hp: int = 0
         hp: int = 0
         max_heals: int = 0
@@ -42,7 +44,10 @@ init python:
         farm_enabled: bool = False
         big_gun_install: str = None
         r1m3_farm_count: int = 0
-        r1m4_side_quest: str = "CanBeGiven"
+        r1m4warehouse_side_quest: str = "Q_CANBEGIVEN"
+        r1m4warehouse_side_quest_status: str = "NotTaken"
+        sidequest_findhusband: str = "Q_CANBEGIVEN"
+        sidequest_findhusband_status: str = "NotTaken"
 
         def update_town_info(self, town_type, town_name, group_logo):
             self.town_type = town_type
@@ -106,6 +111,7 @@ init python:
     renpy.music.register_channel("bossattack", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("sellitem", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
     renpy.music.register_channel("boss_charge", mixer="sfx", loop=True, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
+    renpy.music.register_channel("crawl_voice", mixer="sfx", loop=False, stop_on_mute=False, tight=False, file_prefix="", file_suffix="")
 
     smallweapon_prices = {
         "Hornet": 280, "Specter": 590, "PKT": 1670, "Kord": 3680, "Storm": 3450, "Maxim": 26600, "Fagot": 25500
@@ -336,6 +342,16 @@ init python:
             "desc": "Заряд плазмы, посылаемый этим оружием, летит с небольшой скоростью, но при удачном попадании может буквально испепелить противника.",
             "icon": "gui/townmenu/items/fagot.png",
         },
+        "Book": {
+            "name": "Книги",
+            "desc": "Старые книги. Сегодня немногие умеют читать, но те, кто умеет, готовы заплатить неплохие деньги за мудрость веков, сокрытую среди пожелтевших листов.",
+            "icon": "gui/townmenu/items/books.png",
+        },
+        "Tobacco": {
+            "name": "Табак",
+            "desc": "Неизвестно, что делали в прошлом при помощи этих вонючих палочек, но сегодня они активно используются в качестве ингредиента для снадобий.",
+            "icon": "gui/townmenu/items/tobacco.png",
+        },
     }
 
     car_descriptions = {
@@ -367,6 +383,8 @@ init python:
         "Fuel": 1850,
         "Maxim": 13300,
         "Fagot": 12750,
+        "Book": 25315,
+        "Tobacco": 13785,
     }
 
     ItemPricesVillage = {
@@ -392,6 +410,8 @@ init python:
         "Fuel": 900,
         "Maxim": 13300,
         "Fagot": 12750,
+        "Book": 24615,
+        "Tobacco": 13215, 
     }
 
     CarPrices = {
@@ -410,47 +430,52 @@ init python:
         "Mirotvorec": 180001,
     }
 
-    def buy_weapon_with_old_handling(weapon_name):
-        addedg = None
-        sell_price = 0
-
+    def buy_weapon_with_old_handling(weapon_name, as_second=False):
         if weapon_name in smallweapon_prices:
             price = smallweapon_prices[weapon_name]
+            gun_size = "Small"
         elif weapon_name in bigweapon_prices:
             price = bigweapon_prices[weapon_name]
+            gun_size = "Big"
         else:
             renpy.notify("Ошибка: цена оружия не найдена.")
             return
 
-        if player_config.money >= price:
-            player_config.money -= price
+        if not player_config.spend_money(price):
+            return
 
-            if player_config.current_gun not in player_config.inventory:
-                addedg = player_config.try_add_item(player_config.current_gun)
-            
-                if not addedg:
-                    if player_config.town_type == "City":
-                        sell_price = ItemPricesCity.get(player_config.current_gun, 0)
-                    else:
-                        sell_price = ItemPricesVillage.get(player_config.current_gun, 0)
+        weapon_data = GunDatabase.get(weapon_name)
+        gun_type = weapon_data.get("type") if weapon_data else None
 
-                    player_config.add_money(sell_price)
+        if gun_size == "Big" and player_config.big_gun_install != "Possible":
+            renpy.notify("Эта машина не поддерживает крупное оружие.")
+            player_config.add_money(price)
+            return
 
-            player_config.current_gun = weapon_name
+        if as_second and player_config.big_gun_install != "Possible":
+            renpy.notify("Эта машина не поддерживает второй слот оружия.")
+            player_config.add_money(price)
+            return
 
-            weapon_data = GunDatabase.get(weapon_name)
-            if weapon_data:
-                player_config.gun_type = weapon_data.get("type")
-            else:
-                player_config.gun_type = None
-
-            renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
-            if not addedg:
-                renpy.notify(f"Вы купили {gun_names.get(weapon_name, weapon_name)} за {price} монет.\nИнвентарь полон. Старое оружие было продано за {sell_price} монет.")
-            else:
-                renpy.notify(f"Вы купили {gun_names.get(weapon_name, weapon_name)} за {price} монет.")
+        if as_second:
+            old = player_config.second_gun
+            player_config.second_gun = weapon_name
+            player_config.second_gun_type = gun_type
+            slot_name = "второй слот"
         else:
-            renpy.notify("Недостаточно денег!")
+            old = player_config.current_gun
+            player_config.current_gun = weapon_name
+            player_config.gun_type = gun_type
+            slot_name = "первый слот"
+
+        if old:
+            if not player_config.try_add_item(old):
+                sell_price = ItemPricesCity.get(old, 0) if player_config.town_type == "City" else ItemPricesVillage.get(old, 0)
+                player_config.add_money(sell_price)
+                renpy.notify(f"{gun_names.get(old, old)} продан за {sell_price} монет (нет места в инвентаре).")
+
+        renpy.notify(f"Установлено в {slot_name}: {gun_names.get(weapon_name, weapon_name)}")
+        renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
 
     def buy_car_with_exchange(car_name):
         car_price = CarPrices.get(car_name, 0)
@@ -516,7 +541,7 @@ init python:
             if player_config.money >= repair_cost:
                 player_config.spend_money(repair_cost)
                 player_config.hp = player_config.max_hp
-                renpy.notify(f"Вы отдали {repair_cost} монет")
+                renpy.notify(f"Вы отдали {repair_cost} монет.")
                 renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
             else:
                 renpy.notify("Недостаточно денег для ремонта!")
@@ -538,7 +563,7 @@ init python:
             return
 
         player_config.spend_money(heal_cost)
-        renpy.notify(f"Вы отдали {heal_cost} монет")
+        renpy.notify(f"Вы отдали {heal_cost} монет.")
         player_config.heals = player_config.max_heals
         renpy.sound.play("audio/sfx/coins.wav", channel="sellitem")
 
@@ -616,32 +641,136 @@ init python:
         if items_not_added > 0:
             compensation = items_not_added * random.randint(100, 200)
             money_drop += compensation
-            renpy.say(None, f"В вашем инвентаре не хватает места! Получено: {compensation} монет")
 
         player_config.add_money(money_drop)
 
+        parts = []
         if dropped_something:
             drop_list = ", ".join(drop_names_text)
-            renpy.say(None, f"Найдены следующие предметы: {drop_list}.\nТакже получено {money_drop} монет.")
-        else:
-            renpy.say(None, f"Найдено: {money_drop} монет.")
+            parts.append(f"Найдены следующие предметы: {drop_list}.")
+        if items_not_added > 0:
+            parts.append(f"Не хватило места для {items_not_added} предм. - получена компенсация {compensation} монет.")
+        parts.append(f"Также получено {money_drop} монет." if dropped_something else f"Найдено: {money_drop} монет.")
 
+        renpy.say(None, "\n".join(parts))
+
+    def handle_full_inventory(item, price_map):
+        while not player_config.try_add_item(item):
+            db = ItemDatabase[item]
+            dbname = db["name"]
+            sellprice = int(price_map.get(item) / 2)
+            if player_config.town_type != "NotInCity":
+                ntf = renpy.confirm(
+                    f"В вашем инвентаре не хватает места для \"{dbname}\"! "
+                    f"Хотите ли вы открыть инвентарь и продать лишние предметы?\n\n"
+                    f"В случае отказа \"{dbname}\" будут проданы за 50% стоимости ({sellprice} монет)."
+                )
+            else:
+                ntf = renpy.confirm(
+                    f"В вашем инвентаре не хватает места для \"{dbname}\"! "
+                    f"Хотите ли вы открыть инвентарь и освободить место?\n\n"
+                    f"В случае отказа вам будет начислена компенсация в размере 50% стоимости \"{dbname}\" ({sellprice} монет)."
+                )
+            if ntf:
+                renpy.call_screen("Selling_Menu")
+            else:
+                player_config.add_money(sellprice)
+                break
+
+        renpy.notify(f"В ваш инвентарь добавлен предмет: {dbname}")
 
 default player_config = PlayerConfig()
+
+init python:
+    BATTLE_MUSIC_CONFIG = {
+        "r1m4": [1, 2, 7],
+#       "r2m1": [3, 6],
+#       "r2m2": [3, 6],
+    }
+    
+    DEFAULT_BATTLE_MUSIC = [1, 2]
+
+    def battle_setup(enemy_image, enemy_hp, bgname, enemy_name, enemy_type="Regular", damage_multiplier=1.0, boss_icon=None):
+        store.enemy_image = enemy_image
+        store.enemy_hp = enemy_hp
+        store.enemy_max_hp = enemy_hp
+        store.bgname = bgname
+        store.enemy_name = enemy_name
+        store.EnemyType = enemy_type
+        store.enemy_damage_multiplier = damage_multiplier
+        store.boss_icon = f"{boss_icon}.png"
+
+        store.player_hp = player_config.hp
+        store.player_max_hp = player_config.max_hp
+        store.damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
+
+        if player_config.second_gun:
+            store.secondary_damage_range = gun_stats.get(player_config.second_gun, None)
+        else:
+            store.secondary_damage_range = None
+
+        store.max_heals = player_config.heals
+        store.heal_count = 0
+        store.turn_count = 0
+        store.remainheals = store.max_heals
+        store.attack_locked = False
+
+        _window_hide()
+        renpy.store._game_menu_screen = None
+        renpy.store._menu = False
+        config.keymap['save'] = []
+        config.keymap['load'] = []
+        config.keymap['game_menu'] = []
+        persistent._in_battle = True
+
+    def battle_end_win():
+        renpy.store._game_menu_screen = "save_screen"
+        renpy.store._menu = True
+        config.keymap['save'] = ['save']
+        config.keymap['load'] = ['load']
+        config.keymap['game_menu'] = ['game_menu']
+        persistent._in_battle = False
+        renpy.sound.stop(channel="shoot")
+        player_config.hp = store.player_hp
+        player_config.heals = store.remainheals
+
+    def battle_end_lose():
+        renpy.store._game_menu_screen = "save_screen"
+        renpy.store._menu = True
+        config.keymap['save'] = ['save']
+        config.keymap['load'] = ['load']
+        config.keymap['game_menu'] = ['game_menu']
+        persistent._in_battle = False
+        renpy.sound.stop(channel="shoot")
+
+    def CheckForRandomBattle():
+        global randommus
+        if random.random() <= 0.5:
+            current_music = renpy.music.get_playing(channel='music')
+            if current_music and current_music not in battle_tracks:
+                persistent._prebattle_music = current_music
+            else:
+                persistent._prebattle_music = None
+
+            tracks = BATTLE_MUSIC_CONFIG.get(player_config.current_region, DEFAULT_BATTLE_MUSIC)
+            randommus = random.choice(tracks)
+
+            renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
+            renpy.say(None, "На Вас нападают!")
+            renpy.call("randomfight")
 
 transform stretch_in:
     yzoom 0.95
     linear 0.1 yzoom 1.0
 
 label start:
-    if not config.developer:
-        $ _window_hide()
-        $ _game_menu_screen = None
-        $ _menu = False
-        $ config.keymap['save'] = []
-        $ config.keymap['load'] = []
-        $ config.keymap['game_menu'] = []
-        $ persistent._in_battle = True
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
 
     jump tutorial_check
 
@@ -649,7 +778,7 @@ label show_loading(load_slides):
     python:
         import random
 
-        total_time = random.uniform(4.0, 7.0)
+        total_time = random.uniform(3.0, 5.0)
         num_slides = len(load_slides)
 
         weights = [random.random() for _ in range(num_slides)]
@@ -666,24 +795,13 @@ label show_loading(load_slides):
 label randomfight:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
+    stop sfx2
+
     $ enemyint = random.randint(1, 4)
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
-
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = f"randomenemy{enemyint}"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_damage_multiplier = 1.0
 
     if player_config.current_region == "r1m1":
         $ enemy_hp = random.randint(80, 150)
@@ -692,16 +810,7 @@ label randomfight:
     elif player_config.current_region == "r1m4":
         $ enemy_hp = random.randint(180, 300)
 
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандит"
-    $ bgname = f"bg_{player_config.current_region}_randomfight"
-    $ EnemyType = "Regular"
+    $ battle_setup(f"randomenemy{enemyint}", enemy_hp, f"bg_{player_config.current_region}_randomfight", "Бандит")
 
     $ renpy.scene()
     $ renpy.show(bgname, at_list=[center], what=None)
@@ -711,28 +820,12 @@ label randomfight:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         $ renpy.hide(enemy_image)
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         $ renpy.hide(enemy_image) 
         with dissolve
@@ -748,7 +841,7 @@ label randomfight:
             else:
                 $ allowed_tracks = get_region_driving_tracks()
                 $ renpy.music.play(renpy.random.choice(allowed_tracks), channel="music", fadeout=1.0)
-                
+        
         return
 
 label fightlost:
@@ -763,20 +856,36 @@ label fightlost:
     ]
 
     $ renpy.say(mc, random.choice(dead_msgs))
+
+    $ _window_hide()
+    $ _game_menu_screen = None
+    $ _menu = False
+    $ config.keymap['save'] = []
+    $ config.keymap['load'] = []
+    $ config.keymap['game_menu'] = []
+    $ persistent._in_battle = True
+
+    pause 0.5
+
+    $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
+    python:
+        for i in range(len(slides)):
+            renpy.show(slides[i])
+            renpy.pause(pauses[i], hard=True)
+            renpy.hide(slides[i])
     
     return
 
 label demofinished:
     call screen onebuttonpopup("Демо-версия завершена.\nСпасибо за игру!")
 
-    if not config.developer:
-        pause 1.0
+    pause 1.0
 
-        $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
-        python:
-            for i in range(len(slides)):
-                renpy.show(slides[i])
-                renpy.pause(pauses[i], hard=True)
-                renpy.hide(slides[i])
+    $ slides = ["loading_1", "loading_2", "loading_3", "loading_4", "loading_5", "loading_6"]
+    python:
+        for i in range(len(slides)):
+            renpy.show(slides[i])
+            renpy.pause(pauses[i], hard=True)
+            renpy.hide(slides[i])
 
     return

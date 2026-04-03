@@ -1,6 +1,6 @@
 label main_game:
 
-    if not config.developer:
+    if TutorialAccepted == False:
         pause 0.5
 
         show bg_r1m1load at truecenter
@@ -10,6 +10,18 @@ label main_game:
         call show_loading(level_slides) from _call_show_loading
 
         hide bg_r1m1load
+
+    stop music fadeout 1.0
+
+    pause 1.0
+
+    call screen crawl_text(
+        text_content="История не сохранила точных сведений о тёмных временах, наступивших сразу после Катастрофы. Доподлинно известно лишь то, что люди выжили в отравленном воздухе благодаря защитным маскам. Это творение неизвестного изобретателя уравняло всех. Тонкая преграда, вставшая на пути неминуемой смерти, стала символом нового человечества. Маски сплотили людей и придали им силы бороться за место под солнцем.\n\n    Возникли новые поселения вдали от прежних городов, ставших братскими могилами. Постепенно были налажены связи между разрозненными группами выживших. Фермеры, шахтёры, торговцы – возвращение к простым занятиям пошло только на пользу растерянным людям.\n\n    Но человек остаётся человеком во все времена. Остались те, кто сохранял мудрость веков, чтобы делиться ею с миром. Были и те, кто предпочёл созиданию разрушение.",
+        sound_file="audio/voice/r1m1/r1m1_969_narrator.ogg",
+        back_music="audio/music/bio07unloop.ogg",
+        duration=69.0,
+        scroll_speed=3.5
+    )
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True
@@ -22,30 +34,14 @@ label main_game:
     $ player_config.max_heals = CarMaxHeals.get(player_config.car, 15)
     $ player_config.heals = player_config.max_heals
 
-    $ renpy.notify("Игра сохранена в слот 1.")
-    $ renpy.save("checkpoint-1")
-
-    play music "music/bio07unloop.ogg" fadeout 1.0
-
-    scene black with fade
-
-    "{cps=20}История не сохранила точных сведений о тёмных временах, наступивших сразу после Катастрофы. Доподлинно известно лишь то, что люди выжили в отравленном воздухе благодаря защитным маскам.{/cps}"
-
-    "{cps=20}Это творение неизвестного изобретателя уравняло всех. Тонкая преграда, вставшая на пути неминуемой смерти, стала символом нового человечества. Маски сплотили людей и придали им силы бороться за место под солнцем.{/cps}"
-
-    "{cps=20}Возникли новые поселения вдали от прежних городов, ставших братскими могилами. Постепенно были налажены связи между разрозненными группами выживших.{/cps}"
-
-    "{cps=20}Фермеры, шахтёры, торговцы – возвращение к простым занятиям пошло только на пользу растерянным людям.{/cps}"
-
-    "{cps=20}Но человек остаётся человеком во все времена. Остались те, кто сохранял мудрость веков, чтобы делиться ею с миром.{/cps} {cps=10}Были и те, кто предпочёл созиданию разрушение.{/cps}"
-
-    "Вы тихо и мирно спали, как вдруг Вас разбудил отец..."
+    scene bg_glukhoe with fade
 
     play music "music/quietdialogue01.ogg" fadeout 1.0
 
-    scene bg_glukhoe with fade
-
     show fther at left with dissolve
+
+    $ renpy.notify("Игра сохранена в слот 1.")
+    $ renpy.save("checkpoint-1")
 
     father "Проснулся, лежебока! Уже битый час я жду тебя, чтобы сказать кое-что весьма важное, а ты опять спишь как сурок..."
 
@@ -116,32 +112,10 @@ label main_game:
 
 label firstenemyfight:
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "firsteverenemy"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 80
-    $ bgname = "bg_firsteverenemy"
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандит"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.0
+    $ battle_setup("firsteverenemy", 80, "bg_firsteverenemy", "Бандит")
 
     scene bg_firsteverenemy
     show firsteverenemy at center
@@ -150,51 +124,21 @@ label firstenemyfight:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide firsteverenemy
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide firsteverenemy with dissolve
-
         play music "music/driving1.ogg" fadeout 1.0
-
         $ drops = player_config.get_random_drops()
-
         if drops:
             python:
                 process_battle_loot(drops)
 
-        if random.random() <= 0.5:
-            $ current_music = renpy.music.get_playing(channel='music')
-
-            if current_music and current_music not in battle_tracks:
-                $ persistent._prebattle_music = current_music
-            else:
-                $ persistent._prebattle_music = None
-
-            $ randommus = random.randint(1, 2)
-            $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-            "На Вас нападают!"
-            call randomfight from _call_randomfight
+        $ CheckForRandomBattle()
 
         jump afterfirstattack
 
@@ -236,13 +180,13 @@ label afterfirstattack:
         "Согласиться":
             $ renpy.notify("Игра сохранена в слот 3.")
             $ renpy.save("checkpoint-3")
-            $ LisaAgreed = "True"
+            $ LisaAgreed = True
             jump lisaagree
 
         "Отказать":
             $ renpy.notify("Игра сохранена в слот 3.")
             $ renpy.save("checkpoint-3")
-            $ LisaAgreed = "False"
+            $ LisaAgreed = False
             jump lisarefuse
 
 label lisaagree:
@@ -292,32 +236,10 @@ label secondenemy:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "secenemy"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 125
-    $ bgname = "bg_secondenemy"
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals 
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандит"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.0
+    $ battle_setup("secenemy", 125, "bg_secondenemy", "Бандит")
 
     scene bg_secondenemy
     show secenemy at center
@@ -326,42 +248,23 @@ label secondenemy:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide secenemy
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide secenemy with dissolve
-
         play music "music/driving2.ogg" fadeout 1.0
-
         $ drops = player_config.get_random_drops()
-
         if drops:
             python:
                 process_battle_loot(drops)
-
-        if LisaAgreed == "True":
+                
+        if LisaAgreed == True:
             jump tozaimka
-        elif LisaAgreed == "False":
+        elif LisaAgreed == False:
             jump dickzapravka
 
 label tozaimka:
@@ -382,17 +285,7 @@ label tozaimka:
 
     hide lisa2 with dissolve
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_2
+    $ CheckForRandomBattle()
 
     scene bg_gugulino with dissolve
 
@@ -436,6 +329,7 @@ label tozaimka:
     lisa "Здесь наши пути расходятся: надоело мне тащиться следом за твоей развалюхой. К тому же там, где для тебя нет дороги, моя машина пройдёт с лёгкостью."
 
     $ player_config.add_money(500)
+    $ renpy.notify("Вы получили 500 монет.")
 
     lisa "Ты выполнил свою часть сделки. Держи свои деньги."
 
@@ -457,17 +351,7 @@ label tozaimka:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_3
+    $ CheckForRandomBattle()
 
     play music "music/town1.ogg" fadeout 1.0
 
@@ -478,9 +362,9 @@ label sergo:
 
     scene bg_insowth with fade
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
         "Вы добрались до Южного и заехали в город. Спустя несколько секунд поисков Вы находите Серго."
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         "Вы заехали в город и усердно ищете Серго. Спустя несколько секунд Вы его находите."
 
     show sergo at left with dissolve
@@ -559,21 +443,11 @@ label sergo:
             hide mcsurp with dissolve
             "Фермер сел в вашу машину и Вы поехали в сторону заправки по его наводке."
 
-            if LisaAgreed == "False":
+            if LisaAgreed == False:
                 $ player_config.town_type = "NotInCity"
                 jump secondenemy
-            elif LisaAgreed == "True":
-                if random.random() <= 0.5:
-                    $ current_music = renpy.music.get_playing(channel='music')
-
-                    if current_music and current_music not in battle_tracks:
-                        $ persistent._prebattle_music = current_music
-                    else:
-                        $ persistent._prebattle_music = None
-                    $ randommus = random.randint(1, 2)
-                    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                    "На Вас нападают!"
-                    call randomfight from _call_randomfight_4
+            elif LisaAgreed == True:
+                $ CheckForRandomBattle()
                 
                 $ player_config.town_type = "NotInCity"
                 jump dickzapravka
@@ -592,11 +466,10 @@ label sergo:
 
             "Вы спокойно уходите, а Фермер продолжает ругаться на Вас в след."
             mc "\"Странный какой-то тип. Не зря я ему отказал.\""
-            if LisaAgreed == "True":
-                $ player_config.town_type = "NotInCity"
+            $ player_config.town_type = "NotInCity"
+            if LisaAgreed == True:
                 jump felixmeet
-            elif LisaAgreed == "False":
-                $ player_config.town_type = "NotInCity"
+            elif LisaAgreed == False:
                 jump glukhoeburn
 
 label dickzapravka:
@@ -636,9 +509,9 @@ label dickzapravka:
 
     hide mc3 with dissolve
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
         jump felixmeet
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         jump glukhoeburn
 
 label felixmeet:
@@ -689,34 +562,9 @@ label felixbeforefight:
 
     menu:
         "Атаковать":
-            $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
+            $ RunFromFelix = False
 
-            if player_config.hp is None:
-                $ player_config.hp = player_config.max_hp
-            
-            $ _window_hide()
-            $ _game_menu_screen = None
-            $ _menu = False
-            $ config.keymap['save'] = []
-            $ config.keymap['load'] = []
-            $ config.keymap['game_menu'] = []
-            $ persistent._in_battle = True
-            $ RunFromFelix = "False"
-            $ enemy_image = "felixteam"
-            $ player_hp = player_config.hp
-            $ player_max_hp = player_config.max_hp
-            $ max_heals = player_config.heals
-            $ enemy_hp = 225
-            $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-            $ turn_count = 0
-            $ enemy_max_hp = enemy_hp
-            $ heal_count = 0
-            $ remainheals = max_heals - heal_count
-            $ attack_locked = False
-            $ enemy_name = "Бандиты"
-            $ bgname = "bg_felix_nocars"
-            $ EnemyType = "Regular"
-            $ enemy_damage_multiplier = 1.2
+            $ battle_setup("felixteam", 225, "bg_felix_nocars", "Бандит", "Regular", 1.2)
 
             scene bg_felix_nocars
             show felixteam at center
@@ -725,55 +573,37 @@ label felixbeforefight:
                 call screen enemy_ui
 
             if player_hp <= 0:
-                $ _game_menu_screen = "save_screen"
-                $ _menu = True
-                $ config.keymap['save'] = ['save']
-                $ config.keymap['load'] = ['load']
-                $ config.keymap['game_menu'] = ['game_menu']
-                $ persistent._in_battle = False
-                $ renpy.sound.stop(channel="shoot")
-                
+                $ battle_end_lose()
                 hide felixteam
                 play sound "sfx/explosion04.wav"
                 jump fightlost
             else:
-                $ _game_menu_screen = "save_screen"
-                $ _menu = True
-                $ config.keymap['save'] = ['save']
-                $ config.keymap['load'] = ['load']
-                $ config.keymap['game_menu'] = ['game_menu']
-                $ persistent._in_battle = False
-                $ renpy.sound.stop(channel="shoot")
-                $ player_config.hp = player_hp
-                $ player_config.heals = remainheals
-
+                $ battle_end_win()
                 hide felixteam with dissolve
 
                 jump felixafterfight
 
         "Попытаться уехать":
             scene bg_felixrun with dissolve
-            $ RunFromFelix = "True"
+            $ RunFromFelix = True
             "Вы пытаетесь уехать под шквалом огня. На удивление бандиты не бросаются за Вами в погоню и спустя несколько секунд огонь прекращается."
             "Однако по рации Вы слышите следующее..."
             jump felixafterfight
 
 label felixafterfight:
 
-    if RunFromFelix == "False":
+    if RunFromFelix == False:
         show felix2 with dissolve
 
     unknown "Мы ещё встретимся, щенок! Попомни мои слова, ты пожалеешь, что связался с Феликсом!"
 
-    if RunFromFelix == "False":
+    if RunFromFelix == False:
         felix "Уходим!"
         hide felix2 with dissolve
 
     mc "Обязательно встретимся, Феликс..."
 
-    if RunFromFelix == "True":
-        "Вы починились на ближайшей заправке и продолжили путь до дома."
-    elif RunFromFelix == "False":
+    if RunFromFelix == False:
         "Феликс со своей охраной поспешно удаляется, а Вы поехали дальше домой."
 
     jump glukhoeburn
@@ -785,9 +615,9 @@ label glukhoeburn:
 
     stop music fadeout 1.0
 
-    if LisaAgreed == "False":
+    if LisaAgreed == False:
         "Вы спокойно возвращались домой, гадая о чём же с Вами хотел поговорить отец."
-    elif LisaAgreed == "True":
+    elif LisaAgreed == True:
         "Вы возвращались домой одновременно не понимая - что за чертовщина с Вами произошла за столь короткое время. Но больше Вас волновало о чём же хотел поговорить отец."
 
     scene bg_glburnaway with dissolve
@@ -802,9 +632,9 @@ label glukhoeburn:
 
     "Оказавшись ближе у родной деревни Вы видите, как она полностью охвачена огнём."
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
         jump deadfather
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         jump dyingfather
 
 label deadfather:
@@ -850,17 +680,7 @@ label deadfather:
 
     "Полностью раздосадованный Вы уезжаете обратно в Южный."
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_5
+    $ CheckForRandomBattle()
 
     jump sowthagain
 
@@ -924,17 +744,7 @@ label dyingfather:
 
     mc "Может быть, в Южном слышали о нём?"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_6
+    $ CheckForRandomBattle()
 
     jump sowthagain
 
@@ -947,7 +757,7 @@ label sowthagain:
     scene bg_insowth with fade
     play music "music/town1.ogg" fadeout 1.0
 
-    if LisaAgreed == "True":
+    if LisaAgreed == True:
 
         "Вы приехали в Южный и встретили местного бармена."
 
@@ -1003,7 +813,7 @@ label sowthagain:
 
         mc "Уничтожение Глухого перечёркивает все соглашения! Я убью его!"
 
-        if RunFromFelix == "False":
+        if RunFromFelix == False:
             mc "Я уже встречался с ним на поле боя и победил."
 
         dronn "Но теперь ты хочешь напасть на укреплённую базу. Не подумай, что я тебя отговариваю!"
@@ -1025,41 +835,21 @@ label sowthagain:
             "Ехать в Заимку":
                 $ renpy.notify("Игра сохранена в слот 2.")
                 $ renpy.save("checkpoint-2")
-                $ TakeGunFromZaimka = "True"
+                $ TakeGunFromZaimka = True
                 $ player_config.town_type = "NotInCity"
-                if random.random() <= 0.5:
-                    $ current_music = renpy.music.get_playing(channel='music')
-
-                    if current_music and current_music not in battle_tracks:
-                        $ persistent._prebattle_music = current_music
-                    else:
-                        $ persistent._prebattle_music = None
-                    $ randommus = random.randint(1, 2)
-                    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                    "На Вас нападают!"
-                    call randomfight from _call_randomfight_7
+                $ CheckForRandomBattle()
                 play music "music/town2.ogg" fadeout 1.0
                 jump KventinZaimka
 
             "Ехать сразу к Феликсу":
                 $ renpy.notify("Игра сохранена в слот 2.")
                 $ renpy.save("checkpoint-2")
-                $ TakeGunFromZaimka = "False"
+                $ TakeGunFromZaimka = False
                 $ player_config.town_type = "NotInCity"
-                if random.random() <= 0.5:
-                    $ current_music = renpy.music.get_playing(channel='music')
-
-                    if current_music and current_music not in battle_tracks:
-                        $ persistent._prebattle_music = current_music
-                    else:
-                        $ persistent._prebattle_music = None
-                    $ randommus = random.randint(1, 2)
-                    $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                    "На Вас нападают!"
-                    call randomfight from _call_randomfight_8
+                $ CheckForRandomBattle()
                 jump felixbase
 
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
 
         "Вы приехали в Южный и встретили местного бармена. Бармен начинает диалог сам."
 
@@ -1094,17 +884,7 @@ label sowthagain:
 
         $ player_config.town_type = "NotInCity"
 
-        if random.random() <= 0.5:
-            $ current_music = renpy.music.get_playing(channel='music')
-
-            if current_music and current_music not in battle_tracks:
-                $ persistent._prebattle_music = current_music
-            else:
-                $ persistent._prebattle_music = None
-            $ randommus = random.randint(1, 2)
-            $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-            "На Вас нападают!"
-            call randomfight from _call_randomfight_9
+        $ CheckForRandomBattle()
 
         scene black with fade
 
@@ -1134,26 +914,18 @@ label KventinZaimka:
 
     kventin "Бери, конечно. Всё в отличном состоянии."
 
+    python:
+        if not player_config.try_add_item("Storm"):
+            handle_full_inventory("Storm", ItemPricesVillage)
+        else:
+            renpy.notify("В ваш инвентарь добавлен предмет: Шторм.")
+
     mc "Спасибо. Теперь можно отправляться на охоту!"
 
     hide mc3 with dissolve
     hide kventin with dissolve
 
-    python:
-        weapon_name = player_config.current_gun
-        display_name = gun_names.get(weapon_name, weapon_name)
-
-        if player_config.try_add_item(weapon_name):
-            renpy.notify(f'В ваш инвентарь добавлен "{display_name}".')
-        else:
-            price = ItemPricesCity.get(weapon_name, 65)
-            player_config.add_money(price)
-            renpy.notify(f'В вашем инвентаре недостаточно места. "{display_name}" был автоматически продан за {price} монет.')
-
-    $ player_config.current_gun = "Storm"
-    $ player_config.gun_type = "Shotgun"
-
-    "Вы ставите новое вооружение на свою машину и едете к Феликсу..."
+    "Вы едете к Феликсу..."
 
     $ player_config.town_type = "NotInCity"
 
@@ -1195,32 +967,10 @@ label felixbase:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "felixbandits"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 300
-    $ bgname = "bg_felixbase_fight"
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals 
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Бандиты Феликса"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.2
+    $ battle_setup("felixbandits", 300, "bg_felixbase_fight", "Бандиты Феликса", "Regular", 1.2)
 
     scene bg_felixbase_fight
     show felixbandits at center
@@ -1229,28 +979,12 @@ label felixbase:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
-        hide felixbandits
+        $ battle_end_lose()
+        hide secenemy
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide felixbandits with dissolve
 
@@ -1291,22 +1025,11 @@ label felixbase:
     jump felix_battle
 
 label felix_battle:
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ max_heals = player_config.heals
-    $ enemy_hp = 200
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals 
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Феликс"
-    $ enemy_image = "felixcar"
-    $ bgname = "bg_felixbase"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.0
+    $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
+    if player_config.hp is None:
+        $ player_config.hp = player_config.max_hp
+
+    $ battle_setup("felixcar", 200, "bg_felixbase", "Феликс")
 
     scene bg_felixbase
     show felixcar at center
@@ -1315,28 +1038,12 @@ label felix_battle:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
-        hide felixcar
+        $ battle_end_lose()
+        hide secenemy
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         hide felixcar with dissolve
 
         play music "music/intensedialogue03.ogg" fadeout 1.0
@@ -1424,17 +1131,7 @@ label felixdefeated:
     hide felix with dissolve
     hide mcsurp with dissolve
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.randint(1, 2)
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_10
+    $ CheckForRandomBattle()
 
     jump leaver1m1tovaterland
 

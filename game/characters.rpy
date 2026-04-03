@@ -1,7 +1,7 @@
 # characters.rpy - file for define characters
 
 # Main character
-define mc = Character("[player_name]", color="#FED11B")
+define mc = Character("[current_profile_name()]", color="#FED11B")
 
 # Characters that used across all storyline
 define lisa = Character('Лиса', color="#FED11B")
@@ -47,3 +47,5 @@ define galden = Character('Галден', color="#FED11B")
 define wsec = Character('Охранник', color="#FED11B")
 define extguard = Character('Страж', color="#FED11B")
 define extleader = Character('Лидер', color="#FED11B")
+define alla = Character('Жена Аллушка', color="#FED11B")
+define filimon = Character('Филимон', color="#FED11B")

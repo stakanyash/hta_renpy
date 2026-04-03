@@ -1,14 +1,13 @@
 label r1m4start:
-    if not config.developer: 
-        pause 0.5
+    pause 0.5
 
-        show bg_r1m4load at truecenter
+    show bg_r1m4load at truecenter
 
-        $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
+    $ level_slides = ["loadinglvl0","loadinglvl1","loadinglvl2","loadinglvl3","loadinglvl4","loadinglvl5","loadinglvl6"]
 
-        call show_loading(level_slides) from _call_show_loading_5
+    call show_loading(level_slides) from _call_show_loading_5
 
-        scene black
+    scene black
 
     $ _game_menu_screen = "save_screen"
     $ _menu = True
@@ -32,9 +31,9 @@ label r1m4start:
     play music "music/town1.ogg" fadeout 1.0
     scene bg_olm with dissolve
 
-    if player_config.r1m4_side_quest == "CanBeGiven":
+    if player_config.r1m4warehouse_side_quest == "Q_CANBEGIVEN":
         jump galdenquest
-    elif LisaAgreed == "False":
+    elif LisaAgreed == False:
         jump homersearch
 
 # Without Lisa route
@@ -79,17 +78,7 @@ label homersearch:
 
     "Вы начали искать Гомера в рыбацких посёлках."
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_21
+    $ CheckForRandomBattle()
 
     play music "music/driving7.ogg" fadeout 1.0
     scene bg_lauka with fade
@@ -106,17 +95,7 @@ label homersearch:
 
     mc "Мне что, придётся весь регион объездить в его поисках?!"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_22
+    $ CheckForRandomBattle()
 
     scene bg_kordan with fade
 
@@ -151,17 +130,7 @@ label homersearch:
 
     hide mcsurp
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])   
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_23
+    $ CheckForRandomBattle()
 
     $ player_config.update_town_info("Village", "Салиниом", "free_traders_alliance")
     
@@ -238,17 +207,7 @@ label homersearch:
 
     $ player_config.town_type = "NotInCity"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_24
+    $ CheckForRandomBattle()
 
     jump tokranfight
 
@@ -293,62 +252,24 @@ label tokranfight:
     pause 0.5
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "kranboss"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 2500
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Кран"
-    $ bgname = "bg_kranfight"
-    $ EnemyType = "Boss"
-    $ BossIcon = "boss1.png"
-    $ enemy_damage_multiplier = 2.0
+    $ battle_setup("kranboss", 2500, "bg_kranfight", "Бандит", "Boss", 2.5, "boss1")
+
+    scene bg_kranfight
     show kranboss at center
 
     while enemy_hp > 0 and player_hp > 0:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ renpy.sound.stop(channel="boss_charge")
-        
+        $ battle_end_lose()
         hide kranboss
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide kranboss with dissolve
         stop sfx2 fadeout 1.0
@@ -364,26 +285,22 @@ label tokranfight:
 
 label leaveregion1:
 
+    stop boss_charge fadeout 1.0
+
     play music "music/bio02.ogg" fadeout 1.0
 
-    if player_config.car == "Molokovoz":
-        scene bg_leaver1_cargo1_1 with dissolve
-    elif player_config.car == "Ural":
-        scene bg_leaver1_ural_1 with dissolve
-    else:
-        scene bg_leaver1_van_1 with dissolve
+    $ renpy.scene()
+    $ renpy.show(f"bg_leaver1_{player_config.car}_1")
+    $ renpy.with_statement(dissolve)
 
     mc "Это то самое место, которое указал Гомер, но я не вижу никаких врат."
     mc "Неужели всё зря?!"
 
     pause 0.5
 
-    if player_config.car == "Molokovoz":
-        scene bg_leaver1_cargo1_2 with dissolve
-    elif player_config.car == "Ural":
-        scene bg_leaver1_ural_2 with dissolve
-    else:
-        scene bg_leaver1_van_2 with dissolve
+    $ renpy.scene()
+    $ renpy.show(f"bg_leaver1_{player_config.car}_2")
+    $ renpy.with_statement(dissolve)
 
     mc "Что это лезет из-под воды? Покой нам только снится..."
     mc "Только прикончил одного монстра, как второй на подходе..."
@@ -394,24 +311,18 @@ label leaveregion1:
 
     pause 0.5
 
-    if player_config.car == "Molokovoz":
-        scene bg_leaver1_cargo1_3 with dissolve
-    elif player_config.car == "Ural":
-        scene bg_leaver1_ural_3 with dissolve
-    else:
-        scene bg_leaver1_van_3 with dissolve
+    $ renpy.scene()
+    $ renpy.show(f"bg_leaver1_{player_config.car}_3")
+    $ renpy.with_statement(dissolve)
 
     mc "Похоже, он приглашает меня к себе в пасть. Так это же и есть Морские Врата!"
     mc "В животе чудища я и доплыву до Оракула."
 
     pause 0.5
 
-    if player_config.car == "Molokovoz":
-        scene bg_leaver1_cargo1_4 with dissolve
-    elif player_config.car == "Ural":
-        scene bg_leaver1_ural_4 with dissolve
-    else:
-        scene bg_leaver1_van_4 with dissolve
+    $ renpy.scene()
+    $ renpy.show(f"bg_leaver1_{player_config.car}_4")
+    $ renpy.with_statement(dissolve)
 
     mc "Страшно, конечно..."
     mc "Ну, терять мне нечего. Только вперёд!"
@@ -461,31 +372,29 @@ label galdenquest:
         "Согласиться":
             $ renpy.notify("Игра сохранена в слот 5.")
             $ renpy.save("checkpoint-5")
-            $ r1m4SideQuest = "Taken"
+            $ player_config.r1m4warehouse_side_quest = "Q_TAKEN"
+            $ player_config.r1m4warehouse_side_quest_status = "Accepted"
             mc "Хорошо, я попробую разобраться."
             hide galden with dissolve
             "Вы уезжаете на склад."
             $ player_config.town_type = "NotInCity"
             hide mcsurp
 
-            if random.random() <= 0.5:
-                $ current_music = renpy.music.get_playing(channel='music')
-
-                if current_music and current_music not in battle_tracks:
-                    $ persistent._prebattle_music = current_music
-                else:
-                    $ persistent._prebattle_music = None
-                $ randommus = random.choice([1, 2, 7])
-                $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                "На Вас нападают!"
-                call randomfight from _call_randomfight_25
+            $ CheckForRandomBattle()
             
-            jump r1m4SideQuest_start
+            if random.random() <= 0.7:
+                if player_config.sidequest_findhusband == "Q_CANBETAKEN":
+                    jump r1m4SideQuest_FindHusband_start
+                else:
+                    jump r1m4SideQuest_start
+            else:
+                jump r1m4SideQuest_start
 
         "Отказать":
             $ renpy.notify("Игра сохранена в слот 5.")
             $ renpy.save("checkpoint-5")
-            $ r1m4SideQuest = "Failed"
+            $ player_config.r1m4warehouse_side_quest = "Q_FAILED"
+            $ player_config.r1m4warehouse_side_quest_status = "Declined"
             mc "Мне это неинтересно."
             hide galden with dissolve
             "Вы спокойно уходите. Незнакомец ничего не говорит Вам в след."
@@ -526,6 +435,7 @@ label r1m4SideQuest_start:
 
     menu:
         "Освободить лидера":
+            $ player_config.r1m4warehouse_side_quest_status = "GoingForLeaderSave"
             $ renpy.notify("Игра сохранена в слот 6.")
             $ renpy.save("checkpoint-6")
             mc "Хорошо, я помогу вам. Где ваш лидер?"
@@ -534,21 +444,12 @@ label r1m4SideQuest_start:
             hide wsecurity
             hide mc6
 
-            if random.random() <= 0.5:
-                $ current_music = renpy.music.get_playing(channel='music')
-
-                if current_music and current_music not in battle_tracks:
-                    $ persistent._prebattle_music = current_music
-                else:
-                    $ persistent._prebattle_music = None
-                $ randommus = random.choice([1, 2, 7])
-                $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-                "На Вас нападают!"
-                call randomfight from _call_randomfight_26
+            $ CheckForRandomBattle()
             
             jump r1m4SideQuest_whereisleader
 
         "Отбить склад силой":
+            $ player_config.r1m4warehouse_side_quest_status = "LeaderIsNotSaved"
             $ renpy.notify("Игра сохранена в слот 6.")
             $ renpy.save("checkpoint-6")
             mc "Слишком это хлопотно, проще убить вас всех."
@@ -564,32 +465,10 @@ label r1m4SideQuest_warehousefight:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "warehouseguard"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 2125 # 50% of 5 van hp
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Захватчики склада"
-    $ bgname = "bg_warehouse"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.5
+    $ battle_setup("warehouseguard", 2125, "bg_warehouse", "Захватчики склада", "Regular", 1.5)
 
     scene bg_warehouse
     show warehouseguard at center
@@ -598,28 +477,12 @@ label r1m4SideQuest_warehousefight:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide warehouseguard
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide warehouseguard with dissolve
 
@@ -687,32 +550,10 @@ label r1m4SideQuest_freeleader:
     $ renpy.music.play(f"audio/music/battle{randommus}.ogg", channel='music')
 
     $ player_config.max_hp = CarHP.get(player_config.car, CarHP["Van"])
-
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ _window_hide()
-    $ _game_menu_screen = None
-    $ _menu = False
-    $ config.keymap['save'] = []
-    $ config.keymap['load'] = []
-    $ config.keymap['game_menu'] = []
-    $ persistent._in_battle = True
-    $ enemy_image = "leadertakers"
-    $ player_hp = player_config.hp
-    $ player_max_hp = player_config.max_hp
-    $ enemy_hp = 2025 # 50% HP of 3 Vans and 1 Lorry
-    $ damage_range = gun_stats.get(player_config.current_gun, gun_stats["Hornet"])
-    $ max_heals = player_config.heals
-    $ turn_count = 0
-    $ enemy_max_hp = enemy_hp
-    $ heal_count = 0
-    $ remainheals = max_heals - heal_count
-    $ attack_locked = False
-    $ enemy_name = "Захватчики лидера рыбаков"
-    $ bgname = "bg_freeleaderfight"
-    $ EnemyType = "Regular"
-    $ enemy_damage_multiplier = 1.35
+    $ battle_setup("leadertakers", 2025, "bg_freeleaderfight", "Бандит", "Regular", 1.35)
 
     scene bg_freeleaderfight
     show leadertakers at center
@@ -721,28 +562,12 @@ label r1m4SideQuest_freeleader:
         call screen enemy_ui
 
     if player_hp <= 0:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        
+        $ battle_end_lose()
         hide leadertakers
         play sound "sfx/explosion04.wav"
         jump fightlost
     else:
-        $ _game_menu_screen = "save_screen"
-        $ _menu = True
-        $ config.keymap['save'] = ['save']
-        $ config.keymap['load'] = ['load']
-        $ config.keymap['game_menu'] = ['game_menu']
-        $ persistent._in_battle = False
-        $ renpy.sound.stop(channel="shoot")
-        $ player_config.hp = player_hp
-        $ player_config.heals = remainheals
-
+        $ battle_end_win()
         play sound "sfx/explosion04.wav"
         hide leadertakers with dissolve
 
@@ -753,6 +578,8 @@ label r1m4SideQuest_leaderisfree:
     play music "music/intensedialogue03.ogg" fadeout 1.0
     scene bg_leaderisfree with fade
 
+    $ player_config.r1m4warehouse_side_quest_status = "LeaderSaved"
+
     mc "Чего ждёшь? Садись в мою машину. Торопись, они могли вызвать подмогу!"
 
     extleader "Спасибо, что освободил меня, незнакомец. Но каковы твои мотивы? Я не уверен, могу ли тебе доверять."
@@ -760,19 +587,15 @@ label r1m4SideQuest_leaderisfree:
     mc "Я заключил договор с твоими бойцами, что освобожу тебя в обмен на одну нужную мне вещь."
     mc "И лучше бы им выполнить свою часть сделки!"
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
+    $ CheckForRandomBattle()
 
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
+    if random.random() <= 0.7:
+        if player_config.sidequest_findhusband == "Q_CANBEGIVEN":
+            jump r1m4SideQuest_FindHusband_start
         else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_27
-
-    jump r1m4SideQuest_leaderisback
+            jump r1m4SideQuest_leaderisback
+    else:
+        jump r1m4SideQuest_leaderisback
 
 label r1m4SideQuest_leaderisback:
 
@@ -802,17 +625,7 @@ label r1m4SideQuest_leaderisback:
 
     $ r1m4SideQuestLeaderSaved = True
 
-    if random.random() <= 0.5:
-        $ current_music = renpy.music.get_playing(channel='music')
-
-        if current_music and current_music not in battle_tracks:
-            $ persistent._prebattle_music = current_music
-        else:
-            $ persistent._prebattle_music = None
-        $ randommus = random.choice([1, 2, 7])
-        $ renpy.music.play(f"audio/music/alarm{randommus}.ogg", channel='music')
-        "На Вас нападают!"
-        call randomfight from _call_randomfight_28
+    $ CheckForRandomBattle()
 
     jump r1m4SideQuest_finish
 
@@ -838,6 +651,9 @@ label r1m4SideQuest_finish:
     $ player_config.add_money(1000)
     $ renpy.notify("Вы получили 1000 монет.")
 
+    $ player_config.r1m4warehouse_side_quest = "Q_COMPLETED"
+    $ player_config.r1m4warehouse_side_quest_status = "Completed"
+
     galden "Отлично! Вот тебе награда."
 
     mc "Супер!"
@@ -852,3 +668,189 @@ label r1m4SideQuest_finish:
     hide mcsurp
 
     jump homersearch
+
+# Alla encounter (during warehouse sidequest)
+
+label r1m4SideQuest_FindHusband_start:
+    scene bg_allaencounter with fade
+
+    play music "music/driving7.ogg" fadeout 1.0
+
+    "Вы ехали в направлении склада, но тут вас останавливают..."
+
+    show alla at right, stretch_in
+
+    alla "Ох, молодой человек, беда у меня."
+
+    show mc_2 at left, stretch_in
+
+    mc "Что у Вас случилось?"
+
+    hide alla
+    show alla at right, stretch_in
+
+    alla "Муж мой поехал на рынок и пропал. Наверное, продал товар и запил. Вот я и пошла на его поиски."
+
+    menu:
+        "Помочь":
+            $ player_config.SideQuest_FindHusband = "Q_TAKEN"
+            mc "Я могу Вам помочь в его поисках."
+            alla "Спасибо тебе молодой человек, ты меня сможешь найти в деревне Перчь."
+            mc "Скажите хоть, как зовут Вашего мужа? И опишите внешность."
+            hide alla
+            show alla at right, stretch_in
+            alla "Ох, конечно! Зовут его Филимон. Кудрявый, с повязкой на лбу. Любит говорить \"встала и пошла\", а также неравнодушен к розовым кофточкам."
+            mc "Я всё понял. Проедусь по местным барам, поищу."
+
+            hide alla with dissolve
+            hide mc_2 with dissolve
+
+            $ CheckForRandomBattle()
+
+            jump r1m4SideQuest_FindHusband_searches
+        "Отказать":
+            $ player_config.SideQuest_FindHusband = "Q_FAILED"
+            mc "Это твои проблемы, решай их сама."
+
+            hide alla with dissolve
+            hide mc_2 with dissolve
+
+            "После этого Вы поехали дальше к складу."
+
+            $ CheckForRandomBattle()
+                
+            if player_config.r1m4warehouse_side_quest_status == "Accepted":
+                jump r1m4SideQuest_start
+            elif player_config.r1m4warehouse_side_quest_status == "LeaderSaved":
+                jump r1m4SideQuest_leaderisback
+
+label r1m4SideQuest_FindHusband_searches:
+    scene bg_lauka with fade
+    $ player_config.update_town_info("Village", "Лаука", "fishermen")
+
+    "В Лауке его нет..."
+
+    $ CheckForRandomBattle()
+
+    scene bg_saliniom with fade
+    $ player_config.update_town_info("Village", "Салиниом", "fishermen")
+
+    "В Салиниоме его так-же нет..."
+
+    $ CheckForRandomBattle()
+
+    scene bg_olm with fade
+    $ player_config.update_town_info("City", "Ольм", "north_nath_traders")
+
+    "Даже в Ольме его нет..."
+    mc "Хотя казалось бы, что ему тут делать?"
+
+    $ CheckForRandomBattle()
+
+    scene bg_kordan with fade
+    $ player_config.update_town_info("Village", "Кордан", "fishermen")
+
+    mc "Да где-же искать твоего Филимона-то?!"
+    mc "Попробую поискать его в Калисе..."
+
+    $ CheckForRandomBattle()
+
+    scene bg_kalis with fade
+    $ player_config.update_town_info("Village", "Калис", "fishermen")
+
+    "В баре Калиса Вы замечаете подходящего под описание Филимона..."
+
+    show filimon at right with dissolve
+    show mc6 at left with dissolve
+
+    filimon "Что ты хочешь от меня, мил человек?"
+    mc "Филимон, твоя жена совсем с ног сбилась тебя искать, а ты тут по барам рассиживаешься."
+    filimon "Устал я от неё! Дай отдохнуть, с мужиками посидеть."
+    mc "Давай-ка я тебя провожу до дому."
+    filimon "Не хочу домой! И ты мне надоел, встал и пошёл отсюда."
+    mc "Лучше соглашайся по-хорошему!"
+    filimon "Слушай, давай я тебе денег дам, и ты от меня отстанешь?"
+
+    menu:
+        "Согласиться":
+            mc "Ладно, пожалею тебя. Сколько?"
+            filimon "500 монет тебя устроит?"
+            mc "Я большего от тебя и не ждал. Давай сюда."
+            $ player_config.add_money(500)
+            $ renpy.notify("Вы получили 500 монет.")
+            $ player_config.sidequest_findhusband = "Q_FAILED"
+            $ player_config.sidequest_findhusband_status = "Failed"
+
+            hide filimon with dissolve
+            hide mc6 with dissolve
+
+            "После этого Вы поехали дальше к складу."
+
+            $ player_config.town_type = "NotInCity"
+
+            $ CheckForRandomBattle()
+                
+            if player_config.r1m4warehouse_side_quest_status == "Accepted":
+                jump r1m4SideQuest_start
+            elif player_config.r1m4warehouse_side_quest_status == "LeaderSaved":
+                jump r1m4SideQuest_leaderisback
+        "Отказать":
+            mc "Нет, я пообещал, что верну тебя домой!"
+            filimon "Делать нечего, поехали. Надоел ты мне уже."
+            mc "Вот и ладненько."
+
+            hide filimon with dissolve
+            hide mc6 with dissolve
+
+            "После этого Вы поехали в Перчь."
+
+            $ player_config.town_type = "NotInCity"
+
+            $ CheckForRandomBattle()
+
+            jump r1m4SideQuest_FindHusband_bringback
+
+label r1m4SideQuest_FindHusband_bringback:
+    scene bg_perch with fade
+    $ player_config.update_town_info("Village", "Перчь", "fishermen")
+
+    "Приехав в Перчь Вы достаточно быстро находите Аллушку."
+
+    show alla at right, stretch_in
+
+    alla "Ты привёз мне моего мужа?"
+
+    show mc6 at left, stretch_in
+
+    mc "Вон он, жив и здрав."
+
+    hide alla
+    show alla at right, stretch_in
+
+    alla "Ох, даже не знаю, как тебя отблагодарить. У меня тут есть вещи на продажу, вот я тебе их и отдам."
+
+    python:
+        if not player_config.try_add_item("Tobacco"):
+            handle_full_inventory("Tobacco", ItemPricesVillage)
+        else:
+            renpy.notify("В ваш инвентарь добавлен предмет: Табак.")
+
+        if not player_config.try_add_item("Book"):
+            handle_full_inventory("Book", ItemPricesVillage)
+        else:
+            renpy.notify("В ваш инвентарь добавлен предмет: Книги.")
+
+    mc "Спасибо. До свидания."
+
+    hide alla with dissolve
+
+    mc "Надо двигаться дальше..."
+
+    $ player_config.town_type = "NotInCity"
+
+    $ CheckForRandomBattle()
+                
+    if player_config.r1m4warehouse_side_quest_status == "Accepted":
+        jump r1m4SideQuest_start
+    elif player_config.r1m4warehouse_side_quest_status == "LeaderSaved":
+        jump r1m4SideQuest_leaderisback

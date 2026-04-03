@@ -18,7 +18,7 @@ screen onebuttonpopup(message):
                 text_align 0.5
                 color "#ffffff"
             
-            textbutton "OK":
+            textbutton "OK" activate_sound "audio/sfx/click.wav":
                 xalign 0.5
                 action Return()
                 style "confirm_button"
