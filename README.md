@@ -4,6 +4,10 @@
 
 # Hard Truck Apocalypse: Ren'Py
 
+![status](https://img.shields.io/badge/status-in%20development-brightgreen?style=for-the-badge)
+![version](https://img.shields.io/badge/version-0.6-blue?style=for-the-badge)
+![lang](https://img.shields.io/badge/language-RU-purple?style=for-the-badge)
+
 </div>
 
 **Hard Truck Apocalypse: Ren'Py** - фанатский перенос сюжета и некоторых элементов геймплея оригинальной игры на движок для визуальных новелл **Ren'Py**. 
@@ -35,6 +39,8 @@
 - Выдача рандомных предметов и рандомного количества монет после боёв
 - Логика чекпоинтов, которая заменяет встроенные в Ren'Py по умолчанию автосейвы
 - Система множителя урона в зависимости от количества противников (чем больше врагов - тем выше урон по игроку)
+- Возможность установки второго оружия на совместимые автомобили
+- Система профилей
 
 ### В разработке:
 
@@ -42,7 +48,29 @@
 - Все типы встреч (энкаунтеры), присутствующие в оригинальной игре
 - Отдельная механика боёв для боссов
 - Система перемещений по карте
-- Возможность установки второго оружия на совместимые автомобили
+
+---
+
+### Запуск из исходного кода
+
+В связи с модификацией движка запуск проекта из исходников требует дополнительной настройки.
+
+#### Требования
+
+- **Ren'Py SDK 8.5.2**  
+  https://www.renpy.org/release/8.5.2
+
+#### Инструкция по запуску
+
+1. Скачайте и распакуйте Ren'Py SDK  
+2. Скачайте модифицированные файлы движка:  
+   https://github.com/stakanyash/hta_renpy/tree/modified_engine  
+3. Скопируйте файлы в корневую папку SDK с подтверждением замены  
+4. Запустите Ren'Py SDK `(renpy.exe для Windows; renpy.sh для Linux)` и укажите папку для проектов 
+5. Скачайте исходный код игры из ветки `main`  
+6. Распакуйте проект в папку проектов Ren'Py  
+7. Если проект не появился - перезапустите SDK  
+8. Запустите игру через SDK
 
 ---
 
@@ -52,17 +80,17 @@
 
 </div>
 
-<img width="1474" height="860" alt="screenshot0001" src="https://github.com/user-attachments/assets/248241ac-bc36-4b90-a7c7-c0e9ac4e6907" />
+<img width="1474" height="860" alt="screenshot0001" src="https://github.com/user-attachments/assets/5c773289-2fa8-4437-bba3-46f89161dca9" />
 <blockquote>Главное меню игры</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="screenshot0002" src="https://github.com/user-attachments/assets/9f60915a-9bf0-4064-8e1b-942fdfc512f2" />
+<img width="1474" height="860" alt="screenshot0002" src="https://github.com/user-attachments/assets/38664c69-1152-4ffc-a457-fd37491ebe97" />
 <blockquote>Окно ввода имени</blockquote>
 
 ---
 
-<img width="1474" height="860" alt="screenshot0003" src="https://github.com/user-attachments/assets/a7d6f171-71a6-4e26-89ad-849c66bb2a14" />
+<img width="1474" height="860" alt="screenshot0003" src="https://github.com/user-attachments/assets/00be9bb3-6fb8-46f5-a46d-86bb565fbd92" />
 <blockquote>Окно выбора сложности (можно менять в процессе игры через настройки)</blockquote>
 
 ---
@@ -87,7 +115,7 @@
 
 ---
 
-<img width="1474" height="860" alt="screenshot0008" src="https://github.com/user-attachments/assets/cb253e85-ad4a-4616-85fb-583191adeebc" />
+<img width="1474" height="860" alt="screenshot0008" src="https://github.com/user-attachments/assets/c6f9f582-6f7d-4e19-a453-e003b75be9f6" />
 <blockquote>Экран статистики</blockquote>
 
 ---
@@ -97,7 +125,7 @@
 
 ---
 
-<img width="1474" height="860" alt="screenshot0010" src="https://github.com/user-attachments/assets/a7d3d7c9-42e0-4915-80b3-57dfc1b9a8cc" />
+<img width="1474" height="860" alt="screenshot0010" src="https://github.com/user-attachments/assets/931e459e-5f1d-4c51-9809-a5106c0aa9f1" />
 <blockquote>Экран инвентаря</blockquote>
 
 ---
@@ -107,7 +135,7 @@
 
 ---
 
-<img width="1474" height="860" alt="screenshot0012" src="https://github.com/user-attachments/assets/340403c3-ef5c-4664-9534-f2e7732bc60d" />
+<img width="1474" height="860" alt="screenshot0012" src="https://github.com/user-attachments/assets/17be5b3c-35e2-430a-b001-93f594e0cf5d" />
 <blockquote>Магазин оружия</blockquote>
 
 ---
