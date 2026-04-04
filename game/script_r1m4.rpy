@@ -553,7 +553,7 @@ label r1m4SideQuest_freeleader:
     if player_config.hp is None:
         $ player_config.hp = player_config.max_hp
 
-    $ battle_setup("leadertakers", 2025, "bg_freeleaderfight", "Бандит", "Regular", 1.35)
+    $ battle_setup("leadertakers", 2025, "bg_freeleaderfight", "Захватчики лидера рыбаков", "Regular", 1.35)
 
     scene bg_freeleaderfight
     show leadertakers at center
